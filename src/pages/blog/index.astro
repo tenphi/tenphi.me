@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/ui/Container';
+import Stack from '../../components/ui/Stack';
+import PostCard from '../../components/PostCard';
+import PostList from '../../components/PostList';
+import { tasty } from '@tenphi/tasty';
+
+const Heading = tasty({
+  as: 'h1',
+  styles: {
+    preset: 'h1',
+    color: '#text',
+    margin: '0',
+  },
+});
+
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout
+  title="Blog"
+  description="Blog posts by Andrey Yamanov about frontend engineering, design systems, and developer tools."
+>
+  <Container>
+    <Stack gap="5x" padding="4x 0 8x">
+      <Heading>Blog</Heading>
+      <PostList>
+        {
+          posts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              date={post.data.date}
+              description={post.data.description}
+              slug={post.id}
+            />
+          ))
+        }
+      </PostList>
+    </Stack>
+  </Container>
+</BaseLayout>

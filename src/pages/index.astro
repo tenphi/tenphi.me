@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container';
+import Stack from '../components/ui/Stack';
+import Link from '../components/ui/Link';
+import { tasty } from '@tenphi/tasty';
+
+const Hero = tasty({
+  as: 'section',
+  styles: {
+    display: 'flex',
+    flow: 'column',
+    gap: '3x',
+
+    Heading: {
+      $: 'h1',
+      preset: 'h1',
+      color: '#text',
+      margin: '0',
+    },
+    Bio: {
+      $: 'p',
+      preset: 't1',
+      color: '#text-soft',
+      margin: '0',
+    },
+    Links: {
+      $: '>',
+      display: 'flex',
+      flow: 'row',
+      gap: '2x',
+      flexWrap: 'wrap',
+    },
+  },
+  elements: { Links: 'div' },
+});
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Andrey Yamanov',
+  jobTitle: 'Frontend Developer & Principal UX/UI Engineer',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'Cube Dev',
+    url: 'https://cube.dev',
+  },
+  url: 'https://tenphi.me',
+  sameAs: [
+    'https://github.com/tenphi',
+    'https://x.com/tenphi',
+    'https://www.linkedin.com/in/tenphi',
+  ],
+};
+---
+
+<BaseLayout
+  title="Andrey Yamanov"
+  description="Frontend Developer & Principal UX/UI Engineer. Creator of Tasty and Glaze. Based in Amsterdam."
+  jsonLd={jsonLd}
+>
+  <Container>
+    <Hero padding="8x 0">
+      <h1>Andrey Yamanov</h1>
+      <p>
+        Frontend Developer & Principal UX/UI Engineer at <Link
+          href="https://cube.dev">Cube Dev</Link
+        >. Building AI-ready, scalable design systems and UI components. Creator
+        of <Link href="https://github.com/tenphi/tasty">Tasty</Link> and <Link
+          href="https://github.com/tenphi/glaze">Glaze</Link
+        >. Based in Amsterdam.
+      </p>
+      <Hero.Links>
+        <Link href="https://github.com/tenphi">GitHub</Link>
+        <Link href="https://x.com/tenphi">X</Link>
+        <Link href="https://www.linkedin.com/in/tenphi">LinkedIn</Link>
+      </Hero.Links>
+    </Hero>
+  </Container>
+</BaseLayout>

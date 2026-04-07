@@ -1,0 +1,90 @@
+import { tasty } from '@tenphi/tasty';
+
+const ArticleContent = tasty({
+  as: 'div',
+  styles: {
+    display: 'flex',
+    flow: 'column',
+
+    H2: {
+      $: 'h2',
+      preset: 'h2',
+      color: '#text',
+      margin: {
+        '': '3x 0 1.5x',
+        '@own(:first-child)': '0 0 1.5x',
+        '@own(:last-child)': '3x 0 0',
+      },
+    },
+    H3: {
+      $: 'h3',
+      preset: 'h3',
+      color: '#text',
+      margin: {
+        '': '2.5x 0 1x',
+        '@own(:first-child)': '0 0 1x',
+        '@own(:last-child)': '2.5x 0 0',
+      },
+    },
+    P: {
+      $: 'p',
+      margin: {
+        '': '0 0 2x',
+        '@own(:last-child)': '0',
+      },
+    },
+    A: {
+      $: 'a',
+      color: '#accent-text',
+      textDecoration: {
+        '': 'none',
+        '@own(:hover)': 'underline',
+      },
+    },
+    Ul: {
+      $: 'ul',
+      margin: {
+        '': '0 0 2x',
+        '@own(:last-child)': '0',
+      },
+      paddingLeft: '3x',
+    },
+    Ol: {
+      $: 'ol',
+      margin: {
+        '': '0 0 2x',
+        '@own(:last-child)': '0',
+      },
+      paddingLeft: '3x',
+    },
+    Li: {
+      $: 'li',
+      margin: '0 0 .5x',
+      lineHeight: '1.7',
+    },
+    Blockquote: {
+      $: 'blockquote',
+      margin: {
+        '': '0 0 2x',
+        '@own(:last-child)': '0',
+      },
+      padding: '0 0 0 2x',
+      border: '3bw left',
+      preset: 'italic',
+      color: '#text-soft',
+    },
+    Hr: {
+      $: 'hr',
+      border: 'none',
+      height: '1px',
+      fill: '#border',
+      margin: {
+        '': '3x 0',
+        '@own(:first-child)': '0 0 3x',
+        '@own(:last-child)': '3x 0 0',
+      },
+    },
+  },
+});
+
+export default ArticleContent;

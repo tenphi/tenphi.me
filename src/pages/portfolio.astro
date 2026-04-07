@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container';
+import Stack from '../components/ui/Stack';
+import ProjectCard from '../components/ProjectCard';
+import { tasty } from '@tenphi/tasty';
+
+const Heading = tasty({
+  as: 'h1',
+  styles: {
+    preset: 'h1',
+    color: '#text',
+    margin: '0',
+  },
+});
+
+const Section = tasty({
+  as: 'section',
+  styles: {
+    display: 'flex',
+    flow: 'column',
+    gap: '3x',
+
+    SectionTitle: {
+      $: 'h2',
+      preset: 'h2',
+      color: '#text',
+      margin: '0',
+    },
+  },
+});
+
+const Grid = tasty({
+  as: 'div',
+  styles: {
+    display: 'grid',
+    gridColumns: {
+      '': '1fr',
+      '@tablet | @desktop': '1fr 1fr',
+    },
+    gap: '3x',
+  },
+});
+---
+
+<BaseLayout
+  title="Portfolio"
+  description="Projects by Andrey Yamanov — Tasty ecosystem, open-source tools, and product work."
+>
+  <Container>
+    <Stack gap="6x" padding="4x 0 8x">
+      <Heading>Portfolio</Heading>
+
+      <Section>
+        <h2>Tasty Ecosystem</h2>
+        <Grid>
+          <ProjectCard>
+            <ProjectCard.Title href="https://github.com/tenphi/tasty">
+              @tenphi/tasty
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              Core styling engine and DSL for React. Declarative, state-aware
+              styling with design token integration, sub-element styling, and
+              optional zero-runtime extraction via Babel.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>React</ProjectCard.Tag>
+              <ProjectCard.Tag>TypeScript</ProjectCard.Tag>
+              <ProjectCard.Tag>CSS-in-JS</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+
+          <ProjectCard>
+            <ProjectCard.Title href="https://github.com/tenphi/glaze">
+              @tenphi/glaze
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              OKHSL color theme generator with WCAG contrast solving. Zero
+              dependencies. Generates light, dark, and high-contrast schemes.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>OKHSL</ProjectCard.Tag>
+              <ProjectCard.Tag>WCAG</ProjectCard.Tag>
+              <ProjectCard.Tag>Color</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+
+          <ProjectCard>
+            <ProjectCard.Title
+              href="https://github.com/tenphi/tasty-eslint-plugin"
+            >
+              @tenphi/eslint-plugin-tasty
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              ESLint plugin for validating tasty() and tastyStatic() style
+              objects — tokens, states, presets, and property names.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>ESLint</ProjectCard.Tag>
+              <ProjectCard.Tag>DX</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+
+          <ProjectCard>
+            <ProjectCard.Title
+              href="https://github.com/tenphi/tasty-vscode-extension"
+            >
+              Tasty VS Code Extension
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              VS Code syntax highlighting for Tasty DSL inside style objects.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>VS Code</ProjectCard.Tag>
+              <ProjectCard.Tag>DX</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+
+          <ProjectCard>
+            <ProjectCard.Title href="https://tasty.style">
+              tasty.style
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              Documentation site, live playground, and interactive examples for
+              the Tasty ecosystem.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>Next.js</ProjectCard.Tag>
+              <ProjectCard.Tag>WebContainers</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+        </Grid>
+      </Section>
+
+      <Section>
+        <h2>Product Work</h2>
+        <Grid>
+          <ProjectCard>
+            <ProjectCard.Title href="https://cubecloud.dev">
+              Cube Cloud
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              Deploy, optimize and scale Cube.js applications. UI, UX, and
+              frontend development.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>React</ProjectCard.Tag>
+              <ProjectCard.Tag>UI/UX</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+
+          <ProjectCard>
+            <ProjectCard.Title
+              href="https://main--626ee6db91d1c8004a912249.chromatic.com/"
+            >
+              Cube Cloud UIKit
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              UIKit for Cube Cloud. Built with React, React Aria, and Tasty CSS
+              generator.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>React</ProjectCard.Tag>
+              <ProjectCard.Tag>React Aria</ProjectCard.Tag>
+              <ProjectCard.Tag>Design System</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+
+          <ProjectCard>
+            <ProjectCard.Title href="https://subtly.media">
+              Subtly.Media
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              Smart subtitles for Netflix. Idea, UI, UX, and full-stack
+              development.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>React</ProjectCard.Tag>
+              <ProjectCard.Tag>Full-stack</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+
+          <ProjectCard>
+            <ProjectCard.Title href="https://sellerscale.com">
+              Sellerscale
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              Smarter financial management for Amazon sellers. UI, UX, and
+              frontend.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>Vue</ProjectCard.Tag>
+              <ProjectCard.Tag>UI/UX</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+
+          <ProjectCard>
+            <ProjectCard.Title href="https://numl.tenphi.me">
+              Numl.Design Website
+            </ProjectCard.Title>
+            <ProjectCard.Description>
+              Landing, Storybook, Handbook, Documentation, and REPL for the
+              Numl.Design project.
+            </ProjectCard.Description>
+            <ProjectCard.Tags>
+              <ProjectCard.Tag>Vue</ProjectCard.Tag>
+              <ProjectCard.Tag>Nuxt.js</ProjectCard.Tag>
+              <ProjectCard.Tag>UI/UX</ProjectCard.Tag>
+            </ProjectCard.Tags>
+          </ProjectCard>
+        </Grid>
+      </Section>
+    </Stack>
+  </Container>
+</BaseLayout>

@@ -1,0 +1,98 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/ui/Container';
+import Stack from '../../components/ui/Stack';
+import Link from '../../components/ui/Link';
+import ArticleContent from '../../components/ArticleContent';
+import { tasty } from '@tenphi/tasty';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const Heading = tasty({
+  as: 'h1',
+  styles: {
+    preset: 'h1',
+    color: '#text',
+    margin: '0',
+  },
+});
+
+const Meta = tasty({
+  as: 'time',
+  styles: {
+    preset: 't3',
+    color: '#text-soft',
+  },
+});
+
+const Article = tasty({
+  as: 'article',
+  styles: {
+    display: 'flex',
+    flow: 'column',
+    gap: '2x',
+  },
+});
+
+const BackLink = tasty({
+  as: 'div',
+  styles: {
+    padding: '4x 0 0',
+  },
+});
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.date.toISOString().split('T')[0],
+  author: {
+    '@type': 'Person',
+    name: 'Andrey Yamanov',
+    url: 'https://tenphi.me',
+  },
+};
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  <Container>
+    <Stack gap="0" padding="4x 0 8x">
+      <Article>
+        <Heading>{post.data.title}</Heading>
+        <Meta dateTime={post.data.date.toISOString().split('T')[0]}>
+          {formatDate(post.data.date)}
+        </Meta>
+        <ArticleContent>
+          <Content />
+        </ArticleContent>
+      </Article>
+      <BackLink>
+        <Link href="/blog">&larr; Back to blog</Link>
+      </BackLink>
+    </Stack>
+  </Container>
+</BaseLayout>

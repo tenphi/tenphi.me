@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Blog — tenphi.me</title><meta name="description" content="Blog posts by Andrey Yamanov about frontend engineering, design systems, and developer tools."><meta name="author" content="Andrey Yamanov"><link rel="canonical" href="https://tenphi.me/blog/"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"><meta property="og:title" content="Blog — tenphi.me"><meta property="og:description" content="Blog posts by Andrey Yamanov about frontend engineering, design systems, and developer tools."><meta property="og:url" content="https://tenphi.me/blog/"><meta property="og:type" content="website"><meta property="og:site_name" content="tenphi.me"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Blog — tenphi.me"><meta name="twitter:description" content="Blog posts by Andrey Yamanov about frontend engineering, design systems, and developer tools."><style data-tasty-ssr>@property --tasty-second-fill-color { syntax: "<color>"; inherits: false; initial-value: transparent; }
+@property --tasty-second-fill-color-oklch { syntax: "<number>+"; inherits: false; initial-value: 0 0 0; }
+@property --current-color { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --current-color-oklch { syntax: "<number>+"; inherits: true; initial-value: 0 0 0; }
+@property --white-color { syntax: "<color>"; inherits: true; initial-value: rgb(255 255 255); }
+@property --white-color-oklch { syntax: "<number>+"; inherits: true; initial-value: 1 0 89.88; }
+@property --black-color { syntax: "<color>"; inherits: true; initial-value: rgb(0 0 0); }
+@property --black-color-oklch { syntax: "<number>+"; inherits: true; initial-value: 0 0 0; }
+@property --clear-color { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --clear-color-oklch { syntax: "<number>+"; inherits: true; initial-value: 0 0 0; }
+@property --border-color { syntax: "<color>"; inherits: true; initial-value: rgb(0 0 0); }
+@property --border-color-oklch { syntax: "<number>+"; inherits: true; initial-value: 0 0 0; }
+@property --gap { syntax: "<length>"; inherits: true; initial-value: 4px; }
+@property --radius { syntax: "<length>"; inherits: true; initial-value: 6px; }
+@property --border-width { syntax: "<length>"; inherits: true; initial-value: 1px; }
+@property --outline-width { syntax: "<length>"; inherits: true; initial-value: 3px; }
+@property --transition { syntax: "<time>"; inherits: true; initial-value: 80ms; }
+@property --sharp-radius { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --bold-font-weight { syntax: "<number>"; inherits: true; initial-value: 700; }
+@property --font-sans-fallback { syntax: "*"; inherits: true; initial-value: system-ui, -apple-system, "segoe ui", roboto, helvetica, arial, "apple color emoji", "segoe ui emoji", sans-serif; }
+@property --font-mono-fallback { syntax: "*"; inherits: true; initial-value: ui-monospace, sfmono-regular, menlo, monaco, consolas, "liberation mono", "courier new", monospace; }
+@property --current-color { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --current-color-oklch { syntax: "<number>+"; inherits: true; initial-value: 0 0 0; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    img { max-width: 100%; height: auto; display: block; }
+  
+:root { --gap: 8px; --radius: 6px; --max-width: 720px; --font: "inter", system-ui, -apple-system, sans-serif; --monospace-font: "jetbrains mono", ui-monospace, monospace; }
+:root:has([data-theme-switcher][data-theme="dark"]) { --surface-color: oklch(0.25337 0.00473 210); --surface-color-oklch: 0.25337 0.00473 210; --surface-2-color: oklch(0.30302 0.00817 210); --surface-2-color-oklch: 0.30302 0.00817 210; --text-color: oklch(0.95707 0.0013 210); --text-color-oklch: 0.95707 0.0013 210; --text-soft-color: oklch(0.88069 0.00233 210); --text-soft-color-oklch: 0.88069 0.00233 210; --border-color: oklch(0.42691 0.02481 210); --border-color-oklch: 0.42691 0.02481 210; --accent-text-color: oklch(0.72757 0.07969 210); --accent-text-color-oklch: 0.72757 0.07969 210; --accent-text-hover-color: oklch(0.78508 0.08249 210); --accent-text-hover-color-oklch: 0.78508 0.08249 210; }
+:root:not(:has([data-theme-switcher][data-theme="dark"])) { --surface-color: oklch(1 0 89.88); --surface-color-oklch: 1 0 89.88; --surface-2-color: oklch(0.97425 0.00175 210); --surface-2-color-oklch: 0.97425 0.00175 210; --text-color: oklch(0.20103 0.00318 210); --text-color-oklch: 0.20103 0.00318 210; --text-soft-color: oklch(0.37491 0.00389 210); --text-soft-color-oklch: 0.37491 0.00389 210; --border-color: oklch(0.89694 0.01762 210); --border-color-oklch: 0.89694 0.01762 210; --accent-text-color: oklch(0.55918 0.07253 210); --accent-text-color-oklch: 0.55918 0.07253 210; --accent-text-hover-color: oklch(0.53398 0.07212 210); --accent-text-hover-color-oklch: 0.53398 0.07212 210; }
+html { line-height: 1.6; font-family: var(--font-sans, var(--font-sans-fallback)); color: var(--text-color); --current-color: var(--text-color); --current-color-oklch: var(--text-color-oklch); background-color: var(--surface-color); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+code { font-size: 0.875em; font-family: var(--font-mono, var(--font-mono-fallback)); background-color: var(--surface-2-color); padding: 0.15em 0.4em; border-radius: 3px; }
+pre { background-color: var(--surface-2-color); padding: 16px; border-radius: 6px; overflow: auto; }
+pre code { background-color: transparent; padding: 0; }
+.t0.t0 { color: var(--text-color); --current-color: var(--text-color); --current-color-oklch: var(--text-color-oklch); }
+.t1.t1 { font-size: 2rem; line-height: 1.2; font-weight: 700; }
+.t2.t2 { margin: 0; }
+.t3.t3 { display: flex; gap: 8px; flex-flow: column; }
+.t4.t4:hover { color: var(--accent-text-color); --current-color: var(--accent-text-color); --current-color-oklch: var(--accent-text-color-oklch); }
+.t4.t4:not(:hover) { color: var(--text-color); --current-color: var(--text-color); --current-color-oklch: var(--text-color-oklch); }
+.t5.t5 { font-size: 1.125rem; line-height: 1.4; font-weight: 600; text-decoration: none; }
+.t6.t6 { transition: color 0.15s; }
+.t7.t7 { color: var(--text-soft-color); --current-color: var(--text-soft-color); --current-color-oklch: var(--text-soft-color-oklch); }
+.t8.t8 { font-size: 0.8125rem; }
+.t9.t9 { font-size: 0.9375rem; line-height: 1.5; }
+.t10.t10 { padding: 24px 0; }
+.t11.t11 { margin: 0 auto; width: 100%; min-width: initial; max-width: var(--max-width); }
+@media (640px <= width < 1024px) { .t11.t11 { padding: 0 24px; } }
+@media (not (640px <= width < 1024px)) { .t11.t11 { padding: 0 16px; } }
+.t12.t12 { display: flex; flex-flow: row; }
+.t13.t13 { align-items: center; justify-content: space-between; }
+.t14.t14 { font-size: 1.125rem; font-weight: 700; text-decoration: none; }
+.t15.t15:hover { color: var(--text-color); --current-color: var(--text-color); --current-color-oklch: var(--text-color-oklch); }
+.t15.t15:not(:hover) { color: var(--text-soft-color); --current-color: var(--text-soft-color); --current-color-oklch: var(--text-soft-color-oklch); }
+.t16.t16 { font-size: 0.9375rem; text-decoration: none; }
+.t17.t17 { padding: 32px 0; }
+.t18.t18 { display: flex; gap: 32px; flex-flow: column; }
+.t19.t19 { padding: 32px 0 64px 0; }
+.t20.t20 { display: flex; gap: 40px; flex-flow: column; }</style><script data-tasty-cache type="application/json">{"entries":{"appearance\u0000color:\"#text\"":"t0","font\u0000fontSize:\"2rem\"\u0000fontWeight:\"700\"\u0000lineHeight:\"1.2\"":"t1","dimension\u0000margin:\"0\"":"t2","display\u0000display:\"flex\"\u0000flow:\"column\"\u0000gap:\"1x\"":"t3","appearance\u0000color:{\"\":\"#text\",\":hover\":\"#accent-text\"}":"t4","font\u0000fontSize:\"1.125rem\"\u0000fontWeight:\"600\"\u0000lineHeight:\"1.4\"\u0000textDecoration:\"none\"":"t5","position\u0000transition:\"color 0.15s\"":"t6","appearance\u0000color:\"#text-soft\"":"t7","font\u0000fontSize:\"0.8125rem\"":"t8","font\u0000fontSize:\"0.9375rem\"\u0000lineHeight:\"1.5\"":"t9","dimension\u0000padding:\"3x 0\"":"t10","dimension\u0000margin:\"auto left right\"\u0000padding:{\"\":\"0 2x\",\"@tablet\":\"0 3x\"}\u0000width:\"initial 100% $max-width\"":"t11","display\u0000display:\"flex\"\u0000flow:\"row\"":"t12","layout\u0000alignItems:\"center\"\u0000justifyContent:\"space-between\"":"t13","font\u0000fontSize:\"1.125rem\"\u0000fontWeight:\"700\"\u0000textDecoration:\"none\"":"t14","appearance\u0000color:{\"\":\"#text-soft\",\":hover\":\"#text\"}":"t15","font\u0000fontSize:\"0.9375rem\"\u0000textDecoration:\"none\"":"t16","dimension\u0000padding:\"4x 0\"":"t17","display\u0000display:\"flex\"\u0000flow:\"column\"\u0000gap:\"4x\"":"t18","dimension\u0000padding:\"4x 0 8x\"":"t19","display\u0000display:\"flex\"\u0000flow:\"column\"\u0000gap:\"5x\"":"t20"},"classCounter":21}</script></head> <body>  <header class="t10"><div class="t11"><nav class="t12 t13"><a href="/" class="t0 t14">tenphi.me</a><a href="/blog" class="t15 t16 t6">Blog</a></nav></div></header> <main>  <div class="t11"> <div class="t19 t20"> <h1 class="t0 t1 t2">Blog</h1> <div class="t18"><article class="t3"><a href="/blog/hello-world" class="t4 t5 t6">Hello World</a><time dateTime="2026-04-07" class="t7 t8">Apr 7, 2026</time><p class="t7 t9 t2">First post on the new blog. A brief intro and what to expect.</p></article></div> </div> </div>  </main> <footer class="t7 t8 t17"><div class="t11">© 2026 Andrey Yamanov</div></footer> </body></html>
