@@ -46,12 +46,12 @@ const Button = tasty({
 });
 ```
 
-The meaning is obvious:
+Applied in order of priority, this means:
 
-- default background is `#primary`
-- on hover use `#primary-hover`
-- on active use `#primary-pressed`
 - when disabled use `#surface`
+- otherwise, on active use `#primary-pressed`
+- otherwise, on hover use `#primary-hover`
+- otherwise use `#primary`
 
 The important part is what happens next.
 
