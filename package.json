@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@tenphi/eslint-plugin-tasty": "^0.6.2",
+    "@tenphi/eslint-plugin-tasty": "^0.6.3",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^10.2.0",

@@ -102,6 +102,9 @@ configure({
       padding: '2x',
       height: 'min 100dvh',
     },
+    code: {
+      preset: 'code',
+    },
   },
   replaceTokens: {
     '$content-width': '$max-width',
