@@ -49,8 +49,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.2.0(jiti@2.6.1))
       '@tenphi/eslint-plugin-tasty':
-        specifier: ^0.6.2
-        version: 0.6.2(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3)
+        specifier: ^0.6.3
+        version: 0.6.3(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3)
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.14
@@ -839,8 +839,8 @@ packages:
   '@tabler/icons@3.41.1':
     resolution: {integrity: sha512-OaRnVbRmH2nHtFeg+RmMJ/7m2oBIF9XCJAUD5gQnMrpK9f05ydj8MZrAf3NZQqOXyxGN1UBL0D5IKLLEUfr74Q==}
 
-  '@tenphi/eslint-plugin-tasty@0.6.2':
-    resolution: {integrity: sha512-GR63b/KobzjwblDP25XMs9qUKU1SmQTMChQybEgR5OMEG2DjMNZz9PRLviFCY8zJQIA8iihXDR5AIdUp334k/w==}
+  '@tenphi/eslint-plugin-tasty@0.6.3':
+    resolution: {integrity: sha512-FtE2N+6DZfSIWS5CI1fp4np0gSAwyjwxR9beYpw35LqOFZ2mprU71aodKEeDMZ6m3yC4Bu/gG2toVVgykN+DWw==}
     engines: {node: '>=20'}
     peerDependencies:
       eslint: '>=8.0.0'
@@ -2930,7 +2930,7 @@ snapshots:
 
   '@tabler/icons@3.41.1': {}
 
-  '@tenphi/eslint-plugin-tasty@0.6.2(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3)':
+  '@tenphi/eslint-plugin-tasty@0.6.3(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/utils': 8.58.0(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3)
       eslint: 10.2.0(jiti@2.6.1)
