@@ -3,6 +3,7 @@ title: "Mutually exclusive selectors: CSS states that never conflict"
 description: "Tasty compiles component states into mutually exclusive CSS selectors, so you can define and extend component styles confidently without specificity fights or source-order surprises."
 date: 2026-04-21
 tags: ["CSS", "CSS-in-JS", "Design Systems"]
+draft: true
 ---
 
 Have you ever swapped two CSS lines and watched a button break in production?
