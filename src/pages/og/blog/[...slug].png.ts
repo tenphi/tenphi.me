@@ -11,7 +11,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const GET: APIRoute = async ({ props }) => {
-  const { post } = props as { post: { data: { title: string; description: string } } };
+  const { post } = props as {
+    post: { data: { title: string; description: string } };
+  };
 
   const png = await generateOgImage(
     ogCard({

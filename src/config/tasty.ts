@@ -75,7 +75,8 @@ configure({
     '@mobile': '@media(w < 640px)',
     '@tablet': '@media(640px <= w < 1024px)',
     '@desktop': '@media(w >= 1024px)',
-    '@dark': '@root(:has(input[name="theme"][value="dark"]:checked)) | (@media(prefers-color-scheme: dark) & @root(:has(input[name="theme"][value="system"]:checked)))',
+    '@dark':
+      '@root(:has(input[name="theme"][value="dark"]:checked)) | (@media(prefers-color-scheme: dark) & @root(:has(input[name="theme"][value="system"]:checked)))',
   },
   tokens: {
     $gap: '8px',

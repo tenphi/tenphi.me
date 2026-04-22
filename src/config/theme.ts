@@ -59,7 +59,7 @@ blue.colors({
     lightness: 90,
     mode: 'fixed',
   },
-  'shadow': {
+  shadow: {
     type: 'shadow',
     bg: 'surface',
     intensity: 5,

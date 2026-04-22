@@ -38,7 +38,7 @@ const HeaderEl = tasty({
       inset: 0,
       pointerEvents: 'none',
     },
-    
+
     Nav: {
       display: 'flex',
       flow: 'row',
@@ -87,7 +87,12 @@ export default function Header() {
       <HeaderEl>
         <HeaderEl.Nav>
           <HeaderEl.SiteName href="/">
-            <HeaderEl.Avatar src="/avatar-face.svg" alt="tenphi.me" width={40} height={40} />
+            <HeaderEl.Avatar
+              src="/avatar-face.svg"
+              alt="tenphi.me"
+              width={40}
+              height={40}
+            />
           </HeaderEl.SiteName>
           <HeaderEl.NavLinks>
             <HeaderEl.NavLink href="/portfolio">Portfolio</HeaderEl.NavLink>

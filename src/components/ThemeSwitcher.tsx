@@ -58,11 +58,22 @@ export default function ThemeSwitcher() {
   return (
     <ThemeSwitcherEl role="radiogroup" aria-label="Color theme">
       <ThemeSwitcherEl.Option aria-label="System theme">
-        <input type="radio" name="theme" value="system" aria-label="System theme" defaultChecked />
+        <input
+          type="radio"
+          name="theme"
+          value="system"
+          aria-label="System theme"
+          defaultChecked
+        />
         <IconDeviceDesktop size={16} stroke={2} aria-hidden="true" />
       </ThemeSwitcherEl.Option>
       <ThemeSwitcherEl.Option aria-label="Light theme">
-        <input type="radio" name="theme" value="light" aria-label="Light theme" />
+        <input
+          type="radio"
+          name="theme"
+          value="light"
+          aria-label="Light theme"
+        />
         <IconSun size={16} stroke={2} aria-hidden="true" />
       </ThemeSwitcherEl.Option>
       <ThemeSwitcherEl.Option aria-label="Dark theme">

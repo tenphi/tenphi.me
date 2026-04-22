@@ -119,13 +119,15 @@ const jsonLd = {
           <span>{readTime}</span>
         </MetaBar>
         <Heading>{post.data.title}</Heading>
-        {post.data.tags?.length > 0 && (
-          <TagsBar>
-            {post.data.tags.map((tag: string) => (
-              <Tag>{tag}</Tag>
-            ))}
-          </TagsBar>
-        )}
+        {
+          post.data.tags?.length > 0 && (
+            <TagsBar>
+              {post.data.tags.map((tag: string) => (
+                <Tag>{tag}</Tag>
+              ))}
+            </TagsBar>
+          )
+        }
         <ArticleContent>
           <Content />
         </ArticleContent>

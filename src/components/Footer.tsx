@@ -16,9 +16,7 @@ const FooterEl = tasty({
 export default function Footer() {
   return (
     <Container>
-      <FooterEl>
-        &copy; 2026 Andrey Yamanov
-      </FooterEl>
+      <FooterEl>&copy; 2026 Andrey Yamanov</FooterEl>
     </Container>
   );
 }
