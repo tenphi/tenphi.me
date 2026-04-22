@@ -134,7 +134,7 @@ const ArticleContent = tasty({
       transform: 'rotate(135deg)',
     },
     Code: {
-      $: 'p > code',
+      $: 'p > code, li > code',
       preset: 'code',
       fill: '#surface',
       padding: '0.15em 0.4em',
