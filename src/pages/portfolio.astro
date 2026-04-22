@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Container from '../components/ui/Container';
 import Stack from '../components/ui/Stack';
 import ProjectCard from '../components/ProjectCard';
+import Tag from '../components/ui/Tag';
 import { tasty } from '@tenphi/tasty';
 
 const Heading = tasty({
@@ -41,11 +42,25 @@ const Grid = tasty({
     gap: '3x',
   },
 });
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Portfolio — Andrey Yamanov',
+  description:
+    'Projects by Andrey Yamanov — Tasty ecosystem, open-source tools, and product work.',
+  url: 'https://tenphi.me/portfolio',
+  author: {
+    '@type': 'Person',
+    name: 'Andrey Yamanov',
+    url: 'https://tenphi.me',
+  },
+};
 ---
 
 <BaseLayout
   title="Portfolio"
   description="Projects by Andrey Yamanov — Tasty ecosystem, open-source tools, and product work."
+  jsonLd={jsonLd}
 >
   <Container>
     <Stack gap="6x" padding="4x 0 8x">
@@ -64,9 +79,9 @@ const Grid = tasty({
               optional zero-runtime extraction via Babel.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>React</ProjectCard.Tag>
-              <ProjectCard.Tag>TypeScript</ProjectCard.Tag>
-              <ProjectCard.Tag>CSS-in-JS</ProjectCard.Tag>
+              <Tag>React</Tag>
+              <Tag>TypeScript</Tag>
+              <Tag>CSS-in-JS</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
 
@@ -79,9 +94,9 @@ const Grid = tasty({
               dependencies. Generates light, dark, and high-contrast schemes.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>OKHSL</ProjectCard.Tag>
-              <ProjectCard.Tag>WCAG</ProjectCard.Tag>
-              <ProjectCard.Tag>Color</ProjectCard.Tag>
+              <Tag>OKHSL</Tag>
+              <Tag>WCAG</Tag>
+              <Tag>Color</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
 
@@ -96,8 +111,8 @@ const Grid = tasty({
               objects — tokens, states, presets, and property names.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>ESLint</ProjectCard.Tag>
-              <ProjectCard.Tag>DX</ProjectCard.Tag>
+              <Tag>ESLint</Tag>
+              <Tag>DX</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
 
@@ -111,8 +126,8 @@ const Grid = tasty({
               VS Code syntax highlighting for Tasty DSL inside style objects.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>VS Code</ProjectCard.Tag>
-              <ProjectCard.Tag>DX</ProjectCard.Tag>
+              <Tag>VS Code</Tag>
+              <Tag>DX</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
 
@@ -125,8 +140,8 @@ const Grid = tasty({
               the Tasty ecosystem.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>Next.js</ProjectCard.Tag>
-              <ProjectCard.Tag>WebContainers</ProjectCard.Tag>
+              <Tag>Next.js</Tag>
+              <Tag>WebContainers</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
         </Grid>
@@ -144,8 +159,8 @@ const Grid = tasty({
               frontend development.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>React</ProjectCard.Tag>
-              <ProjectCard.Tag>UI/UX</ProjectCard.Tag>
+              <Tag>React</Tag>
+              <Tag>UI/UX</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
 
@@ -160,9 +175,9 @@ const Grid = tasty({
               generator.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>React</ProjectCard.Tag>
-              <ProjectCard.Tag>React Aria</ProjectCard.Tag>
-              <ProjectCard.Tag>Design System</ProjectCard.Tag>
+              <Tag>React</Tag>
+              <Tag>React Aria</Tag>
+              <Tag>Design System</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
 
@@ -175,8 +190,8 @@ const Grid = tasty({
               development.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>React</ProjectCard.Tag>
-              <ProjectCard.Tag>Full-stack</ProjectCard.Tag>
+              <Tag>React</Tag>
+              <Tag>Full-stack</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
 
@@ -189,8 +204,8 @@ const Grid = tasty({
               frontend.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>Vue</ProjectCard.Tag>
-              <ProjectCard.Tag>UI/UX</ProjectCard.Tag>
+              <Tag>Vue</Tag>
+              <Tag>UI/UX</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
 
@@ -203,9 +218,9 @@ const Grid = tasty({
               Numl.Design project.
             </ProjectCard.Description>
             <ProjectCard.Tags>
-              <ProjectCard.Tag>Vue</ProjectCard.Tag>
-              <ProjectCard.Tag>Nuxt.js</ProjectCard.Tag>
-              <ProjectCard.Tag>UI/UX</ProjectCard.Tag>
+              <Tag>Vue</Tag>
+              <Tag>Nuxt.js</Tag>
+              <Tag>UI/UX</Tag>
             </ProjectCard.Tags>
           </ProjectCard>
         </Grid>

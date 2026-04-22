@@ -4,6 +4,17 @@ export default function GlobalStyles() {
   useRawCSS(`
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     img { max-width: 100%; height: auto; display: block; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   `);
 
   useGlobalStyles('html', {
@@ -17,25 +28,6 @@ export default function GlobalStyles() {
   useGlobalStyles('body', {
     preset: 't2',
     margin: '0',
-    padding: '0',
-  });
-
-  useGlobalStyles('code', {
-    preset: 'code',
-    fill: '#surface-2',
-    padding: '0.15em 0.4em',
-    radius: '.5r',
-  });
-
-  useGlobalStyles('pre', {
-    fill: '#surface-2',
-    padding: '2x',
-    radius: '1r',
-    overflow: 'auto',
-  });
-
-  useGlobalStyles('pre code', {
-    fill: 'transparent',
     padding: '0',
   });
 

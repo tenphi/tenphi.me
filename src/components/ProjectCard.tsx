@@ -6,8 +6,8 @@ const ProjectCard = tasty({
     display: 'flex',
     flow: 'column',
     gap: '1x',
-    padding: '3x',
-    radius: '1r',
+    padding: '2.5x',
+    radius: '1cr',
     border: true,
 
     Title: {
@@ -31,17 +31,11 @@ const ProjectCard = tasty({
       flexWrap: 'wrap',
       padding: '.5x 0 0',
     },
-    Tag: {
-      preset: 'label',
-      color: '#text-soft',
-      textTransform: 'uppercase',
-    },
   },
   elements: {
     Title: 'a',
     Description: 'p',
     Tags: 'div',
-    Tag: 'span',
   },
 });
 

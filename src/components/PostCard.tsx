@@ -1,4 +1,5 @@
 import { tasty } from '@tenphi/tasty';
+import Tag from './ui/Tag';
 
 const PostCard = tasty({
   as: 'article',
@@ -17,7 +18,11 @@ const PostCard = tasty({
       transition: 'color 0.15s',
     },
     Meta: {
-      preset: 't3',
+      display: 'flex',
+      flow: 'row',
+      gap: '1x',
+      alignItems: 'center',
+      preset: 'overline',
       color: '#text-soft',
     },
     Description: {
@@ -25,11 +30,18 @@ const PostCard = tasty({
       color: '#text-soft',
       margin: '0',
     },
+    Tags: {
+      display: 'flex',
+      flow: 'row',
+      gap: '1x',
+      flexWrap: 'wrap',
+    },
   },
   elements: {
     Title: 'a',
-    Meta: 'time',
+    Meta: 'div',
     Description: 'p',
+    Tags: 'div',
   },
 });
 
@@ -46,6 +58,8 @@ interface PostCardProps {
   date: Date;
   description: string;
   slug: string;
+  readTime?: string;
+  tags?: string[];
 }
 
 export default function PostCardView({
@@ -53,14 +67,31 @@ export default function PostCardView({
   date,
   description,
   slug,
+  readTime,
+  tags,
 }: PostCardProps) {
   return (
     <PostCard>
-      <PostCard.Title href={`/blog/${slug}`}>{title}</PostCard.Title>
-      <PostCard.Meta dateTime={date.toISOString().split('T')[0]}>
-        {formatDate(date)}
+      <PostCard.Meta>
+        <time dateTime={date.toISOString().split('T')[0]}>
+          {formatDate(date)}
+        </time>
+        {readTime && (
+          <>
+            <span>&middot;</span>
+            <span>{readTime}</span>
+          </>
+        )}
       </PostCard.Meta>
+      <PostCard.Title href={`/blog/${slug}`}>{title}</PostCard.Title>
       <PostCard.Description>{description}</PostCard.Description>
+      {tags && tags.length > 0 && (
+        <PostCard.Tags>
+          {tags.map((tag) => (
+            <Tag key={tag}>{tag}</Tag>
+          ))}
+        </PostCard.Tags>
+      )}
     </PostCard>
   );
 }

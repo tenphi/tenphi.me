@@ -1,11 +1,44 @@
 import { tasty } from '@tenphi/tasty';
 import Container from './ui/Container';
+import ThemeSwitcher from './ThemeSwitcher';
+
+const StickyContainer = tasty(Container, {
+  styles: {
+    position: 'sticky',
+    inset: '0 top',
+    zIndex: 100,
+    padding: {
+      '': '2x 0',
+      '@mobile': '1x 0',
+    },
+    width: {
+      '': 'initial (100dvw - 2x) ($max-width + 2x)',
+      '@tablet': 'initial (100dvw - 4x) ($max-width + 2x)',
+    },
+  },
+});
 
 const HeaderEl = tasty({
   as: 'header',
   styles: {
-    padding: '3x 0',
+    position: 'relative',
+    radius: '1cr',
+    padding: '1.5x',
+    shadow: '0 .5x 1x #shadow',
+    fill: '#surface.5',
+    image: 'linear-gradient(to bottom, #surface.75, #surface-down.1)',
+    backdropFilter: 'blur(1x)',
 
+    Border: {
+      $: '&::before',
+      content: '""',
+      radius: '1cr',
+      border: '#surface.5',
+      position: 'absolute',
+      inset: 0,
+      pointerEvents: 'none',
+    },
+    
     Nav: {
       display: 'flex',
       flow: 'row',
@@ -13,10 +46,15 @@ const HeaderEl = tasty({
       alignItems: 'center',
     },
     SiteName: {
-      preset: 't1',
-      fontWeight: '700',
-      color: '#text',
+      display: 'flex',
+      alignItems: 'center',
       textDecoration: 'none',
+    },
+    Avatar: {
+      display: 'block',
+      width: '5x',
+      height: '5x',
+      margin: '-1x 0',
     },
     NavLinks: {
       display: 'flex',
@@ -37,6 +75,7 @@ const HeaderEl = tasty({
   elements: {
     Nav: 'nav',
     SiteName: 'a',
+    Avatar: 'img',
     NavLinks: 'div',
     NavLink: 'a',
   },
@@ -44,16 +83,19 @@ const HeaderEl = tasty({
 
 export default function Header() {
   return (
-    <HeaderEl>
-      <Container>
+    <StickyContainer>
+      <HeaderEl>
         <HeaderEl.Nav>
-          <HeaderEl.SiteName href="/">tenphi.me</HeaderEl.SiteName>
+          <HeaderEl.SiteName href="/">
+            <HeaderEl.Avatar src="/avatar-face.svg" alt="tenphi.me" width={40} height={40} />
+          </HeaderEl.SiteName>
           <HeaderEl.NavLinks>
             <HeaderEl.NavLink href="/portfolio">Portfolio</HeaderEl.NavLink>
             <HeaderEl.NavLink href="/blog">Blog</HeaderEl.NavLink>
+            <ThemeSwitcher />
           </HeaderEl.NavLinks>
         </HeaderEl.Nav>
-      </Container>
-    </HeaderEl>
+      </HeaderEl>
+    </StickyContainer>
   );
 }

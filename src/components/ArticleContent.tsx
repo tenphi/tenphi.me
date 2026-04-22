@@ -84,6 +84,62 @@ const ArticleContent = tasty({
         '@own(:last-child)': '3x 0 0',
       },
     },
+
+    Img: {
+      $: 'img',
+      maxWidth: '100%',
+      height: 'auto',
+    },
+    Code: {
+      $: 'code',
+      preset: 'code',
+      fill: '#surface-2',
+      padding: '0.15em 0.4em',
+      radius: '.5r',
+    },
+    Pre: {
+      $: 'pre',
+      fill: '#syntax-bg',
+      color: '#syntax-text',
+      padding: '1x 2x',
+      radius: '1r',
+      overflow: 'auto',
+      preset: 'code',
+      border: true,
+      scrollbar: 'thin',
+      margin: {
+        '': '0 0 2x',
+        '@own(:last-child)': '0',
+      },
+    },
+    PreCode: {
+      $: 'pre code',
+      fill: 'transparent',
+      padding: '0',
+      whiteSpace: 'pre',
+    },
+    Table: {
+      $: 'table',
+      width: '100%',
+      borderCollapse: 'collapse',
+      margin: {
+        '': '0 0 2x',
+        '@own(:last-child)': '0',
+      },
+      preset: 'code',
+    },
+    Th: {
+      $: 'th',
+      textAlign: 'left',
+      padding: '1x 2x',
+      border: 'bottom 2bw',
+      fontWeight: 600,
+    },
+    Td: {
+      $: 'td',
+      padding: '1x 2x',
+      border: 'bottom',
+    },
   },
 });
 

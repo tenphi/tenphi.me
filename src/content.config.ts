@@ -8,6 +8,7 @@ const blog = defineCollection({
     description: z.string(),
     date: z.date(),
     draft: z.boolean().default(false),
+    tags: z.array(z.string()).default([]),
   }),
 });
 

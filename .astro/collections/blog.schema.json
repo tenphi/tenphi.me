@@ -16,6 +16,13 @@
       "default": false,
       "type": "boolean"
     },
+    "tags": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "$schema": {
       "type": "string"
     }

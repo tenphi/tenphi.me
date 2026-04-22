@@ -6,12 +6,13 @@ import Stack from '../../components/ui/Stack';
 import PostCard from '../../components/PostCard';
 import PostList from '../../components/PostList';
 import { tasty } from '@tenphi/tasty';
+import readingTime from 'reading-time';
 
 const Heading = tasty({
   as: 'h1',
   styles: {
     preset: 'h1',
-    color: '#text',
+    color: '#text-soft',
     margin: '0',
   },
 });
@@ -19,11 +20,33 @@ const Heading = tasty({
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'Andrey Yamanov — Blog',
+  description:
+    'Blog posts about frontend engineering, design systems, and developer tools.',
+  url: 'https://tenphi.me/blog',
+  author: {
+    '@type': 'Person',
+    name: 'Andrey Yamanov',
+    url: 'https://tenphi.me',
+  },
+  blogPost: posts.map((post) => ({
+    '@type': 'BlogPosting',
+    headline: post.data.title,
+    description: post.data.description,
+    datePublished: post.data.date.toISOString().split('T')[0],
+    url: `https://tenphi.me/blog/${post.id}/`,
+  })),
+};
 ---
 
 <BaseLayout
   title="Blog"
   description="Blog posts by Andrey Yamanov about frontend engineering, design systems, and developer tools."
+  jsonLd={jsonLd}
 >
   <Container>
     <Stack gap="5x" padding="4x 0 8x">
@@ -36,6 +59,8 @@ const posts = (await getCollection('blog'))
               date={post.data.date}
               description={post.data.description}
               slug={post.id}
+              readTime={readingTime(post.body ?? '').text}
+              tags={post.data.tags}
             />
           ))
         }
