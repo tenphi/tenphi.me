@@ -194,7 +194,7 @@ If you do try it, I would genuinely love feedback. The most useful feedback is r
 - where the docs skipped a mental step
 - where the abstraction solved a real problem, or failed to
 
-That kind of feedback has shaped the project from the beginning, and it still does.
+That kind of feedback has shaped the project from the beginning, and it still does. If something feels confusing, awkward, or missing, the best place to share it is [GitHub Issues](https://github.com/tenphi/tasty/issues).
 
 If you made it all the way to the end, thank you for reading. This one means a lot to me, because it is really about a problem I spent years trying to solve.
 
