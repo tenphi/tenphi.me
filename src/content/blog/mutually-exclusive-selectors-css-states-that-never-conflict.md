@@ -334,6 +334,8 @@ No config file. No build plugin. Just React.
 
 **Try it now** — the [playground](https://tasty.style/playground) runs in your browser, no install needed.
 
-If Tasty resonates with you, a [star on GitHub](https://github.com/tenphi/tasty) helps more than you'd think.
+If you try Tasty, I'd love to hear what clicked, what felt awkward, and where the docs or examples fell short. That kind of feedback directly shapes what I build next — closing documentation gaps, writing better tutorials, and adding more useful examples.
+
+If Tasty resonates with you, a [star on GitHub](https://github.com/tenphi/tasty) also helps more than you'd think.
 
 **Links**: [Docs](https://tasty.style) | [GitHub](https://github.com/tenphi/tasty) | [npm](https://www.npmjs.com/package/@tenphi/tasty)
