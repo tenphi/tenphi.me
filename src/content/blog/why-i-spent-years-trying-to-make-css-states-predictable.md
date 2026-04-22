@@ -92,7 +92,7 @@ I wanted a model where adding a new state did not mean mentally re-deriving the 
 
 The core idea is simple. Turning it into a real tool was the hard part.
 
-Getting from "this works for a few pseudo-classes" to "this can support real-world component systems" took several years and hundreds of iterations.
+Getting from "this works for simple state conditions" to "this can support real-world component systems" took several years and hundreds of iterations.
 
 The hard part was never producing one clever selector. The hard part was building a system that stayed coherent when all of these showed up together:
 
