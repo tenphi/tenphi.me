@@ -164,9 +164,7 @@ const Panel = tasty({
 
 This is the point where I find the model becomes more useful than ordinary selector authoring.
 
-The component is not special because it does something impossible in CSS. It is special because the author can describe intersecting concerns at a higher level, and the compiler takes responsibility for producing selectors that resolve those concerns consistently.
-
-That is the boundary I wanted from the beginning.
+Three properties, each with a different set of concerns — media queries, container queries, modifiers, root state, pseudo-classes — and the author never has to think about how they interact with each other. The compiler already knows.
 
 ## What this post is, and what it is not
 
