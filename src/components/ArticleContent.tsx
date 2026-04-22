@@ -30,7 +30,7 @@ const ArticleContent = tasty({
       $: 'p',
       margin: {
         '': '0 0 2x',
-        '@own(:last-child)': '0',
+        '@own(:last-child) & !@own(:is(summary +))': '0',
       },
     },
     A: {
@@ -60,7 +60,6 @@ const ArticleContent = tasty({
     Li: {
       $: 'li',
       margin: '0 0 .5x',
-      lineHeight: '1.7',
     },
     Blockquote: {
       $: 'blockquote',
@@ -89,6 +88,50 @@ const ArticleContent = tasty({
       $: 'img',
       maxWidth: '100%',
       height: 'auto',
+    },
+    Details: {
+      $: 'details',
+      border: true,
+      radius: true,
+      padding: '1x 2x',
+      margin: {
+        '': '0 0 2x',
+        '@own(:last-child)': '0',
+      },
+    },
+    Summary: {
+      $: 'summary',
+      preset: 'bold',
+      cursor: 'pointer',
+      color: '#accent-text',
+      listStyleType: 'none',
+      display: 'flex',
+      flow: 'row',
+      gap: '1x',
+      align: 'center',
+    },
+    SummaryMarker: {
+      $: 'summary::marker',
+      display: 'none',
+    },
+    SummaryWebkitMarker: {
+      $: 'summary::-webkit-details-marker',
+      display: 'none',
+    },
+    SummaryChevron: {
+      $: 'summary::before',
+      content: '""',
+      display: 'inline-block',
+      width: '.4em',
+      height: '.4em',
+      border: '2bw solid #accent-text top right',
+      transform: 'rotate(45deg)',
+      transition: 'translate .2s',
+      flexShrink: '0',
+    },
+    SummaryChevronOpen: {
+      $: 'details[open] > summary::before',
+      transform: 'rotate(135deg)',
     },
     Code: {
       $: 'p > code',

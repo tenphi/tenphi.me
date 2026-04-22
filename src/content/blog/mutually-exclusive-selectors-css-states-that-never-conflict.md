@@ -65,15 +65,25 @@ const Button = tasty({
 
 Every rule's selector is mutually exclusive with every other. No two rules can match the same element at the same time. Zero specificity arithmetic. Zero source-order tie-breakers.
 
+On paper, that output looks straightforward. In practice, getting from simple modifiers to full modern CSS support took years.
+
+## From idea to tool
+
+Tasty started with simple string-based styles, then added boolean modifiers and static breakpoints. Getting from "works for simple cases" to "handles the full surface area of modern CSS" meant repeatedly redesigning the DSL, breaking the core model, and solving problems there was no paper or prior art for. For a long time, there was no proof the idea could even work at full scale.
+
+The browser had to catch up too. Media queries, container queries, and more complex selector patterns only became practical building blocks for this approach relatively recently.
+
 That deterministic resolution is the core idea. But Tasty is meant to be a practical design-system tool, not just a clever selector trick.
 
 ## Where Tasty fits
 
-Before diving into features, it helps to see where this sits in the landscape. Tasty isn't competing with styled-components or Emotion. It operates at a different layer — not *how you write CSS*, but **how your design system resolves state conflicts**.
+Tasty is built for long-lived component systems. If you're styling a tiny page, it may be more machinery than you need. But when components accumulate states, variants, themes, responsive behavior, and overrides, predictable resolution becomes a huge win.
 
-- **Direct styling** (Tailwind, Emotion, Stitches) — fast authoring, good DX
-- **Typed styling engines** (Panda CSS, vanilla-extract, StyleX) — structure, types, build-time CSS
-- **Design-system engines** (**Tasty**) — governed styling model, deterministic state resolution, server components without `'use client'`
+Tasty is less about changing how you write CSS and more about making component state resolution predictable as your design system grows.
+
+That also doesn't mean giving up performance or static rendering. Tasty powers my personal blog with a fully static build, and it powers the Tasty website built with Next.js. For small projects, that can be overkill. For maintainable ones, it compounds.
+
+If you're comparing it to other styling tools, here's the short version:
 
 <details>
 <summary>How does Tasty compare to Tailwind, Panda CSS, and others?</summary>
@@ -88,7 +98,7 @@ Before diving into features, it helps to see where this sits in the landscape. T
 
 ## How it works
 
-### A DSL that maps to CSS — plus tokens and design units
+### A DSL that maps to CSS — plus design tokens and syntax sugar
 
 Tasty's style language uses CSS properties you already know, plus shorthand tokens that compile to CSS custom properties:
 
