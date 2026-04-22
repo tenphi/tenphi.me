@@ -91,11 +91,12 @@ const ArticleContent = tasty({
       height: 'auto',
     },
     Code: {
-      $: 'code',
+      $: 'p > code',
       preset: 'code',
-      fill: '#surface-2',
+      fill: '#surface',
       padding: '0.15em 0.4em',
-      radius: '.5r',
+      border: true,
+      radius: true,
     },
     Pre: {
       $: 'pre',
