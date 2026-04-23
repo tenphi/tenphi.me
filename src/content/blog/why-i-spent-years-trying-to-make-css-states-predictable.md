@@ -119,6 +119,8 @@ Was it a nicer CSS object format? An atomic CSS generator? A design-system langu
 
 For a long time I honestly did not know whether the idea could scale cleanly enough to justify the effort. It worked in pockets early. Turning it into something I could trust across a design system was the long part.
 
+And this is not just an experiment in the abstract. Tasty has powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit) from the beginning, and through it [Cube Cloud](https://cube.dev/product/cube-cloud), across 100+ components in a real enterprise product. Early versions were absolutely experimental internally. But the model earned its shape under production pressure.
+
 ## The part I care about most
 
 I do not think "mutually exclusive selectors" are interesting because they are clever.
@@ -137,8 +139,6 @@ That is the payoff Tasty is chasing:
 If you are styling a small landing page, this is probably too much machinery. Plain CSS is often the right answer.
 
 But if you are building components that need to survive years of iteration, variant growth, theme expansion, and multiple authors, predictability starts compounding in a very practical way.
-
-That is not hypothetical. Tasty has powered the [UI kit at Cube](https://github.com/cube-js/cube-ui-kit) — over 100 components — and our enterprise product, [Cube Cloud](https://cube.dev/cloud), from the beginning. At the time, it was highly experimental. It is not anymore.
 
 ## A slightly bigger example
 
