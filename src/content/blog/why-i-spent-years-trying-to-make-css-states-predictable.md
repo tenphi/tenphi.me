@@ -18,6 +18,8 @@ That sounds small, but it points to a bigger problem: component state in CSS oft
 
 As long as a component has only one or two states, that overlap feels manageable. Once you add `:hover`, `:active`, `disabled`, dark mode, breakpoints, data attributes, container queries, and overrides, it stops feeling manageable very quickly. You are no longer just writing styles. You are maintaining a resolution system in your head.
 
+And that showed up not only as accidental conflicts, but as a growing difficulty in customizing existing components safely as real requirements piled up.
+
 That was the problem I kept running into while building component systems. Not on toy examples, but on real buttons, inputs, panels, dropdowns, and design-system primitives. The hardest part was not writing the first version of a component. It was extending it later without reopening the entire state-resolution problem.
 
 At some point I stopped asking, "How do I write this selector?" and started asking a better question:
@@ -119,7 +121,7 @@ Was it a nicer CSS object format? An atomic CSS generator? A design-system langu
 
 For a long time I honestly did not know whether the idea could scale cleanly enough to justify the effort. It worked in pockets early. Turning it into something I could trust across a design system was the long part.
 
-And this is not just an experiment in the abstract. Tasty has powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit) from the beginning, and through it [Cube Cloud](https://cube.dev/product/cube-cloud), across 100+ components in a real enterprise product. Early versions were absolutely experimental internally. But the model earned its shape under production pressure and team feedback.
+And this is not just an experiment in the abstract. Tasty has powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit) from the beginning. That system now spans 100+ components and powers [Cube Cloud](https://cube.dev/product/cube-cloud), a real enterprise product. Early versions were absolutely experimental internally. But the model earned its shape under production pressure and team feedback.
 
 ## The part I care about most
 
@@ -197,7 +199,5 @@ If you do try it, I would genuinely love feedback. The most useful feedback is r
 That kind of feedback has shaped the project from the beginning, and it still does. If something feels confusing, awkward, or missing, the best place to share it is [GitHub Issues](https://github.com/tenphi/tasty/issues).
 
 If you made it all the way to the end, thank you for reading. This one means a lot to me, because it is really about a problem I spent years trying to solve.
-
-If you want to follow along or kick the tires, here are the links:
 
 **Links**: [Docs](https://tasty.style) | [Playground](https://tasty.style/playground) | [GitHub](https://github.com/tenphi/tasty) | [npm](https://www.npmjs.com/package/@tenphi/tasty)
