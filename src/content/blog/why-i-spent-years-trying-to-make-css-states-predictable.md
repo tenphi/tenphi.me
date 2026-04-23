@@ -1,8 +1,8 @@
 ---
 title: "Why I spent years trying to make CSS states predictable"
 description: "Why predictable CSS state resolution matters, and how Tasty approaches it with state maps and non-overlapping selectors."
-date: 2026-04-22
-tags: ["CSS", "CSS-in-JS", "Design Systems"]
+date: 2026-04-23
+tags: ["css", "webdev", "frontend", "designsystem"]
 ---
 
 Have you ever changed the order of two CSS rules and broken a component without changing the logic?
