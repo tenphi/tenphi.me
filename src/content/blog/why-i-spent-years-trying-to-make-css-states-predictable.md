@@ -119,7 +119,7 @@ Was it a nicer CSS object format? An atomic CSS generator? A design-system langu
 
 For a long time I honestly did not know whether the idea could scale cleanly enough to justify the effort. It worked in pockets early. Turning it into something I could trust across a design system was the long part.
 
-And this is not just an experiment in the abstract. Tasty has powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit) from the beginning, and through it [Cube Cloud](https://cube.dev/product/cube-cloud), across 100+ components in a real enterprise product. Early versions were absolutely experimental internally. But the model earned its shape under production pressure.
+And this is not just an experiment in the abstract. Tasty has powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit) from the beginning, and through it [Cube Cloud](https://cube.dev/product/cube-cloud), across 100+ components in a real enterprise product. Early versions were absolutely experimental internally. But the model earned its shape under production pressure and team feedback.
 
 ## The part I care about most
 
