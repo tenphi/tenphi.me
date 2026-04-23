@@ -138,6 +138,8 @@ If you are styling a small landing page, this is probably too much machinery. Pl
 
 But if you are building components that need to survive years of iteration, variant growth, theme expansion, and multiple authors, predictability starts compounding in a very practical way.
 
+That is not hypothetical. Tasty has powered the [UI kit at Cube](https://github.com/cube-js/cube-ui-kit) — over 100 components — and our enterprise product, [Cube Cloud](https://cube.dev/cloud), from the beginning. At the time, it was highly experimental. It is not anymore.
+
 ## A slightly bigger example
 
 Here is the same idea with a few more moving parts:
