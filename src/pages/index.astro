@@ -41,6 +41,7 @@ const Hero = tasty({
     },
     gap: '4x',
     alignItems: 'center',
+    padding: '6x top',
 
     Content: {
       display: 'flex',
@@ -59,12 +60,21 @@ const Hero = tasty({
       preset: 'h1',
       color: '#text',
       margin: '0',
+      textAlign: {
+        '': 'left',
+        '@mobile': 'center',
+      },
     },
     Bio: {
       $: 'p',
       preset: 't1',
       color: '#text-soft',
       margin: '0',
+      textAlign: {
+        '': 'left',
+        '@mobile': 'center',
+      },
+      textWrap: 'balance',
     },
     Links: {
       display: 'flex',
@@ -72,6 +82,10 @@ const Hero = tasty({
       gap: '1x',
       alignItems: 'center',
       flexWrap: 'wrap',
+      justifyContent: {
+        '': 'flex-start',
+        '@mobile': 'center',
+      },
     },
   },
   elements: { Content: 'div', Avatar: 'img', Links: 'div' },
