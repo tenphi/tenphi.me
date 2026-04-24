@@ -70,7 +70,7 @@ Tasty compiles that state map into selectors that cannot overlap:
 .t0:not(:hover):not(:active):not([disabled]) { background: var(--primary-color); }
 ```
 
-Now there is no argument for the cascade to settle. No two branches can match at the same time.
+Now there is no selector conflict left for specificity or source order to settle. No two branches can match at the same time.
 
 And the real payoff comes later. Extending or changing this map is far easier than reopening the equivalent selector logic in traditional CSS.
 
