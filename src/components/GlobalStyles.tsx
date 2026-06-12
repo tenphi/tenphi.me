@@ -2,6 +2,10 @@ import { useGlobalStyles, useRawCSS } from '@tenphi/tasty';
 
 export default function GlobalStyles() {
   useRawCSS(`
+    @view-transition {
+      navigation: auto;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     img { max-width: 100%; height: auto; display: block; }
     .sr-only {
@@ -21,6 +25,8 @@ export default function GlobalStyles() {
     font: true,
     color: '#text',
     fill: '#surface',
+    containerType: 'scroll-state',
+    containerName: 'page',
     '-webkit-font-smoothing': 'antialiased',
     '-moz-osx-font-smoothing': 'grayscale',
   });

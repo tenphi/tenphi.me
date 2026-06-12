@@ -16,6 +16,7 @@ const PostCard = tasty({
       },
       textDecoration: 'none',
       transition: 'color 0.15s',
+      viewTransitionName: 'title',
     },
     Meta: {
       display: 'flex',
@@ -24,17 +25,20 @@ const PostCard = tasty({
       alignItems: 'center',
       preset: 'overline',
       color: '#text-soft',
+      viewTransitionName: 'meta',
     },
     Description: {
       preset: 't2',
       color: '#text-soft',
       margin: '0',
+      viewTransitionName: 'description',
     },
     Tags: {
       display: 'flex',
       flow: 'row',
       gap: '1x',
       flexWrap: 'wrap',
+      viewTransitionName: 'tags',
     },
   },
   elements: {

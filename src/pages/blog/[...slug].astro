@@ -27,6 +27,7 @@ const Heading = tasty({
     preset: 'h1',
     color: '#text',
     margin: '0',
+    viewTransitionName: 'title',
   },
 });
 
@@ -39,6 +40,7 @@ const MetaBar = tasty({
     alignItems: 'center',
     preset: 'overline',
     color: '#text-soft',
+    viewTransitionName: 'meta',
   },
 });
 
@@ -49,6 +51,7 @@ const TagsBar = tasty({
     flow: 'row',
     gap: '1x',
     flexWrap: 'wrap',
+    viewTransitionName: 'tags',
   },
 });
 
@@ -58,6 +61,7 @@ const Article = tasty({
     display: 'flex',
     flow: 'column',
     gap: '2x',
+    viewTransitionName: 'description',
   },
 });
 

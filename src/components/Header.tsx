@@ -5,7 +5,12 @@ import ThemeSwitcher from './ThemeSwitcher';
 const StickyContainer = tasty(Container, {
   styles: {
     position: 'sticky',
-    inset: '0 top',
+    inset: {
+      '': '0 top',
+      '@supports(container-type: scroll-state) & @(scroll-state(scrolled: block-end))':
+        '-10x top',
+    },
+    transition: 'inset .5s',
     zIndex: 100,
     padding: {
       '': '2x 0',
