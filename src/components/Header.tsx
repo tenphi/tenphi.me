@@ -6,7 +6,7 @@ const StickyContainer = tasty(Container, {
   styles: {
     position: 'sticky',
     inset: {
-      '': '0 top',
+      _: '0 top',
       '@supports(container-type: scroll-state) & @(scroll-state(scrolled: block-end))':
         '-10x top',
     },
