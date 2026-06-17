@@ -3,60 +3,60 @@ import { glaze } from '@tenphi/glaze';
 const blue = glaze(210, 70);
 
 blue.colors({
-  surface: { lightness: 100, saturation: 0.08 },
+  surface: { tone: 100, saturation: 0.08 },
   'surface-2': {
     base: 'surface',
-    lightness: '-3',
+    tone: '-4',
     saturation: 0.12,
   },
   'surface-down': {
     base: 'surface',
-    lightness: '-20',
+    tone: '-20',
     saturation: 0.12,
     mode: 'fixed',
   },
   text: {
     base: 'surface',
-    lightness: 0,
+    tone: 0,
     contrast: 'AAA',
     saturation: 0.06,
   },
   'text-soft': {
     base: 'surface',
-    lightness: 20,
+    tone: 20,
     contrast: ['AA', 'AAA'],
     saturation: 0.04,
   },
   border: {
     base: 'surface',
-    lightness: ['-12', '-22'],
+    tone: ['-12', '-22'],
     saturation: 0.3,
   },
   'accent-text': {
     base: 'surface',
-    lightness: 50,
+    tone: 50,
     contrast: ['AA', 'AAA'],
     saturation: 80,
   },
   'accent-text-2': {
     base: 'surface-2',
-    lightness: 50,
+    tone: 50,
     contrast: ['AA', 'AAA'],
     saturation: 80,
   },
   'accent-surface': {
     base: 'accent-surface-text',
-    lightness: '-48',
+    tone: '-48',
     contrast: ['AA', 7],
     saturation: 100,
     mode: 'fixed',
   },
   'accent-surface-text': {
-    lightness: 100,
+    tone: 100,
     mode: 'fixed',
   },
   'accent-surface-text-hover': {
-    lightness: 90,
+    tone: 90,
     mode: 'fixed',
   },
   shadow: {
@@ -80,10 +80,10 @@ blue.colors({
 const syntax = glaze(210, 90);
 
 syntax.colors({
-  bg: { lightness: 100, saturation: 0.1 },
+  bg: { tone: 100, saturation: 0.1 },
   text: {
     base: 'bg',
-    lightness: 0,
+    tone: 0,
     contrast: 'AAA',
     saturation: 0,
   },
