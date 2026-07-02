@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { tastyIntegration } from '@tenphi/tasty/ssr/astro';
 import { tastyCodeTheme } from './src/lib/shiki-theme';
@@ -21,5 +22,5 @@ export default defineConfig({
       langs: [tastyLang],
     },
   },
-  integrations: [react(), tastyIntegration({ islands: false }), sitemap()],
+  integrations: [react(), mdx(), tastyIntegration({ islands: false }), sitemap()],
 });

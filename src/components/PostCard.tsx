@@ -16,7 +16,6 @@ const PostCard = tasty({
       },
       textDecoration: 'none',
       transition: 'color 0.15s',
-      viewTransitionName: 'title',
     },
     Meta: {
       display: 'flex',
@@ -25,20 +24,17 @@ const PostCard = tasty({
       alignItems: 'center',
       preset: 'overline',
       color: '#text-soft',
-      viewTransitionName: 'meta',
     },
     Description: {
       preset: 't2',
       color: '#text-soft',
       margin: '0',
-      viewTransitionName: 'description',
     },
     Tags: {
       display: 'flex',
       flow: 'row',
       gap: '1x',
       flexWrap: 'wrap',
-      viewTransitionName: 'tags',
     },
   },
   elements: {
@@ -76,7 +72,7 @@ export default function PostCardView({
 }: PostCardProps) {
   return (
     <PostCard>
-      <PostCard.Meta>
+      <PostCard.Meta style={{ viewTransitionName: `meta-${slug}` }}>
         <time dateTime={date.toISOString().split('T')[0]}>
           {formatDate(date)}
         </time>
@@ -87,10 +83,19 @@ export default function PostCardView({
           </>
         )}
       </PostCard.Meta>
-      <PostCard.Title href={`/blog/${slug}`}>{title}</PostCard.Title>
-      <PostCard.Description>{description}</PostCard.Description>
+      <PostCard.Title
+        href={`/blog/${slug}`}
+        style={{ viewTransitionName: `title-${slug}` }}
+      >
+        {title}
+      </PostCard.Title>
+      <PostCard.Description
+        style={{ viewTransitionName: `description-${slug}` }}
+      >
+        {description}
+      </PostCard.Description>
       {tags && tags.length > 0 && (
-        <PostCard.Tags>
+        <PostCard.Tags style={{ viewTransitionName: `tags-${slug}` }}>
           {tags.map((tag) => (
             <Tag key={tag}>{tag}</Tag>
           ))}

@@ -1,0 +1,358 @@
+---
+import { Code } from 'astro:components';
+import { tastyCodeTheme } from '../lib/shiki-theme';
+
+export interface Props {
+  html?: string;
+  css?: string;
+  js?: string;
+  title?: string;
+  showCode?: boolean;
+}
+
+const { html = '', css = '', js = '', title, showCode = true } = Astro.props;
+
+const hasJs = js.length > 0;
+
+/** Strip common leading whitespace so MDX template-literal indent does not show in source. */
+const dedent = (code: string): string => {
+  const lines = code.replace(/\r\n/g, '\n').split('\n');
+  while (lines.length > 0 && lines[0]!.trim() === '') lines.shift();
+  while (lines.length > 0 && lines[lines.length - 1]!.trim() === '')
+    lines.pop();
+  if (lines.length === 0) return '';
+
+  const indents = lines
+    .filter((line) => line.trim().length > 0)
+    .map((line) => line.match(/^(\s*)/)?.[1]?.length ?? 0);
+  const min = Math.min(...indents);
+  if (min === 0) return lines.join('\n');
+  return lines.map((line) => line.slice(min)).join('\n');
+};
+
+const langLabel: Record<'html' | 'css' | 'js', string> = {
+  html: 'HTML',
+  css: 'CSS',
+  js: 'JS',
+};
+
+const hashStr = (s: string): string => {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  }
+  return (h >>> 0).toString(36);
+};
+
+const id = hasJs
+  ? `preview-${hashStr(html + '\0' + css + '\0' + js)}`
+  : undefined;
+
+const heightReporter = id
+  ? `
+<script>
+  (function () {
+    var id = ${JSON.stringify(id)};
+    var send = function () {
+      var h = document.documentElement.scrollHeight;
+      try { parent.postMessage({ type: 'preview:height', id: id, height: h }, '*'); } catch (e) {}
+    };
+    window.addEventListener('load', send);
+    window.addEventListener('resize', send);
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(send).observe(document.documentElement);
+    } else {
+      setTimeout(send, 60);
+    }
+  })();
+</script>`
+  : '';
+
+const previewScrollbarCss = `:where(*) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color, transparent);
+}`;
+
+const srcdoc = hasJs
+  ? `<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>${previewScrollbarCss}</style>
+<style>${css}</style>
+</head>
+<body>
+${html}
+<script>${js}<\/script>
+${heightReporter}
+</body>
+</html>`
+  : '';
+
+const srcdocAttr = JSON.stringify(srcdoc);
+
+const sources: Array<{ lang: 'html' | 'css' | 'js'; code: string }> = [];
+if (html) sources.push({ lang: 'html', code: dedent(html) });
+if (css) sources.push({ lang: 'css', code: dedent(css) });
+if (js) sources.push({ lang: 'js', code: dedent(js) });
+---
+
+<div class="preview" data-preview-id={id}>
+  <div class="preview-chrome">
+    {title && <span class="preview-title">{title}</span>}
+    {
+      !title && (
+        <span class="preview-dots" aria-hidden="true">
+          <>
+            <i />
+            <i />
+            <i />
+          </>
+        </span>
+      )
+    }
+    {hasJs && <span class="preview-tag">JS</span>}
+  </div>
+
+  <div class="preview-surface">
+    {
+      hasJs ? (
+        <iframe
+          data-preview-id={id}
+          data-preview-srcdoc={srcdocAttr}
+          sandbox="allow-scripts"
+          loading="lazy"
+          title={title ?? 'Live preview'}
+        />
+      ) : (
+        <template shadowrootmode="open">
+          <style set:html={previewScrollbarCss} />
+          {css && <style set:html={css} />}
+          <Fragment set:html={html} />
+        </template>
+      )
+    }
+  </div>
+
+  {
+    showCode && sources.length > 0 && (
+      <div class="preview-code">
+        <div class="preview-code-panels" data-expanded="false">
+          {sources.map((s) => (
+            <div class="preview-code-block">
+              <div class="preview-code-label">{langLabel[s.lang]}</div>
+              <div class="preview-code-scroll">
+                <Code
+                  code={s.code + '\n'}
+                  lang={s.lang}
+                  theme={tastyCodeTheme}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        <button type="button" class="preview-code-toggle" aria-expanded="false">
+          Show code
+        </button>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .preview {
+    display: flex;
+    flex-direction: column;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    background: var(--surface-color);
+  }
+
+  .preview-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--surface-2-color);
+    min-height: 2rem;
+  }
+
+  .preview-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-soft-color);
+    flex: 1;
+  }
+
+  .preview-dots {
+    display: inline-flex;
+    gap: 0.35rem;
+    flex: 1;
+  }
+  .preview-dots i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--border-color);
+    display: block;
+  }
+
+  .preview-tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent-text-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.1rem 0.4rem;
+  }
+
+  .preview-surface {
+    padding: 1.25rem;
+    background: var(--surface-color);
+  }
+
+  .preview :global(iframe) {
+    width: 100%;
+    border: none;
+    background: var(--surface-color);
+    display: block;
+    min-height: 2rem;
+  }
+
+  .preview-code {
+    border-top: 1px solid var(--border-color);
+  }
+
+  .preview-code-panels {
+    height: 0;
+    overflow: hidden;
+    interpolate-size: allow-keywords;
+    transition: height 0.25s ease;
+  }
+
+  .preview-code-panels[data-expanded='true'] {
+    height: auto;
+  }
+
+  .preview-code-block {
+    border-bottom: 1px solid var(--border-color);
+  }
+  .preview-code-block:last-child {
+    border-bottom: none;
+  }
+
+  .preview-code-label {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-soft-color);
+    background: var(--surface-2-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .preview-code-scroll {
+    max-height: 16rem;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-color)
+      var(--scrollbar-track-color, transparent);
+  }
+
+  .preview-code-scroll :global(.astro-code) {
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    padding: 0.75rem 1rem;
+    overflow: visible !important;
+  }
+
+  .preview-code-scroll :global(.line) {
+    line-height: 1.5;
+  }
+
+  .preview-code-toggle {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-top: 1px solid var(--border-color);
+    background: var(--surface-2-color);
+    color: var(--accent-text-color);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .preview-code-toggle:hover {
+    background: var(--surface-down-color);
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.preview-code-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const panels = btn.previousElementSibling;
+      if (!(panels instanceof HTMLElement)) return;
+
+      const expanded = panels.dataset.expanded === 'true';
+      panels.dataset.expanded = String(!expanded);
+      btn.setAttribute('aria-expanded', String(!expanded));
+      btn.textContent = expanded ? 'Show code' : 'Hide code';
+    });
+  });
+
+  const iframes = document.querySelectorAll<HTMLIFrameElement>(
+    'iframe[data-preview-srcdoc]',
+  );
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const frame = entry.target as HTMLIFrameElement;
+        try {
+          let doc = JSON.parse(frame.dataset.previewSrcdoc ?? '""');
+          const root = document.documentElement;
+          const thumb = getComputedStyle(root)
+            .getPropertyValue('--scrollbar-thumb-color')
+            .trim();
+          const track = getComputedStyle(root)
+            .getPropertyValue('--scrollbar-track-color')
+            .trim();
+          if (thumb || track) {
+            const vars = `:root {${thumb ? ` --scrollbar-thumb-color: ${thumb};` : ''}${track ? ` --scrollbar-track-color: ${track};` : ''} }`;
+            doc = doc.replace('<head>', `<head><style>${vars}</style>`);
+          }
+          frame.srcdoc = doc;
+        } catch {
+          // ignore malformed payloads
+        }
+        io.unobserve(frame);
+      }
+    },
+    { rootMargin: '200px' },
+  );
+
+  iframes.forEach((frame) => io.observe(frame));
+
+  window.addEventListener('message', (event) => {
+    const data = event.data as
+      | { type?: string; id?: string; height?: number }
+      | undefined;
+    if (!data || data.type !== 'preview:height' || !data.id) return;
+    const frame = document.querySelector<HTMLIFrameElement>(
+      `iframe[data-preview-id="${CSS.escape(data.id)}"]`,
+    );
+    if (frame && typeof data.height === 'number') {
+      frame.style.height = `${data.height}px`;
+    }
+  });
+</script>

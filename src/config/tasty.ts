@@ -90,6 +90,8 @@ configure({
     '$default-font-weight': '400',
     ...typographyTokens,
     ...colorTokens,
+    '#scrollbar-thumb': '#border',
+    '#scrollbar-track': '#border.4',
   },
   globalStyles: {
     body: {

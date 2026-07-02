@@ -1,0 +1,59 @@
+---
+title: 'Preview test'
+description: 'Scratch post to verify live code previews.'
+date: 2026-07-02
+tags: ['test']
+draft: true
+---
+
+import Preview from '../../components/Preview.astro';
+
+## HTML + CSS preview (Declarative Shadow DOM)
+
+This one ships zero client JavaScript. The design tokens below resolve through
+the shadow boundary, so it follows light/dark automatically.
+
+<Preview
+  title="Button states"
+  html={`<button class="btn">Click me</button>`}
+  css={`
+    .btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      background: var(--accent-surface-color);
+      color: var(--accent-surface-text-color);
+      font: inherit;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: var(--accent-surface-text-hover-color);
+    }
+  `}
+/>
+
+## Interactive JS preview (lazy srcdoc iframe)
+
+This one loads on scroll and runs in an isolated, null-origin sandbox.
+
+<Preview
+  title="Counter"
+  html={`<button class="counter">Clicked 0 times</button>`}
+  css={`
+    .counter {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      background: var(--surface-2-color);
+      color: var(--text-color);
+      font: inherit;
+      cursor: pointer;
+    }
+  `}
+  js={`const b = document.querySelector('.counter');
+let n = 0;
+b.addEventListener('click', () => {
+  n += 1;
+  b.textContent = 'Clicked ' + n + ' times';
+});`}
+/>

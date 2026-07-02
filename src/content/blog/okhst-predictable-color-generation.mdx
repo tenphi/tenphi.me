@@ -1,0 +1,588 @@
+---
+title: 'OKHST: predictable color generation for real interfaces'
+description: 'OKHST is a tone-based color space for generating UI palettes that behave more predictably across states, dark mode, and high contrast.'
+date: 2026-07-02
+tags: ['css', 'color', 'accessibility', 'webdev']
+draft: true
+---
+
+import Preview from '../../components/Preview.astro';
+import {
+  toneSwatchesHtml,
+  toneSwatchesCss,
+  rampHtml,
+  rampCss,
+} from './_okhst-previews';
+
+One hue should be enough to generate useful UI colors.
+
+Not a beautiful gradient. Not a decorative palette. I mean the boring parts of
+an interface: backgrounds, text, borders, hover states, selected states,
+disabled states, shadows, dark mode, and high contrast.
+
+That sounds simple until you try to make it work for every hue.
+
+Regular HSL is easy to author, but it is visually unreliable: its lightness is
+uneven across hues, and changing lightness can shift the perceived saturation
+too. OKLCH is much better color science, but raw chroma is not a friendly way to
+generate UI saturation. OKHSL gets much closer to what I wanted, but it still
+has one problem for interface work:
+
+**lightness is not contrast.**
+
+That is why I made OKHST: a color space for generating UI palettes that behave
+more predictably. Instead of asking authors to tune lightness by eye, OKHST
+gives them a **tone** axis where numeric changes map more consistently to
+visible contrast, state changes, and light/dark relationships.
+
+It makes palette authoring less magical. Humans can produce better palettes
+with fewer iterations, and AI can follow a clear methodology instead of
+guessing token values by trial and error.
+
+## The Old Attempt
+
+About seven years ago, I tried to make UI color generation happen at runtime.
+
+The idea was simple: instead of hand-picking every token in a design system, the
+framework should generate useful colors from a smaller set of inputs. Give it a
+hue and saturation, then derive the rest: text, surfaces, borders, accents,
+states, dark mode, and contrast variants.
+
+This became possible because I found [HSLuv](https://www.hsluv.org/).
+
+HSLuv gave me something regular HSL did not: a perceptually useful lightness
+axis. In regular HSL, `50%` lightness can mean wildly different things for
+yellow, blue, red, and green. HSLuv made "make this lighter" and "make this
+darker" much closer to operations a UI system could rely on.
+
+I spent months tuning formulas around it. Eventually the result was good enough
+for production use. It was one of the most fun things I had built at the time,
+because every change was visible immediately.
+
+The old demo is still online: [theme.tenphi.me](https://theme.tenphi.me)
+
+{/* TODO: screenshot — old HSLuv demo at theme.tenphi.me (not final) */}
+
+But the system had limits.
+
+It was deeply coupled to one design system. It was integrated into the framework
+we used. The formulas were tuned for one product. HSLuv itself was also still an
+immature color space, and I had to work around inconsistencies locally.
+
+So even though the idea worked, it did not become a reusable tool. I kept using
+HSLuv in projects but stopped shipping generated palettes, though I never
+stopped thinking that UI colors should be computable.
+
+## The Web Caught Up
+
+The interesting part is that the web changed.
+
+Today we have OKLCH in CSS. That is a huge step forward. It gives the platform a
+modern perceptual color space, and it makes many color operations more sensible
+than HSL ever could.
+
+But OKLCH is still hard to use directly as a UI palette generator.
+
+**The issue is chroma.**
+
+In OKLCH, `C` is absolute chroma. It is not the same thing as the kind of
+"saturation" control people expect when they author UI colors. The maximum
+possible chroma changes depending on hue and lightness. If you keep chroma fixed
+while changing lightness, some colors can leave the sRGB gamut and get clipped.
+
+```css
+/* Same chroma, different lightness.
+   Some hue/lightness combinations may clip in sRGB. */
+.step-1 {
+  color: oklch(35% 0.18 250);
+}
+.step-2 {
+  color: oklch(65% 0.18 250);
+}
+.step-3 {
+  color: oklch(85% 0.18 250);
+}
+```
+
+This is manageable if you are ready to define dozens of colors manually. You can
+pick every value by eye and adjust the outliers.
+
+The problem appears when colors need to be related to each other, like in a
+dynamic theming system. If a background, text color, border, shadow, and hover
+state are all derived from one source color, clipping silently changes the
+relationship you were trying to preserve. A generated ramp can look fine in the
+middle and fall apart near the edges.
+
+Modern CSS makes this very tempting:
+
+```css
+.card {
+  --bg: oklch(65% 0.18 250);
+
+  background: var(--bg);
+  color: oklch(from var(--bg) 25% c h);
+  border-color: oklch(from var(--bg) calc(l - 0.12) c h);
+}
+```
+
+This is elegant. The border and text are clearly related to the background. But
+the same absolute chroma is being carried into new lightness values, and that is
+where generated UI relationships can start to drift or clip.
+
+This is why OKHSL is interesting.
+
+OKHSL gives you a familiar shape: hue, saturation, lightness. But unlike HSL, it
+is built on better OKLab/OKLCH math. Its most important feature for UI
+generation is that saturation is normalized against what is possible for the
+current hue and lightness.
+
+Near white and black, where highly saturated colors cannot physically exist in
+sRGB, OKHSL desaturates gracefully instead of clipping unpredictably.
+
+**That behavior is exactly what a UI palette needs.**
+
+```ts
+// Same saturation, different lightness — OKHSL keeps it in-gamut.
+okhsl({ h: 250, s: 70, l: 20 });
+okhsl({ h: 250, s: 70, l: 50 });
+okhsl({ h: 250, s: 70, l: 90 });
+```
+
+In OKHSL, `70%` saturation means something like:
+
+> Use 70% of the chroma available for this hue and lightness.
+
+That is much better for generated UI colors than:
+
+> Use this absolute chroma value and hope it still fits.
+
+## Why sRGB Is Fine For Core UI
+
+OKHSL is limited to sRGB, and that may sound less exciting in a world of
+wide-gamut displays.
+
+For core UI, I think that limitation is often a feature.
+
+Dense interface colors need to be predictable, calm, and readable. Text and
+background pairs are mostly about luminance contrast. Extra chroma does not
+automatically make text more readable.
+
+In fact, very saturated UI colors can be uncomfortable. Like extremely high
+contrast, extremely high saturation can be tiring or even painful for some
+people. Highly saturated text, icons, and borders can feel loud or vibrating,
+especially when they are small and repeated across an interface.
+
+Wide-gamut color is great for illustration, charts, brand moments, and
+decoration. I am not arguing against it.
+
+I am arguing that core UI tokens need a conservative default. For buttons,
+surfaces, borders, text, and controls, predictable in-gamut relationships matter
+more than maximum chroma.
+
+## The Bug In My Mental Model
+
+OKHSL got me much closer to the color system I wanted.
+
+But after using it for real UI generation, something still felt off.
+
+At first, the problem showed up in dark mode. I could invert colors, and the
+result was technically coherent, but the contrast felt weaker than expected. I
+fixed that with a separate dark-mode transformation curve.
+
+Then I noticed the same issue elsewhere: very dark colors in a light scheme also
+did not move the way I expected.
+
+That was the clue.
+
+**The problem was not dark mode. The problem was the axis.**
+
+**I was using lightness as if it were contrast.**
+
+```ts
+// Nice idea, weak invariant:
+const dark = { ...light, l: 100 - light.l };
+```
+
+Perceptual lightness is useful. It helps colors feel evenly light or dark. But
+UI contrast is about relationships between colors. Equal lightness changes do
+not produce equal contrast changes across the whole range.
+
+A simple way to see it is to compare a tiny step near black with the same tiny
+step near white.
+
+```txt
+Near black: l = 0, 1, 2, 3, 4
+Near white: l = 96, 97, 98, 99, 100
+```
+
+The numeric movement is the same. The contrast between adjacent steps is not.
+
+<Preview
+  title="Equal lightness steps ≠ equal contrast steps"
+  html={`<div class="ramps">
+  <div class="row row--dark">
+    <span class="row-label">Near black</span>
+    <div class="steps">
+      <div class="step" style="background:oklch(0% 0 0)"></div>
+      <div class="step" style="background:oklch(1% 0 0)"></div>
+      <div class="step" style="background:oklch(2% 0 0)"></div>
+      <div class="step" style="background:oklch(3% 0 0)"></div>
+      <div class="step" style="background:oklch(4% 0 0)"></div>
+    </div>
+  </div>
+  <div class="row row--light">
+    <span class="row-label">Near white</span>
+    <div class="steps">
+      <div class="step" style="background:oklch(96% 0 0)"></div>
+      <div class="step" style="background:oklch(97% 0 0)"></div>
+      <div class="step" style="background:oklch(98% 0 0)"></div>
+      <div class="step" style="background:oklch(99% 0 0)"></div>
+      <div class="step" style="background:oklch(100% 0 0)"></div>
+    </div>
+  </div>
+</div>`}
+  css={`
+    html {
+      color-scheme: light;
+    }
+    body {
+      margin: 0;
+    }
+    .ramps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 5rem minmax(0, 1fr);
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+      padding: 1rem 1.25rem;
+    }
+    .row--dark {
+      background: #000;
+    }
+    .row--light {
+      background: #fff;
+    }
+    .row-label {
+      font:
+        500 0.75rem/1 ui-monospace,
+        monospace;
+    }
+    .row--dark .row-label {
+      color: rgba(255, 255, 255, 0.72);
+    }
+    .row--light .row-label {
+      color: rgba(0, 0, 0, 0.55);
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.35rem;
+      min-width: 0;
+    }
+    .step {
+      height: 2.75rem;
+      border-radius: 4px;
+    }
+    .row--dark .step {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .row--light .step {
+      border: 1px solid rgba(0, 0, 0, 0.12);
+    }
+  `}
+/>
+
+Near black, two neighboring steps barely separate. Near white, the same gap
+reads as a clear jump. Equal lightness steps do not produce equal contrast
+steps, and that makes lightness a poor authoring axis for things like borders,
+hover states, shadows, and dark-mode inversion.
+
+I wanted an axis where a numeric step meant something more stable for UI.
+
+**That axis became tone.**
+
+## OKHST
+
+OKHST keeps the useful parts of OKHSL: hue and saturation.
+
+It replaces lightness with **tone**.
+
+Tone is based on a logarithmic luminance transfer, shaped around the same `0.05`
+offset used in the WCAG contrast formula.
+
+```txt
+WCAG contrast uses Y + 0.05.
+OKHST tone is a normalized logarithm of Y + 0.05.
+```
+
+That small connection is the whole trick. For neutral colors, equal tone steps
+correspond to much more even contrast progression. For chromatic colors, it is
+not perfect, because hue and saturation still affect final rendered luminance.
+But as an authoring axis, it behaves much better than lightness for UI work.
+
+For neutral colors the effect is concrete — contrast against both black and
+white, stepping by `+20` tone:
+
+| Tone | vs black | vs white | +20 step × |
+| ---: | -------: | -------: | ---------: |
+|    0 |        1 |       21 |       1.84 |
+|   20 |     1.84 |       11 |       1.84 |
+|   40 |     3.38 |     6.21 |       1.84 |
+|   60 |     6.21 |     3.38 |       1.84 |
+|   80 |       11 |     1.84 |       1.84 |
+|  100 |       21 |        1 |          — |
+
+Each `+20` tone step multiplies contrast by roughly the same factor — about
+`1.84x`. That is the property plain lightness does not have.
+
+<Preview
+  title="Tone ramp — each +20 step multiplies contrast by ~1.84×"
+  html={toneSwatchesHtml}
+  css={toneSwatchesCss}
+  showCode={false}
+/>
+
+The mental model becomes simple:
+
+```ts
+const primary = okhst({ h: 250, s: 70, t: 62 });
+const hover = okhst({ h: 250, s: 70, t: 56 });
+const darkPrimary = okhst({ h: 250, s: 70, t: 38 }); // 100 - 62
+```
+
+Tone movement can describe tints, shades, borders, shadows, and state changes.
+Dark mode can start from one rule:
+
+```txt
+dark tone = 100 - light tone
+```
+
+That does not mean OKHST magically guarantees accessibility. _It does not._ A
+given tone maps to the same OKHSL lightness for every hue and saturation — a
+red, a blue, and a gray at the same tone share a lightness — but the
+uniformity is in lightness, not luminance. Once saturation enters, rendered
+sRGB luminance drifts, so measured contrast can move away from the neutral
+prediction. If you need a contrast floor, you still need to measure WCAG or
+APCA against the final rendered color.
+
+But the search space is better. The numbers are more obvious. A methodology can
+say "move tone by this much" and get a result that is much easier to predict.
+
+That matters for humans, and it matters even more for AI-assisted UI generation.
+If the axes are predictable, an AI can follow rules instead of hallucinating a
+random palette and hoping it looks right.
+
+OKHST is not a universal color science breakthrough. It is a practical
+coordinate system for generating UI palettes.
+
+The full specification is here: [github.com/tenphi/okhst](https://github.com/tenphi/okhst)
+
+## Scheme Mapping
+
+OKHST gives us the primitive:
+
+```txt
+hue, saturation, tone
+```
+
+But real interfaces need one more layer.
+
+In a light scheme, I usually do not want the full `0-100` tone range. Pure black
+or near-black UI colors can create unnecessary harshness. A practical light
+scheme can map authored tones into something like `10-100`.
+
+In a dark scheme, the problem flips. Very black surfaces and pure white text can
+be tiring. Dark UI often feels better when it avoids both extremes, so a
+practical dark scheme can invert tone and map it into something like `15-95`.
+
+High contrast is different. There, the goal is maximum separation, so it should
+usually use the full `0-100` range.
+
+**This mapping is not part of OKHST itself. It is UI logic layered on top.**
+
+But it is important UI logic.
+
+It means dark mode and high contrast can become parameter changes instead of
+separate hand-authored palettes. The same authored tones can be remapped for the
+target scheme.
+
+Tone flipping also needs to be local. Not every color region should invert in
+dark mode. An accent area may need to keep its direction stable while the
+surrounding chrome is dark-mapped.
+
+That distinction becomes especially clear in the CSS playground I've built.
+
+## The Pure-CSS Experiment
+
+Once OKHST was small enough to explain, I wanted to see if it could be expressed
+without a JavaScript library.
+
+Modern Chromium-based browsers are starting to support CSS `@function`. That
+means CSS can define custom functions with real calculations inside them.
+
+So I tried the _obvious unreasonable thing_:
+
+> Can OKHSL and OKHST conversion run directly in CSS?
+
+It turns out, yes. The functions port OKHSL's gamut-normalized saturation and
+emit a standard `oklch()` color, so nothing needs a JavaScript runtime.
+
+I built a playground here: [tenphi.github.io/okhst](https://tenphi.github.io/okhst/)
+
+{/* TODO: screenshot — OKHST playground at tenphi.github.io/okhst (not final) */}
+
+The playground has two functions:
+
+```css
+/* Raw OKHST primitive: direct hue/saturation/tone conversion. */
+--raw-color: --okhst(var(--seed-h), var(--seed-s), 62);
+
+/* UI helper: maps tone into the active scheme before resolving OKHST. */
+--ui-color: --ghst(var(--seed-h), var(--seed-s), 62);
+```
+
+`--okhst()` is the color-space primitive.
+
+`--ghst()` is the practical helper. It applies the current tone window and
+optional tone flipping, then calls `--okhst()`.
+
+The fun part is that the whole playground UI is themed this way. Changing the
+hue, saturation, scheme, or tone window does not only change the swatch ramp. It
+changes the interface around it.
+
+The chrome colors are generated from the same seed:
+
+```css
+:root {
+  --seed-h: 250;
+  --seed-s: 70;
+
+  --c-surface: --ghst(var(--seed-h), 4, 100);
+  --c-elev: --ghst(var(--seed-h), 5, 96);
+  --c-border: --ghst(var(--seed-h), 4, 86);
+  --c-text: --ghst(var(--seed-h), 2, 6);
+  --c-muted: --ghst(var(--seed-h), 2, 38);
+  --c-accent: --ghst(var(--seed-h), var(--seed-s), 58);
+}
+```
+
+One note on units: saturation and tone are both `0-100` here, matching the
+percent form. Hue is degrees, and low saturations like `4` are nearly neutral.
+
+The scheme mapping is just variables:
+
+```css
+:root {
+  --tone-lo: 10;
+  --tone-hi: 100;
+  --tone-flip: 0;
+}
+
+html.dark {
+  --tone-lo: 15;
+  --tone-hi: 95;
+  --tone-flip: 1;
+}
+
+html.high-contrast {
+  /* --tone-flip is inherited from the active light/dark scheme. */
+  --tone-lo: 0;
+  --tone-hi: 100;
+}
+
+.accent-zone {
+  --tone-flip: 0;
+}
+```
+
+And the swatches calculate their own relationships:
+
+```css
+.swatch {
+  --tone-flip: 0; /* palette itself does not invert in dark mode */
+  --t: calc(var(--i) / (var(--count) - 1) * 100);
+  --swatch-bg: --ghst(var(--seed-h), var(--seed-s), var(--t));
+
+  background-color: var(--swatch-bg);
+  color: --ghst(var(--seed-h), calc(var(--seed-s) * 0.4), calc(100 - var(--t)));
+}
+```
+
+This is the part I like most. **The colors are not isolated values. They are
+relationships:**
+
+- the swatch tone comes from its index
+- the text tone is inverted from the background tone
+- the text saturation is reduced relative to the source saturation
+- the palette itself opts out of dark inversion
+- the surrounding UI still follows the active scheme
+
+Rendered with those rules (precomputed, since CSS `@function` is not widely
+shipped yet), the ramp looks like this:
+
+<Preview
+  title="Swatch ramp — colors as relationships"
+  html={rampHtml}
+  css={rampCss}
+  showCode={false}
+/>
+
+The page reads final colors with `getComputedStyle`, but it does not calculate
+them in JavaScript. The value comes from CSS.
+
+_That is very cool._
+
+It is also _not_ something I would ship in production today.
+
+The playground currently requires Chrome or Edge 139+ for CSS `@function`
+support. And even where it works, this much color math in CSS is slow. It is a
+great proof of concept, a great educational demo, and a glimpse of where the
+platform might go.
+
+But it is _not yet_ a practical way to generate hundreds of UI colors in a real
+product.
+
+There is another CSS-specific tradeoff too: relationships often need to be
+computed in place. If you resolve a color too early into a global custom
+property, you can lose local tone flipping, tone windows, and scheme behavior.
+CSS functions can partially solve that by keeping relationship logic reusable
+instead of pre-resolving every color too early, but that is another story.
+
+For production, I still want the idea. I would love to let the browser do all
+that math at style resolution time, but that is not realistic yet.
+
+## Use Glaze Today
+
+The pure-CSS version is the fun part because it proves the browser can express
+the idea.
+
+But if you need generated UI colors **today**, use
+[Glaze](https://github.com/tenphi/glaze).
+
+Glaze is the production-ready version of this thinking. It uses OKHST for color
+generation, supports dependent colors, solves WCAG and APCA contrast, handles
+light, dark, and high-contrast schemes, and exports to real design-token
+formats.
+
+That will be a separate article, because Glaze is not just a color space demo.
+It is a methodology for building production UI palettes.
+
+## Closing
+
+The goal is not to make UIs more colorful. It is to make the boring parts of
+color reliable: text that stays readable, borders that stay visible, shadows
+that make sense, dark mode that does not need a second hand-authored palette,
+and high contrast that does not mean starting over.
+
+OKHST is one attempt to make those relationships easier to author. It is not
+perfect or universal, but it is more predictable, which is what I wanted for UI
+color generation.
+
+The playground is at [tenphi.github.io/okhst](https://tenphi.github.io/okhst/),
+and the full spec is on [GitHub](https://github.com/tenphi/okhst).
