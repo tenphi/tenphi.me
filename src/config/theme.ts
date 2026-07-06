@@ -1,36 +1,36 @@
 import { glaze } from '@tenphi/glaze';
 
-const blue = glaze(210, 70);
+const primary = glaze(210, 100, { pastel: true });
 
-blue.colors({
-  surface: { tone: 100, saturation: 0.08 },
+primary.colors({
+  surface: { tone: 100, saturation: 0.056 },
   'surface-2': {
     base: 'surface',
     tone: '-4',
-    saturation: 0.12,
+    saturation: 0.084,
   },
   'surface-down': {
     base: 'surface',
     tone: '-20',
-    saturation: 0.12,
+    saturation: 0.084,
     mode: 'fixed',
   },
   text: {
     base: 'surface',
     tone: 0,
     contrast: 'AAA',
-    saturation: 0.06,
+    saturation: 0.042,
   },
   'text-soft': {
     base: 'surface',
     tone: 20,
     contrast: ['AA', 'AAA'],
-    saturation: 0.04,
+    saturation: 0.028,
   },
   border: {
     base: 'surface',
     tone: ['-12', '-22'],
-    saturation: 0.3,
+    saturation: 0.21,
   },
   'accent-text': {
     base: 'surface',
@@ -148,12 +148,34 @@ syntax.colors({
   },
 });
 
-const palette = glaze.palette({ blue, syntax }, { primary: 'blue' });
+const STATES = {
+  dark: ':has(input[name="theme"][value="dark"]:checked) | (@media(prefers-color-scheme: dark) & :has(input[name="theme"][value="system"]:checked)',
+};
+const MODES = { highContrast: false };
 
-export const colorTokens = palette.tasty({
+// --- Primary palette: pastel + splitHue -----------------------------------
+// Glaze emits oklch colors referencing `var(--primary-hue)` plus a
+// `$primary-hue` token. Registered through `configure({ tokens })` alongside
+// the syntax tokens; Tasty preserves `var()` inside the oklch color values,
+// so a single `--primary-hue` CSS var rotates the whole UI palette.
+const primaryPalette = glaze.palette({ primary }, { primary: 'primary' });
+const primaryTokens = primaryPalette.tasty({
   prefix: true,
-  states: {
-    dark: ':has(input[name="theme"][value="dark"]:checked) | (@media(prefers-color-scheme: dark) & :has(input[name="theme"][value="system"]:checked)',
-  },
-  modes: { highContrast: false },
+  splitHue: true,
+  states: STATES,
+  modes: MODES,
 });
+
+// --- Syntax palette: non-pastel, no splitHue ------------------------------
+// Full saturation for readability, inline colors (no hue rotation). Used for
+// code highlighting (shiki theme references `--syntax-*-color`).
+const syntaxPalette = glaze.palette({ syntax });
+const syntaxTokens = syntaxPalette.tasty({
+  prefix: true,
+  primary: false,
+  states: STATES,
+  modes: MODES,
+});
+
+// All tokens registered with Tasty at runtime (primary + syntax).
+export const colorTokens = { ...primaryTokens, ...syntaxTokens };

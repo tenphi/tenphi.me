@@ -122,6 +122,54 @@ const ogImageUrl = ogImage
         });
       })();
     </script>
+    <script is:inline>
+      (function () {
+        var STORAGE_KEY = 'hue-preference';
+        var root = document.documentElement;
+        var btn = document.querySelector('[data-hue-toggle]');
+        var popover = document.querySelector('[data-hue-popover]');
+        var slider = document.querySelector('[data-hue-slider]');
+
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (saved != null && slider) {
+          root.style.setProperty('--primary-hue', saved);
+          slider.value = saved;
+        }
+
+        if (btn && popover) {
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = popover.getAttribute('data-open') === 'true';
+            popover.setAttribute('data-open', String(!open));
+            btn.setAttribute('aria-expanded', String(!open));
+          });
+          document.addEventListener('click', function (e) {
+            if (popover.getAttribute('data-open') !== 'true') return;
+            if (
+              !popover.contains(e.target) &&
+              e.target !== btn &&
+              !btn.contains(e.target)
+            ) {
+              popover.setAttribute('data-open', 'false');
+              btn.setAttribute('aria-expanded', 'false');
+            }
+          });
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+              popover.setAttribute('data-open', 'false');
+              btn.setAttribute('aria-expanded', 'false');
+            }
+          });
+        }
+
+        if (slider) {
+          slider.addEventListener('input', function () {
+            root.style.setProperty('--primary-hue', this.value);
+            localStorage.setItem(STORAGE_KEY, this.value);
+          });
+        }
+      })();
+    </script>
     <main style="flex: 1 1 auto; display: flex; flex-direction: column;">
       <slot />
     </main>
