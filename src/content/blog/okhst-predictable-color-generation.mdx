@@ -409,13 +409,25 @@ practical dark scheme can invert tone and map it into something like `15-95`.
 High contrast is different. There, the goal is maximum separation, so it should
 usually use the full `0-100` range.
 
+Opening the window is not enough on its own, though. The window only stretches
+the extremes: text reaches pure black, surfaces reach pure white, but every
+relationship defined between them keeps its original distance. A border that
+sits `14` tones away from its surface is still a subtle border, no matter how
+wide the window gets. Real high contrast means widening the tone steps
+themselves, so that borders, muted text, and accents all pull further away from
+the colors they sit on. And because a fixed tone step maps to a fixed contrast
+ratio, this stays a parameter change: define each color as a tone delta from
+its parent, and high contrast becomes one set of larger deltas. Hand-authoring
+it would mean two more full palettes — high contrast exists for light and dark
+separately — so this is the difference between maintaining four palettes and
+maintaining one set of relationships.
+
 **This mapping is not part of OKHST itself. It is UI logic layered on top.**
 
 But it is important UI logic.
 
-It means dark mode and high contrast can become parameter changes instead of
-separate hand-authored palettes. The same authored tones can be remapped for the
-target scheme.
+It means dark mode and high contrast become parameter changes: the same
+authored tones and deltas, remapped for the target scheme.
 
 Tone flipping also needs to be local. Not every color region should invert in
 dark mode. An accent area may need to keep its direction stable while the
@@ -465,19 +477,28 @@ changes the interface around it. This is the slider from the first paragraph of
 this post, actually working: one `hue` slider, one `saturation` slider, and the
 whole interface follows.
 
-The chrome colors are generated from the same seed:
+The chrome colors are generated from the same seed. Each one is authored as a
+tone delta from the surface — the same parent-relative steps from the previous
+section:
 
 ```css
 :root {
   --seed-h: 250;
   --seed-s: 70;
 
+  /* tone deltas: how far each color steps away from the surface */
+  --d-elev: 4;
+  --d-border: 14;
+  --d-text: 94;
+  --d-muted: 62;
+  --d-accent: 42;
+
   --c-surface: --ghst(var(--seed-h), 4, 100);
-  --c-elev: --ghst(var(--seed-h), 5, 96);
-  --c-border: --ghst(var(--seed-h), 4, 86);
-  --c-text: --ghst(var(--seed-h), 2, 6);
-  --c-muted: --ghst(var(--seed-h), 2, 38);
-  --c-accent: --ghst(var(--seed-h), var(--seed-s), 58);
+  --c-elev: --ghst(var(--seed-h), 5, calc(100 - var(--d-elev)));
+  --c-border: --ghst(var(--seed-h), 4, calc(100 - var(--d-border)));
+  --c-text: --ghst(var(--seed-h), 2, calc(100 - var(--d-text)));
+  --c-muted: --ghst(var(--seed-h), 2, calc(100 - var(--d-muted)));
+  --c-accent: --ghst(var(--seed-h), var(--seed-s), calc(100 - var(--d-accent)));
 }
 ```
 
@@ -503,12 +524,23 @@ html.high-contrast {
   /* --tone-flip is inherited from the active light/dark scheme. */
   --tone-lo: 0;
   --tone-hi: 100;
+
+  /* wider steps: relationships pull apart, not just the extremes */
+  --d-elev: 6;
+  --d-border: 22;
+  --d-text: 100;
+  --d-muted: 72;
+  --d-accent: 50;
 }
 
 .accent-zone {
   --tone-flip: 0;
 }
 ```
+
+Because the chrome colors derive from the deltas, overriding a few variables is
+the entire high-contrast implementation — for light and dark at once, since the
+tone flip is applied on top.
 
 And the swatches calculate their own relationships:
 
