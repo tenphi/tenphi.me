@@ -77,6 +77,8 @@ configure({
     '@desktop': '@media(w >= 1024px)',
     '@dark':
       '@root(:has(input[name="theme"][value="dark"]:checked)) | (@media(prefers-color-scheme: dark) & @root(:has(input[name="theme"][value="system"]:checked)))',
+    '@high-contrast':
+      '@root(:has(input[name="highContrast"][value="on"]:checked)) | (@media(prefers-contrast: more) & @root(:has(input[name="highContrast"][value="system"]:checked)))',
   },
   tokens: {
     $gap: '8px',

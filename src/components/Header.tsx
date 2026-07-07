@@ -1,6 +1,5 @@
 import { tasty } from '@tenphi/tasty';
 import Container from './ui/Container';
-import ThemeSwitcher from './ThemeSwitcher';
 import HueSwitcher from './HueSwitcher';
 
 const StickyContainer = tasty(Container, {
@@ -31,15 +30,27 @@ const HeaderEl = tasty({
     radius: '1cr',
     padding: '1.5x',
     shadow: '0 .5x 1x #shadow',
-    fill: '#surface.5',
-    image: 'linear-gradient(to bottom, #surface.75, #surface-down.1)',
-    backdropFilter: 'blur(1x)',
+    fill: {
+      '': '#surface.5',
+      '@high-contrast': '#surface-topbar',
+    },
+    image: {
+      '': 'linear-gradient(to bottom, #surface.75, #surface-down.1)',
+      '@high-contrast': 'none',
+    },
+    backdropFilter: {
+      '': 'blur(1x)',
+      '@high-contrast': 'none',
+    },
 
     Border: {
       $: '&::before',
       content: '""',
       radius: '1cr',
-      border: '#surface.5',
+      border: {
+        '': '#surface.5',
+        '@high-contrast': '#border',
+      },
       position: 'absolute',
       inset: 0,
       pointerEvents: 'none',
@@ -104,7 +115,6 @@ export default function Header() {
             <HeaderEl.NavLink href="/portfolio">Portfolio</HeaderEl.NavLink>
             <HeaderEl.NavLink href="/blog">Blog</HeaderEl.NavLink>
             <HueSwitcher />
-            <ThemeSwitcher />
           </HeaderEl.NavLinks>
         </HeaderEl.Nav>
       </HeaderEl>

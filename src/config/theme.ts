@@ -11,43 +11,49 @@ primary.colors({
   },
   'surface-down': {
     base: 'surface',
-    tone: '-20',
+    tone: ['-20', '-24'],
     saturation: 0.084,
     mode: 'fixed',
+  },
+  'surface-topbar': {
+    base: 'surface',
+    tone: ['-4', '-8'],
+    saturation: 0.084,
   },
   text: {
     base: 'surface',
     tone: 0,
-    contrast: 'AAA',
+    contrast: { apca: 'body' },
     saturation: 0.042,
   },
   'text-soft': {
     base: 'surface',
     tone: 20,
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.028,
   },
   border: {
     base: 'surface',
-    tone: ['-12', '-22'],
+    tone: '-12',
+    contrast: { apca: 'non-text' },
     saturation: 0.21,
   },
   'accent-text': {
     base: 'surface',
     tone: 50,
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 80,
   },
   'accent-text-2': {
     base: 'surface-2',
     tone: 50,
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 80,
   },
   'accent-surface': {
     base: 'accent-surface-text',
     tone: '-48',
-    contrast: ['AA', 7],
+    contrast: { apca: 'content' },
     saturation: 100,
     mode: 'fixed',
   },
@@ -84,74 +90,75 @@ syntax.colors({
   text: {
     base: 'bg',
     tone: 0,
-    contrast: 'AAA',
+    contrast: { apca: 'body' },
     saturation: 0,
   },
   comment: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.01,
     hue: 210,
   },
   punctuation: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.01,
     hue: 210,
   },
   keyword: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.65,
   },
   string: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.55,
     hue: 15,
   },
   token: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.55,
     hue: 125,
   },
   property: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.55,
     hue: 155,
   },
   number: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.6,
     hue: 70,
   },
   function: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.55,
     hue: 210,
   },
   value: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.5,
     hue: 210,
   },
   operator: {
     base: 'bg',
-    contrast: ['AA', 'AAA'],
+    contrast: { apca: 'content' },
     saturation: 0.5,
     hue: 340,
   },
 });
 
 const STATES = {
-  dark: ':has(input[name="theme"][value="dark"]:checked) | (@media(prefers-color-scheme: dark) & :has(input[name="theme"][value="system"]:checked)',
+  dark: ':has(input[name="theme"][value="dark"]:checked) | (@media(prefers-color-scheme: dark) & :has(input[name="theme"][value="system"]:checked))',
+  highContrast: ':has(input[name="highContrast"][value="on"]:checked) | (@media(prefers-contrast: more) & :has(input[name="highContrast"][value="system"]:checked))',
 };
-const MODES = { highContrast: false };
+const MODES = { highContrast: true };
 
 // --- Primary palette: pastel + splitHue -----------------------------------
 // Glaze emits oklch colors referencing `var(--primary-hue)` plus a

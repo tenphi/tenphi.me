@@ -1,5 +1,8 @@
 import { tasty } from '@tenphi/tasty';
 import { IconPalette } from '@tabler/icons-react';
+import ThemeSwitcher from './ThemeSwitcher';
+import HighContrastSwitcher from './HighContrastSwitcher';
+import Divider from './ui/Divider';
 
 const HueSwitcherEl = tasty({
   as: 'div',
@@ -37,12 +40,25 @@ const HueSwitcherEl = tasty({
         '@own([data-open="true"])': 'flex',
       },
       flow: 'column',
-      width: '200px',
+      width: '260px',
       zIndex: 200,
+    },
+    Section: {
+      display: 'flex',
+      flow: 'column',
+      gap: '.75x',
+    },
+    Setting: {
+      display: 'flex',
+      flow: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: '1x',
     },
     Label: {
       preset: 'label',
       color: '#text-soft',
+      whiteSpace: 'nowrap',
     },
     Slider: {
       $: 'input',
@@ -57,7 +73,7 @@ const HueSwitcherEl = tasty({
     // Slider thumb — vendor pseudo-elements on the Slider input. Use site
     // tokens so it adapts to light/dark and stays visible on the rainbow.
     WebkitThumb: {
-      $: '>Popover>Slider::-webkit-slider-thumb',
+      $: 'Popover Slider::-webkit-slider-thumb',
       '-webkit-appearance': 'none',
       appearance: 'none',
       width: '14px',
@@ -68,7 +84,7 @@ const HueSwitcherEl = tasty({
       cursor: 'pointer',
     },
     MozThumb: {
-      $: '>Popover>Slider::-moz-range-thumb',
+      $: 'Popover Slider::-moz-range-thumb',
       width: '14px',
       height: '14px',
       radius: '50%',
@@ -80,6 +96,8 @@ const HueSwitcherEl = tasty({
   elements: {
     Button: 'button',
     Popover: 'div',
+    Section: 'div',
+    Setting: 'div',
     Label: 'div',
     Slider: 'input',
   },
@@ -101,18 +119,30 @@ export default function HueSwitcher() {
         data-hue-popover
         data-open="false"
         role="dialog"
-        aria-label="Select hue"
+        aria-label="Appearance settings"
       >
-        <HueSwitcherEl.Label>Select hue</HueSwitcherEl.Label>
-        <HueSwitcherEl.Slider
-          type="range"
-          min="0"
-          max="360"
-          step="1"
-          defaultValue={210}
-          data-hue-slider
-          aria-label="Hue"
-        />
+        <HueSwitcherEl.Section>
+          <HueSwitcherEl.Label>Select hue</HueSwitcherEl.Label>
+          <HueSwitcherEl.Slider
+            type="range"
+            min="0"
+            max="360"
+            step="1"
+            defaultValue={210}
+            data-hue-slider
+            aria-label="Hue"
+          />
+        </HueSwitcherEl.Section>
+        <Divider margin="0" />
+        <HueSwitcherEl.Setting>
+          <HueSwitcherEl.Label>Theme</HueSwitcherEl.Label>
+          <ThemeSwitcher />
+        </HueSwitcherEl.Setting>
+        <Divider margin="0" />
+        <HueSwitcherEl.Setting>
+          <HueSwitcherEl.Label>High contrast</HueSwitcherEl.Label>
+          <HighContrastSwitcher />
+        </HueSwitcherEl.Setting>
       </HueSwitcherEl.Popover>
     </HueSwitcherEl>
   );

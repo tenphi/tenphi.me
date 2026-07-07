@@ -1,7 +1,11 @@
 import { tasty } from '@tenphi/tasty';
-import { IconSun, IconMoon, IconDeviceDesktop } from '@tabler/icons-react';
+import {
+  IconContrast,
+  IconContrastOff,
+  IconDeviceDesktop,
+} from '@tabler/icons-react';
 
-const ThemeSwitcherEl = tasty({
+const HighContrastSwitcherEl = tasty({
   as: 'div',
   styles: {
     display: 'flex',
@@ -55,32 +59,37 @@ const ThemeSwitcherEl = tasty({
   },
 });
 
-export default function ThemeSwitcher() {
+export default function HighContrastSwitcher() {
   return (
-    <ThemeSwitcherEl role="radiogroup" aria-label="Color theme">
-      <ThemeSwitcherEl.Option aria-label="System theme">
+    <HighContrastSwitcherEl role="radiogroup" aria-label="High contrast">
+      <HighContrastSwitcherEl.Option aria-label="System high contrast">
         <input
           type="radio"
-          name="theme"
+          name="highContrast"
           value="system"
-          aria-label="System theme"
+          aria-label="System high contrast"
           defaultChecked
         />
         <IconDeviceDesktop size={16} stroke={2} aria-hidden="true" />
-      </ThemeSwitcherEl.Option>
-      <ThemeSwitcherEl.Option aria-label="Light theme">
+      </HighContrastSwitcherEl.Option>
+      <HighContrastSwitcherEl.Option aria-label="High contrast off">
         <input
           type="radio"
-          name="theme"
-          value="light"
-          aria-label="Light theme"
+          name="highContrast"
+          value="off"
+          aria-label="High contrast off"
         />
-        <IconSun size={16} stroke={2} aria-hidden="true" />
-      </ThemeSwitcherEl.Option>
-      <ThemeSwitcherEl.Option aria-label="Dark theme">
-        <input type="radio" name="theme" value="dark" aria-label="Dark theme" />
-        <IconMoon size={16} stroke={2} aria-hidden="true" />
-      </ThemeSwitcherEl.Option>
-    </ThemeSwitcherEl>
+        <IconContrastOff size={16} stroke={2} aria-hidden="true" />
+      </HighContrastSwitcherEl.Option>
+      <HighContrastSwitcherEl.Option aria-label="High contrast on">
+        <input
+          type="radio"
+          name="highContrast"
+          value="on"
+          aria-label="High contrast on"
+        />
+        <IconContrast size={16} stroke={2} aria-hidden="true" />
+      </HighContrastSwitcherEl.Option>
+    </HighContrastSwitcherEl>
   );
 }
