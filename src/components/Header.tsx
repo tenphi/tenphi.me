@@ -1,6 +1,6 @@
 import { tasty } from '@tenphi/tasty';
 import Container from './ui/Container';
-import HueSwitcher from './HueSwitcher';
+import AppearanceSettings from './AppearanceSettings';
 
 const StickyContainer = tasty(Container, {
   styles: {
@@ -114,7 +114,7 @@ export default function Header() {
           <HeaderEl.NavLinks>
             <HeaderEl.NavLink href="/portfolio">Portfolio</HeaderEl.NavLink>
             <HeaderEl.NavLink href="/blog">Blog</HeaderEl.NavLink>
-            <HueSwitcher />
+            <AppearanceSettings />
           </HeaderEl.NavLinks>
         </HeaderEl.Nav>
       </HeaderEl>
