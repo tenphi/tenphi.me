@@ -156,7 +156,8 @@ syntax.colors({
 
 const STATES = {
   dark: ':has(input[name="theme"][value="dark"]:checked) | (@media(prefers-color-scheme: dark) & :has(input[name="theme"][value="system"]:checked))',
-  highContrast: ':has(input[name="highContrast"][value="on"]:checked) | (@media(prefers-contrast: more) & :has(input[name="highContrast"][value="system"]:checked))',
+  highContrast:
+    ':has(input[name="highContrast"][value="on"]:checked) | (@media(prefers-contrast: more) & :has(input[name="highContrast"][value="system"]:checked))',
 };
 const MODES = { highContrast: true };
 
