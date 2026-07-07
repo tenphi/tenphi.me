@@ -15,7 +15,7 @@ export default {
     '$content-width',
   ],
 
-  states: ['@mobile', '@tablet', '@desktop', '@dark'],
+  states: ['@mobile', '@tablet', '@desktop', '@dark', '@high-contrast'],
 
   presets: ['h1', 'h2', 'h3', 't1', 't2', 't3', 'nav', 'code', 'label', 'overline'],
 };
