@@ -26,6 +26,7 @@ const StickyContainer = tasty(Container, {
 const HeaderEl = tasty({
   as: 'header',
   styles: {
+    viewTransitionName: 'header',
     position: 'relative',
     radius: '1cr',
     padding: '1.5x',

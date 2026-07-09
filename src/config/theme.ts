@@ -34,8 +34,7 @@ primary.colors({
   },
   border: {
     base: 'surface',
-    tone: '-12',
-    contrast: { apca: 'non-text' },
+    tone: ['-15', '-30'],
     saturation: 0.21,
   },
   'accent-text': {
