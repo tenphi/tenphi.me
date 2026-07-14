@@ -109,6 +109,9 @@ configure({
     code: {
       preset: 'code',
     },
+    a: {
+      fontWeight: '600',
+    },
   },
   replaceTokens: {
     '$content-width': '$max-width',
