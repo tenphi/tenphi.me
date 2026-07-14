@@ -327,20 +327,29 @@ That is the property plain lightness does not have.
   showCode={false}
 />
 
-The resulting authoring model is simple:
+Tone lets states be authored as deltas instead of independent colors:
 
 ```ts
 // Illustrative pseudo-code, not a real library call.
-const primary = okhst({ h: 250, s: 70, t: 62 });
-const hover = okhst({ h: 250, s: 70, t: 56 });
-const darkPrimary = okhst({ h: 250, s: 70, t: 38 }); // 100 - 62
+const primaryTone = 62;
+const hoverDelta = 6;
+
+const primary = okhst({ h: 250, s: 70, t: primaryTone });
+const hover = okhst({ h: 250, s: 70, t: primaryTone - hoverDelta });
 ```
 
-Tone deltas can describe tints, shades, borders, shadows, and state changes.
-Dark mode can begin with one rule:
+The same pattern can describe tints, shades, borders, and shadows. Scheme
+mapping belongs to the layer above the color primitive; dark mode can begin
+with one transformation:
 
-```txt
-dark tone = 100 - light tone
+```ts
+const darkTone = (tone: number) => 100 - tone;
+
+const darkPrimary = okhst({
+  h: 250,
+  s: 70,
+  t: darkTone(primaryTone),
+});
 ```
 
 OKHST does not guarantee accessibility. The fixed relationship is exact for
