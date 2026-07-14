@@ -160,7 +160,7 @@ Dark mode exposed the problem first. Inverting lightness produced a coherent
 palette, but the contrast felt weaker than expected, so I added a separate
 transformation curve. Then I noticed that very dark colors in a light scheme
 also moved differently from what I expected. The workaround had treated the
-symptom: **I was using lightness as if it were contrast.**
+symptom: I was using lightness as if it were contrast.
 
 ```ts
 // Nice idea, weak invariant:
@@ -279,7 +279,7 @@ for a neutral ramp with equal lightness steps of `+20`:
 |       100 |       21 |        1 |          — |
 
 The numeric steps are identical, but the contrast multiplier between adjacent
-steps drifts from `1.55x` up to `2.09x` and back down to `1.70x`. That drift
+steps drifts from 1.55× up to 2.09× and back down to 1.70×. That drift
 makes lightness a poor authoring axis for things like borders, hover states,
 shadows, and dark-mode inversion.
 
@@ -288,7 +288,7 @@ contrast. That axis became **tone**.
 
 ## OKHST
 
-OKHST keeps OKHSL's hue and saturation and replaces lightness with **tone**.
+OKHST keeps OKHSL's hue and saturation and replaces lightness with tone.
 Structurally, tone is a monotonic remap of the OKHSL lightness axis: a given
 tone always maps to the same OKHSL lightness at every hue and saturation. Every
 OKHST color is therefore a valid OKHSL color, inheriting its gamut behavior and
@@ -317,7 +317,7 @@ equal lightness steps:
 |   80 |       11 |     1.84 |       1.84 |
 |  100 |       21 |        1 |          — |
 
-Each `+20` tone step multiplies contrast by exactly the same factor — `1.84x`.
+Each `+20` tone step multiplies contrast by exactly the same factor — 1.84×.
 That is the property plain lightness does not have.
 
 <Preview
