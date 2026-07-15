@@ -84,10 +84,12 @@ const ArticleContent = tasty({
       },
     },
 
-    Img: {
-      $: 'img',
-      maxWidth: '100%',
+    Screenshot: {
+      $: 'img:not([src$=".svg"])',
+      width: 'max 100%',
       height: 'auto',
+      border: true,
+      radius: true,
     },
     Details: {
       $: 'details',
