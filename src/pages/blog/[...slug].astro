@@ -87,10 +87,16 @@ const Article = tasty({
   },
 });
 
-const BackLink = tasty({
+const PostFooter = tasty({
   as: 'div',
   styles: {
-    padding: '4x 0 0',
+    display: 'flex',
+    flow: 'row',
+    justify: 'space-between',
+    alignItems: 'center',
+    gap: '2x',
+    flexWrap: 'wrap',
+    padding: '6x 0 0',
   },
 });
 
@@ -175,21 +181,22 @@ const jsonLd = {
               postUrl={thread.postUrl}
             />
           </Stack>
-        ) : (
-          <Stack gap="0" padding="6x 0 0">
+        ) : null
+      }
+      <PostFooter>
+        <Link href="/blog">&larr; Back to blog</Link>
+        {
+          !thread && (
             <Link
               href={site.bluesky.profileUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Discuss on Bluesky &rarr;
+              Reply on Bluesky &rarr;
             </Link>
-          </Stack>
-        )
-      }
-      <BackLink>
-        <Link href="/blog">&larr; Back to blog</Link>
-      </BackLink>
+          )
+        }
+      </PostFooter>
     </Stack>
   </Container>
 </BaseLayout>
