@@ -14,6 +14,10 @@ const HighContrastSwitcherEl = tasty({
     border: true,
     radius: '1r',
     overflow: 'hidden',
+    outline: {
+      '': 'none',
+      ':has(input:focus-visible:focus-within)': '2bw solid #focus / 1bw',
+    },
 
     Option: {
       cursor: 'pointer',

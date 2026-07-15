@@ -146,48 +146,94 @@ const ogImageUrl = ogImage
       (function () {
         var STORAGE_KEY = 'hue-preference';
         var root = document.documentElement;
-        var btn = document.querySelector('[data-appearance-toggle]');
-        var popover = document.querySelector('[data-appearance-popover]');
+
+        // Marks that scripting is available: CSS swaps the 18-step radio track
+        // (the JS-free fallback) for the continuous range slider below.
+        root.setAttribute('data-js', '');
+
         var slider = document.querySelector('[data-hue-slider]');
+        if (!slider) return;
+
+        // The popover open/close is pure CSS (:focus-within). JS only powers
+        // the hue slider, so enable it now that scripting is available.
+        slider.disabled = false;
+
+        function describe(value) {
+          slider.setAttribute('aria-valuetext', value + ' degrees');
+        }
 
         var saved = localStorage.getItem(STORAGE_KEY);
-        if (saved != null && slider) {
+        if (saved != null) {
           root.style.setProperty('--primary-hue', saved);
           slider.value = saved;
         }
+        describe(slider.value);
 
-        if (btn && popover) {
-          btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            var open = popover.getAttribute('data-open') === 'true';
-            popover.setAttribute('data-open', String(!open));
-            btn.setAttribute('aria-expanded', String(!open));
+        slider.addEventListener('input', function () {
+          root.style.setProperty('--primary-hue', this.value);
+          localStorage.setItem(STORAGE_KEY, this.value);
+          describe(this.value);
+        });
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        // Progressive enhancement for the appearance popover. The panel opens
+        // purely via CSS `:focus-within`; this adds the accessible extras that
+        // need scripting: syncing `aria-expanded`, closing on Escape, and a
+        // click-to-toggle trigger — all while keeping focus on the button.
+        var widgets = document.querySelectorAll('[data-appearance]');
+        widgets.forEach(function (root) {
+          var button = root.querySelector('[data-appearance-button]');
+          if (!button) return;
+
+          function setExpanded(open) {
+            button.setAttribute('aria-expanded', open ? 'true' : 'false');
+          }
+          setExpanded(false);
+
+          // Snapshot open state at interaction start so a click that both
+          // focuses and opens the panel isn't immediately toggled shut.
+          var wasOpen = false;
+          function snapshot() {
+            wasOpen =
+              root.contains(document.activeElement) &&
+              !root.hasAttribute('data-collapsed');
+          }
+          button.addEventListener('pointerdown', snapshot);
+          button.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') snapshot();
           });
-          document.addEventListener('click', function (e) {
-            if (popover.getAttribute('data-open') !== 'true') return;
-            if (
-              !popover.contains(e.target) &&
-              e.target !== btn &&
-              !btn.contains(e.target)
-            ) {
-              popover.setAttribute('data-open', 'false');
-              btn.setAttribute('aria-expanded', 'false');
+          button.addEventListener('click', function () {
+            if (wasOpen) {
+              root.setAttribute('data-collapsed', '');
+              setExpanded(false);
+            } else {
+              root.removeAttribute('data-collapsed');
+              setExpanded(true);
+            }
+            button.focus();
+          });
+
+          root.addEventListener('focusin', function () {
+            if (!root.hasAttribute('data-collapsed')) setExpanded(true);
+          });
+          root.addEventListener('focusout', function (e) {
+            if (!root.contains(e.relatedTarget)) {
+              root.removeAttribute('data-collapsed');
+              setExpanded(false);
             }
           });
-          document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-              popover.setAttribute('data-open', 'false');
-              btn.setAttribute('aria-expanded', 'false');
+
+          root.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !root.hasAttribute('data-collapsed')) {
+              root.setAttribute('data-collapsed', '');
+              setExpanded(false);
+              button.focus();
+              e.stopPropagation();
             }
           });
-        }
-
-        if (slider) {
-          slider.addEventListener('input', function () {
-            root.style.setProperty('--primary-hue', this.value);
-            localStorage.setItem(STORAGE_KEY, this.value);
-          });
-        }
+        });
       })();
     </script>
     <main style="flex: 1 1 auto; display: flex; flex-direction: column;">

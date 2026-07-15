@@ -43,6 +43,12 @@ primary.colors({
     contrast: { apca: 'content' },
     saturation: 80,
   },
+  focus: {
+    base: 'surface',
+    tone: 50,
+    contrast: { apca: 'content' },
+    saturation: 80,
+  },
   'accent-text-2': {
     base: 'surface-2',
     tone: 50,

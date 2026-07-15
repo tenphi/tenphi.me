@@ -67,12 +67,12 @@ const HeaderEl = tasty({
       display: 'flex',
       alignItems: 'center',
       textDecoration: 'none',
+      margin: '-1x 0',
     },
     Avatar: {
       display: 'block',
       width: '5x',
       height: '5x',
-      margin: '-1x 0',
     },
     NavLinks: {
       display: 'flex',

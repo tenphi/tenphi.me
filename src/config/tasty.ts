@@ -111,6 +111,16 @@ configure({
     },
     a: {
       fontWeight: '600',
+      outline: {
+        '': 'none',
+        ':focus-visible': '2bw solid #focus / 1bw',
+      },
+    },
+    button: {
+      outline: {
+        '': 'none',
+        ':focus-visible': '2bw solid #focus / 1bw',
+      },
     },
   },
   replaceTokens: {
