@@ -60,41 +60,40 @@ const AppearanceSettingsEl = tasty({
       // `visibility` (not `display`) so the flex layout stays column during the
       // discrete exit — an absolutely positioned, hidden panel is still removed
       // from tab order and pointer events.
-      // `[data-collapsed]` (a bare attr resolves against the root component) is
-      // the JS-only "explicitly dismissed" state: it force-closes the panel even
-      // while the trigger keeps focus, so Escape / a second click can close it
-      // without moving focus off the button. No-JS behaviour is unchanged.
+      // The panel is "open" only when focus lives inside the root AND it hasn't
+      // been explicitly dismissed. `[data-collapsed]` (a JS-only attr on the
+      // root) is the dismissed state: Escape / a second click set it so the
+      // panel closes even while the trigger keeps focus. Folding it into a
+      // single open condition (rather than a separate override) is essential —
+      // otherwise the closed opacity/translate values equal the base and get
+      // deduped, so collapsing would only flip `visibility` (an instant jump
+      // with no fade/slide). With the combined condition, collapsing falls back
+      // to the genuine closed values and animates in both directions.
       visibility: {
         '': 'hidden',
-        ':focus-within': 'visible',
-        '[data-collapsed]': 'hidden',
+        ':focus-within & !:is([data-collapsed])': 'visible',
       },
       // Slide 8px down out of the button + fade. `visibility` is transitioned
-      // via `allow-discrete` so the panel stays visible through the fade-out,
-      // and `@starting` seeds the entry values so both directions animate
-      // without JS.
+      // via `allow-discrete` so the panel stays visible through the fade-out.
       opacity: {
         '': '0',
-        ':focus-within': '1',
-        ':focus-within & @starting': '0',
-        '[data-collapsed]': '0',
+        ':focus-within & !:is([data-collapsed])': '1',
       },
       translate: {
         '': '0 -8px',
-        ':focus-within': '0 0',
-        ':focus-within & @starting': '0 -8px',
-        '[data-collapsed]': '0 -8px',
+        ':focus-within & !:is([data-collapsed])': '0 0',
         // Respect reduced-motion: fade only, no vertical slide.
         '@media(prefers-reduced-motion: reduce)': '0 0',
       },
       // Open instantly; delay the close by 150ms. Clicking a <label> inside
       // (e.g. a hue swatch) blurs the active element for ~1 frame before the
-      // radio gains focus, so `:focus-within` briefly flips off. The delayed
+      // radio gains focus, so the open condition briefly flips off. The delayed
       // close means that transient blur never starts animating out — a refocus
       // within the window cancels it, eliminating the open/close flicker.
       transition: {
         '': 'opacity 80ms 150ms, translate 80ms 150ms, visibility 80ms 150ms allow-discrete',
-        ':focus-within': 'opacity 80ms, translate 80ms, visibility 80ms allow-discrete',
+        ':focus-within & !:is([data-collapsed])':
+          'opacity 80ms, translate 80ms, visibility 80ms allow-discrete',
       },
       width: '260px',
       zIndex: 200,
