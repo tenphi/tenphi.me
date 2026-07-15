@@ -6,8 +6,25 @@ import Stack from '../../components/ui/Stack';
 import Link from '../../components/ui/Link';
 import ArticleContent from '../../components/ArticleContent';
 import Tag from '../../components/ui/Tag';
+import EngagementBar from '../../components/EngagementBar';
+import BlueskyComments from '../../components/BlueskyComments';
 import { tasty } from '@tenphi/tasty';
 import readingTime from 'reading-time';
+import { site } from '../../config/site';
+import { getPostThread, getProfile } from '../../lib/bluesky';
+import atprotoRecords from '../../config/atproto-records.json';
+
+interface DocumentRecord {
+  rkey: string;
+  atUri: string;
+  bskyPost?: { uri: string; cid: string };
+}
+
+const records = atprotoRecords as {
+  did: string | null;
+  publication: { rkey: string; atUri: string } | null;
+  documents: Record<string, DocumentRecord>;
+};
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -20,6 +37,11 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const { text: readTime } = readingTime(post.body ?? '');
+
+const documentRecord = records.documents[post.id];
+const bskyPostUri = documentRecord?.bskyPost?.uri;
+const thread = bskyPostUri ? await getPostThread(bskyPostUri) : null;
+const profile = thread ? await getProfile() : null;
 
 const Heading = tasty({
   as: 'h1',
@@ -111,6 +133,7 @@ const jsonLd = {
   ogImage={`/og/blog/${post.id}.png`}
   publishedTime={post.data.date.toISOString().split('T')[0]}
   jsonLd={jsonLd}
+  documentAtUri={documentRecord?.atUri}
 >
   <Container>
     <Stack gap="0" padding="4x 0 8x">
@@ -136,6 +159,34 @@ const jsonLd = {
           <Content />
         </ArticleContent>
       </Article>
+      {
+        thread ? (
+          <Stack gap="4x" padding="6x 0 0">
+            <EngagementBar
+              postUrl={thread.postUrl}
+              likeCount={thread.likeCount}
+              repostCount={thread.repostCount}
+              replyCount={thread.replyCount}
+              followersCount={profile?.followersCount ?? null}
+              profileUrl={site.bluesky.profileUrl}
+            />
+            <BlueskyComments
+              replies={thread.replies}
+              postUrl={thread.postUrl}
+            />
+          </Stack>
+        ) : (
+          <Stack gap="0" padding="6x 0 0">
+            <Link
+              href={site.bluesky.profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discuss on Bluesky &rarr;
+            </Link>
+          </Stack>
+        )
+      }
       <BackLink>
         <Link href="/blog">&larr; Back to blog</Link>
       </BackLink>

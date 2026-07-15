@@ -12,6 +12,7 @@ interface Props {
   ogImage?: string;
   publishedTime?: string;
   jsonLd?: Record<string, unknown>;
+  documentAtUri?: string;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   ogImage,
   publishedTime,
   jsonLd,
+  documentAtUri,
 } = Astro.props;
 
 const siteTitle = `${title} — tenphi.me`;
@@ -54,6 +56,11 @@ const ogImageUrl = ogImage
       title="Andrey Yamanov — Blog"
       href="/rss.xml"
     />
+    {
+      documentAtUri && (
+        <link rel="site.standard.document" href={documentAtUri} />
+      )
+    }
 
     <meta property="og:title" content={siteTitle} />
     <meta property="og:description" content={description} />
