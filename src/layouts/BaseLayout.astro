@@ -49,7 +49,7 @@ const ogImageUrl = ogImage
     <meta name="description" content={description} />
     <meta name="author" content="Andrey Yamanov" />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" data-favicon />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -169,10 +169,28 @@ const ogImageUrl = ogImage
           slider.setAttribute('aria-valuetext', value + ' degrees');
         }
 
+        // Rotate the browser tab icon with the palette. The numeric hue feeds
+        // straight into the OKLCH hue channel (same as the site's accent color),
+        // so an inline SVG data URI keeps the favicon in sync — JS only.
+        var icon = document.querySelector('[data-favicon]');
+        function updateFavicon(hue) {
+          if (!icon) return;
+          var svg =
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
+            '<text x="2" y="26" font-size="28" font-family="system-ui, sans-serif" font-weight="700" fill="oklch(0.62 0.17 ' +
+            hue +
+            ')">t</text></svg>';
+          icon.setAttribute(
+            'href',
+            'data:image/svg+xml,' + encodeURIComponent(svg),
+          );
+        }
+
         var saved = localStorage.getItem(STORAGE_KEY);
         if (saved != null) {
           root.style.setProperty('--primary-hue', saved);
           slider.value = saved;
+          updateFavicon(saved);
         }
         describe(slider.value);
 
@@ -180,6 +198,7 @@ const ogImageUrl = ogImage
           root.style.setProperty('--primary-hue', this.value);
           localStorage.setItem(STORAGE_KEY, this.value);
           describe(this.value);
+          updateFavicon(this.value);
         });
       })();
     </script>

@@ -23,7 +23,7 @@
     "@astrojs/sitemap": "^3.7.2",
     "@resvg/resvg-js": "^2.6.2",
     "@tabler/icons-react": "^3.41.1",
-    "@tenphi/glaze": "1.0.0",
+    "@tenphi/glaze": "1.1.0",
     "@tenphi/tasty": "2.9.1",
     "astro": "^6.1.3",
     "react": "^19.2.4",
