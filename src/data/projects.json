@@ -4,7 +4,7 @@
     "title": "Tasty",
     "href": "https://tasty.style",
     "description": "CSS-in-JS styling engine for React with a declarative, state-aware DSL, design token integration, and SSR support.",
-    "tags": ["React", "TypeScript", "CSS-in-JS"],
+    "tags": ["React", "TypeScript", "CSS-in-JS", "Framework"],
     "icon": "/projects/tasty.png",
     "section": "Tasty Ecosystem",
     "featured": true
@@ -24,7 +24,7 @@
     "title": "@tenphi/eslint-plugin-tasty",
     "href": "https://github.com/tenphi/tasty-eslint-plugin",
     "description": "ESLint plugin for validating tasty() and tastyStatic() style objects — tokens, states, presets, and property names.",
-    "tags": ["ESLint", "DX"],
+    "tags": ["ESLint", "DX", "Tasty"],
     "icon": "github",
     "section": "Tasty Ecosystem",
     "featured": false
@@ -34,7 +34,7 @@
     "title": "Tasty VS Code Extension",
     "href": "https://github.com/tenphi/tasty-vscode-extension",
     "description": "VS Code syntax highlighting for Tasty DSL inside style objects.",
-    "tags": ["VS Code", "DX"],
+    "tags": ["VS Code", "DX", "Tasty"],
     "icon": "github",
     "section": "Tasty Ecosystem",
     "featured": false
@@ -44,7 +44,7 @@
     "title": "tasty.style",
     "href": "https://github.com/tenphi/tasty.style",
     "description": "Source code for Tasty’s official website, documentation, live playground, and interactive showcase.",
-    "tags": ["Next.js", "WebContainers"],
+    "tags": ["Next.js", "WebContainers", "Tasty", "Glaze"],
     "icon": "github",
     "section": "Tasty Ecosystem",
     "featured": false
@@ -54,7 +54,7 @@
     "title": "Cube Cloud",
     "href": "https://cubecloud.dev",
     "description": "Deploy, optimize and scale Cube.js applications. UI, UX, and frontend development.",
-    "tags": ["React", "UI/UX"],
+    "tags": ["React", "UI/UX", "Tasty", "Glaze"],
     "icon": "cloud",
     "section": "Product Work",
     "featured": false
@@ -64,7 +64,7 @@
     "title": "Cube Cloud UIKit",
     "href": "https://main--626ee6db91d1c8004a912249.chromatic.com/",
     "description": "UIKit for Cube Cloud. Built with React, React Aria, and Tasty CSS generator.",
-    "tags": ["React", "React Aria", "Design System"],
+    "tags": ["React", "React Aria", "Design System", "Tasty", "Glaze"],
     "icon": "components",
     "section": "Product Work",
     "featured": false
@@ -114,7 +114,7 @@
     "title": "tenphi.me",
     "href": "https://github.com/tenphi/tenphi.me",
     "description": "Source code for this personal website and blog, built with Astro, React, Tasty, and Glaze.",
-    "tags": ["Astro", "React", "Tasty"],
+    "tags": ["Astro", "React", "Tasty", "Glaze"],
     "icon": "github",
     "section": "Personal",
     "featured": false
