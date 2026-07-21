@@ -1,0 +1,122 @@
+[
+  {
+    "id": "tasty",
+    "title": "Tasty",
+    "href": "https://tasty.style",
+    "description": "CSS-in-JS styling engine for React with a declarative, state-aware DSL, design token integration, and SSR support.",
+    "tags": ["React", "TypeScript", "CSS-in-JS"],
+    "icon": "/projects/tasty.png",
+    "section": "Tasty Ecosystem",
+    "featured": true
+  },
+  {
+    "id": "glaze",
+    "title": "Glaze",
+    "href": "https://github.com/tenphi/glaze",
+    "description": "Predictable OKHST color theme generator with WCAG contrast solving. Zero dependencies. Generates light, dark, and high-contrast schemes.",
+    "tags": ["OKHST", "WCAG", "Color"],
+    "icon": "/projects/glaze.png",
+    "section": "Tasty Ecosystem",
+    "featured": true
+  },
+  {
+    "id": "eslint-plugin-tasty",
+    "title": "@tenphi/eslint-plugin-tasty",
+    "href": "https://github.com/tenphi/tasty-eslint-plugin",
+    "description": "ESLint plugin for validating tasty() and tastyStatic() style objects — tokens, states, presets, and property names.",
+    "tags": ["ESLint", "DX"],
+    "icon": "github",
+    "section": "Tasty Ecosystem",
+    "featured": false
+  },
+  {
+    "id": "tasty-vscode-extension",
+    "title": "Tasty VS Code Extension",
+    "href": "https://github.com/tenphi/tasty-vscode-extension",
+    "description": "VS Code syntax highlighting for Tasty DSL inside style objects.",
+    "tags": ["VS Code", "DX"],
+    "icon": "github",
+    "section": "Tasty Ecosystem",
+    "featured": false
+  },
+  {
+    "id": "tasty-style",
+    "title": "tasty.style",
+    "href": "https://github.com/tenphi/tasty.style",
+    "description": "Source code for Tasty’s official website, documentation, live playground, and interactive showcase.",
+    "tags": ["Next.js", "WebContainers"],
+    "icon": "github",
+    "section": "Tasty Ecosystem",
+    "featured": false
+  },
+  {
+    "id": "cube-cloud",
+    "title": "Cube Cloud",
+    "href": "https://cubecloud.dev",
+    "description": "Deploy, optimize and scale Cube.js applications. UI, UX, and frontend development.",
+    "tags": ["React", "UI/UX"],
+    "icon": "cloud",
+    "section": "Product Work",
+    "featured": false
+  },
+  {
+    "id": "cube-cloud-uikit",
+    "title": "Cube Cloud UIKit",
+    "href": "https://main--626ee6db91d1c8004a912249.chromatic.com/",
+    "description": "UIKit for Cube Cloud. Built with React, React Aria, and Tasty CSS generator.",
+    "tags": ["React", "React Aria", "Design System"],
+    "icon": "components",
+    "section": "Product Work",
+    "featured": false
+  },
+  {
+    "id": "subtly-media",
+    "title": "Subtly.Media",
+    "href": "https://subtly.media",
+    "description": "Smart subtitles for Netflix. Idea, UI, UX, and full-stack development.",
+    "tags": ["React", "Full-stack"],
+    "icon": "subtitles",
+    "section": "Product Work",
+    "featured": false
+  },
+  {
+    "id": "sellerscale",
+    "title": "Sellerscale",
+    "href": "https://sellerscale.com",
+    "description": "Smarter financial management for Amazon sellers. UI, UX, and frontend.",
+    "tags": ["Vue", "UI/UX"],
+    "icon": "chart",
+    "section": "Product Work",
+    "featured": false
+  },
+  {
+    "id": "numl-design",
+    "title": "Numl.Design Website",
+    "href": "https://numl.tenphi.me",
+    "description": "Landing, Storybook, Handbook, Documentation, and REPL for the Numl.Design project.",
+    "tags": ["Vue", "Nuxt.js", "UI/UX", "Deprecated"],
+    "icon": "layout",
+    "section": "Product Work",
+    "featured": false
+  },
+  {
+    "id": "numl-theme-generator",
+    "title": "Numl Theme Generator",
+    "href": "https://theme.tenphi.me/",
+    "description": "Visual CSS color theme generator by Numl.Design.",
+    "tags": ["Color", "CSS", "Deprecated"],
+    "icon": "world",
+    "section": "Product Work",
+    "featured": false
+  },
+  {
+    "id": "tenphi-me",
+    "title": "tenphi.me",
+    "href": "https://github.com/tenphi/tenphi.me",
+    "description": "Source code for this personal website and blog, built with Astro, React, Tasty, and Glaze.",
+    "tags": ["Astro", "React", "Tasty"],
+    "icon": "github",
+    "section": "Personal",
+    "featured": false
+  }
+]
