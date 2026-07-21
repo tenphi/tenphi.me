@@ -20,6 +20,16 @@
     "featured": true
   },
   {
+    "id": "okhst",
+    "title": "OKHST",
+    "href": "https://github.com/tenphi/okhst",
+    "description": "An OKHSL-derived tone space for stable perceptual lightness and contrast-oriented color ramps.",
+    "tags": ["Color Science", "OKHSL", "Research", "Color Generation"],
+    "icon": "github",
+    "section": "Research",
+    "featured": false
+  },
+  {
     "id": "eslint-plugin-tasty",
     "title": "@tenphi/eslint-plugin-tasty",
     "href": "https://github.com/tenphi/tasty-eslint-plugin",
