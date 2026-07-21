@@ -1,5 +1,5 @@
 ---
-title: 'OKHST: predictable color generation for real interfaces'
+title: 'OKHST: predictable color generation for user interfaces'
 description: 'OKHST is a tone-based color space for generating UI palettes that behave more predictably across states, dark mode, and high contrast.'
 date: 2026-07-02
 tags: ['css', 'color', 'accessibility', 'webdev']
@@ -531,6 +531,12 @@ model, just not widely supported enough to depend on yet.
 
 Full OKHST conversion in CSS still has to wait, but this blog already ships one
 narrow slice of the idea across modern browsers.
+
+<img
+  src="/blog/hue-slider.png"
+  alt="Site theme popover with a hue slider, system/light/dark theme controls, and high-contrast options."
+  style="width: 309px;"
+/>
 
 The palette icon in the top bar opens a hue slider. Dragging it rotates the
 site's text, surfaces, borders, and accents without `@function` or JavaScript

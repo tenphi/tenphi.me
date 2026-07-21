@@ -88,6 +88,7 @@ const ArticleContent = tasty({
       $: 'img:not([src$=".svg"])',
       width: 'max 100%',
       height: 'auto',
+      margin: '0 auto',
       border: true,
       radius: true,
     },
