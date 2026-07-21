@@ -41,6 +41,8 @@ const Card = tasty({
       flex: '0 0 64px',
       width: '64px',
       height: '64px',
+      padding: '1x',
+      boxSizing: 'border-box',
       radius: '1cr',
       overflow: 'hidden',
       fill: '#surface-2',
@@ -48,8 +50,8 @@ const Card = tasty({
     },
     IconImage: {
       display: 'block',
-      width: '64px',
-      height: '64px',
+      width: '48px',
+      height: '48px',
       objectFit: 'contain',
     },
     Body: {
@@ -124,9 +126,9 @@ export default function ProjectCard({
     <Card href={href}>
       <Card.Icon>
         {icon.startsWith('/') ? (
-          <Card.IconImage src={icon} alt="" width={64} height={64} />
+          <Card.IconImage src={icon} alt="" width={48} height={48} />
         ) : (
-          <Icon size={32} stroke={1.75} aria-hidden="true" />
+          <Icon size={48} stroke={1.5} aria-hidden="true" />
         )}
       </Card.Icon>
       <Card.Body>
