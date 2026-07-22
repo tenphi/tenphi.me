@@ -61,7 +61,7 @@
   },
   {
     "id": "cube-cloud",
-    "title": "Cube Cloud",
+    "title": "Cube",
     "href": "https://cubecloud.dev",
     "description": "Deploy, optimize and scale Cube.js applications. UI, UX, and frontend development.",
     "tags": ["React", "UI/UX", "Tasty", "Glaze"],
@@ -74,7 +74,7 @@
   },
   {
     "id": "cube-cloud-uikit",
-    "title": "Cube Cloud UIKit",
+    "title": "Cube UI Kit",
     "href": "https://main--626ee6db91d1c8004a912249.chromatic.com/",
     "description": "UIKit for Cube Cloud. Built with React, React Aria, and Tasty CSS generator.",
     "tags": ["React", "React Aria", "Design System", "Tasty", "Glaze"],
