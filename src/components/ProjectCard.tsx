@@ -141,7 +141,12 @@ export interface ProjectCardProps {
 }
 
 function isThemedIcon(icon: ProjectIcon): icon is ThemedProjectIcon {
-  return typeof icon === 'object' && icon !== null && 'light' in icon && 'dark' in icon;
+  return (
+    typeof icon === 'object' &&
+    icon !== null &&
+    'light' in icon &&
+    'dark' in icon
+  );
 }
 
 function ProjectIconView({ icon }: { icon: ProjectIcon }) {
