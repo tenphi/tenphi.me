@@ -1,13 +1,5 @@
 import { tasty } from '@tenphi/tasty';
-import {
-  IconBrandGithub,
-  IconChartBar,
-  IconCloud,
-  IconComponents,
-  IconLayout,
-  IconSubtitles,
-  IconWorld,
-} from '@tabler/icons-react';
+import { IconBrandGithub, IconPalette } from '@tabler/icons-react';
 import Tag from './ui/Tag';
 
 const Card = tasty({
@@ -43,7 +35,7 @@ const Card = tasty({
       height: '64px',
       padding: '1x',
       boxSizing: 'border-box',
-      radius: '1cr',
+      radius: '(1r + 1x)',
       overflow: 'hidden',
       fill: '#surface-2',
       color: '#accent-text',
@@ -53,6 +45,36 @@ const Card = tasty({
       width: '48px',
       height: '48px',
       objectFit: 'contain',
+      radius: true,
+      overflow: 'hidden',
+    },
+    IconImageLight: {
+      display: {
+        '': 'block',
+        '@dark': 'none',
+      },
+      width: '48px',
+      height: '48px',
+      objectFit: 'contain',
+      radius: true,
+      overflow: 'hidden',
+    },
+    IconImageDark: {
+      display: {
+        '': 'none',
+        '@dark': 'block',
+      },
+      width: '48px',
+      height: '48px',
+      objectFit: 'contain',
+      radius: true,
+      overflow: 'hidden',
+    },
+    IconMask: {
+      display: 'block',
+      width: '48px',
+      height: '48px',
+      fill: 'currentColor',
     },
     Body: {
       display: 'flex',
@@ -87,6 +109,9 @@ const Card = tasty({
   elements: {
     Icon: 'div',
     IconImage: 'img',
+    IconImageLight: 'img',
+    IconImageDark: 'img',
+    IconMask: 'span',
     Body: 'div',
     Title: 'h3',
     Description: 'p',
@@ -96,13 +121,15 @@ const Card = tasty({
 
 const icons = {
   github: IconBrandGithub,
-  chart: IconChartBar,
-  cloud: IconCloud,
-  components: IconComponents,
-  layout: IconLayout,
-  subtitles: IconSubtitles,
-  world: IconWorld,
+  palette: IconPalette,
 };
+
+export interface ThemedProjectIcon {
+  light: string;
+  dark: string;
+}
+
+export type ProjectIcon = string | ThemedProjectIcon;
 
 export interface ProjectCardProps {
   id: string;
@@ -110,7 +137,49 @@ export interface ProjectCardProps {
   href: string;
   description: string;
   tags: string[];
-  icon: string;
+  icon: ProjectIcon;
+}
+
+function isThemedIcon(icon: ProjectIcon): icon is ThemedProjectIcon {
+  return typeof icon === 'object' && icon !== null && 'light' in icon && 'dark' in icon;
+}
+
+function ProjectIconView({ icon }: { icon: ProjectIcon }) {
+  if (isThemedIcon(icon)) {
+    return (
+      <>
+        <Card.IconImageLight src={icon.light} alt="" width={48} height={48} />
+        <Card.IconImageDark src={icon.dark} alt="" width={48} height={48} />
+      </>
+    );
+  }
+
+  if (icon.startsWith('mask:')) {
+    const src = icon.slice('mask:'.length);
+    return (
+      <Card.IconMask
+        aria-hidden="true"
+        style={{
+          background: 'currentColor',
+          WebkitMaskImage: `url(${src})`,
+          maskImage: `url(${src})`,
+          WebkitMaskSize: 'contain',
+          maskSize: 'contain',
+          WebkitMaskRepeat: 'no-repeat',
+          maskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'center',
+          maskPosition: 'center',
+        }}
+      />
+    );
+  }
+
+  if (icon.startsWith('/')) {
+    return <Card.IconImage src={icon} alt="" width={48} height={48} />;
+  }
+
+  const Icon = icons[icon as keyof typeof icons] ?? IconBrandGithub;
+  return <Icon size={48} stroke={1.5} aria-hidden="true" />;
 }
 
 export default function ProjectCard({
@@ -120,16 +189,10 @@ export default function ProjectCard({
   tags,
   icon,
 }: ProjectCardProps) {
-  const Icon = icons[icon as keyof typeof icons] ?? IconBrandGithub;
-
   return (
     <Card href={href}>
       <Card.Icon>
-        {icon.startsWith('/') ? (
-          <Card.IconImage src={icon} alt="" width={48} height={48} />
-        ) : (
-          <Icon size={48} stroke={1.5} aria-hidden="true" />
-        )}
+        <ProjectIconView icon={icon} />
       </Card.Icon>
       <Card.Body>
         <Card.Title>{title}</Card.Title>

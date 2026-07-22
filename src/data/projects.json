@@ -25,7 +25,7 @@
     "href": "https://github.com/tenphi/okhst",
     "description": "An OKHSL-derived tone space for stable perceptual lightness and contrast-oriented color ramps.",
     "tags": ["Color Science", "OKHSL", "Research", "Color Generation"],
-    "icon": "github",
+    "icon": "palette",
     "section": "Research",
     "featured": false
   },
@@ -65,7 +65,10 @@
     "href": "https://cubecloud.dev",
     "description": "Deploy, optimize and scale Cube.js applications. UI, UX, and frontend development.",
     "tags": ["React", "UI/UX", "Tasty", "Glaze"],
-    "icon": "cloud",
+    "icon": {
+      "light": "/projects/cube-light.svg",
+      "dark": "/projects/cube-dark.svg"
+    },
     "section": "Product Work",
     "featured": false
   },
@@ -75,7 +78,10 @@
     "href": "https://main--626ee6db91d1c8004a912249.chromatic.com/",
     "description": "UIKit for Cube Cloud. Built with React, React Aria, and Tasty CSS generator.",
     "tags": ["React", "React Aria", "Design System", "Tasty", "Glaze"],
-    "icon": "components",
+    "icon": {
+      "light": "/projects/cube-light.svg",
+      "dark": "/projects/cube-dark.svg"
+    },
     "section": "Product Work",
     "featured": false
   },
@@ -85,7 +91,7 @@
     "href": "https://subtly.media",
     "description": "Smart subtitles for Netflix. Idea, UI, UX, and full-stack development.",
     "tags": ["React", "Full-stack"],
-    "icon": "subtitles",
+    "icon": "/projects/subtly.png",
     "section": "Product Work",
     "featured": false
   },
@@ -95,7 +101,7 @@
     "href": "https://sellerscale.com",
     "description": "Smarter financial management for Amazon sellers. UI, UX, and frontend.",
     "tags": ["Vue", "UI/UX"],
-    "icon": "chart",
+    "icon": "/projects/sellerscale.png",
     "section": "Product Work",
     "featured": false
   },
@@ -105,7 +111,7 @@
     "href": "https://numl.tenphi.me",
     "description": "Landing, Storybook, Handbook, Documentation, and REPL for the Numl.Design project.",
     "tags": ["Vue", "Nuxt.js", "UI/UX", "Deprecated"],
-    "icon": "layout",
+    "icon": "mask:/projects/numl.svg",
     "section": "Product Work",
     "featured": false
   },
@@ -115,7 +121,7 @@
     "href": "https://theme.tenphi.me/",
     "description": "Visual CSS color theme generator by Numl.Design.",
     "tags": ["Color", "CSS", "Deprecated"],
-    "icon": "world",
+    "icon": "palette",
     "section": "Product Work",
     "featured": false
   },
