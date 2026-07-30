@@ -37,6 +37,7 @@
     "@tenphi/eslint-plugin-tasty": "^0.11.2",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "astro-eslint-parser": "3.0.0",
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.0.1",

@@ -70,9 +70,8 @@ const TagsBar = tasty({
   as: 'div',
   styles: {
     display: 'flex',
-    flow: 'row',
+    flow: 'row wrap',
     gap: '1x',
-    flexWrap: 'wrap',
     viewTransitionName: `tags-${post.id}`,
   },
 });
@@ -91,11 +90,10 @@ const PostFooter = tasty({
   as: 'div',
   styles: {
     display: 'flex',
-    flow: 'row',
+    flow: 'row wrap',
     justify: 'space-between',
     alignItems: 'center',
     gap: '2x',
-    flexWrap: 'wrap',
     padding: '6x 0 0',
   },
 });
