@@ -34,7 +34,7 @@
   "devDependencies": {
     "@atproto/api": "^0.20.28",
     "@eslint/js": "^10.0.1",
-    "@tenphi/eslint-plugin-tasty": "^0.11.2",
+    "@tenphi/eslint-plugin-tasty": "^0.11.3",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "astro-eslint-parser": "3.0.0",
