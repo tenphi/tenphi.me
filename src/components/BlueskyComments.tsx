@@ -10,11 +10,10 @@ const Wrapper = tasty({
 
     Header: {
       display: 'flex',
-      flow: 'row',
+      flow: 'row wrap',
       gap: '1x',
       alignItems: 'baseline',
       justifyContent: 'space-between',
-      flexWrap: 'wrap',
     },
     Title: {
       preset: 'h3',
@@ -70,21 +69,24 @@ const Comment = tasty({
       height: '5x',
       radius: 'round',
       fill: '#surface-2',
-      flex: '0 0 auto',
+      flexGrow: 0,
+      flexShrink: 0,
+      flexBasis: 'auto',
     },
     Body: {
       display: 'flex',
       flow: 'column',
       gap: '.5x',
-      flex: '1 1 auto',
-      minWidth: '0',
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 'auto',
+      width: 'min 0',
     },
     Head: {
       display: 'flex',
-      flow: 'row',
+      flow: 'row wrap',
       gap: '1x',
       alignItems: 'baseline',
-      flexWrap: 'wrap',
     },
     Author: {
       preset: 'bold',

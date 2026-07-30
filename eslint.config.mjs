@@ -5,6 +5,7 @@ import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tasty from '@tenphi/eslint-plugin-tasty';
+import * as astroParser from 'astro-eslint-parser';
 
 export default defineConfig(
   {
@@ -15,6 +16,27 @@ export default defineConfig(
   tseslint.configs.stylistic,
   prettier,
   tasty.configs.recommended,
+  {
+    // ESLint only lints extensions some config opts into, so without this block
+    // `.astro` files are skipped silently — which hid a third of the project's
+    // `tasty()` calls from every rule above. The frontmatter is parsed as TS so
+    // the tasty rules can see the style objects declared there.
+    files: ['**/*.astro'],
+    languageOptions: {
+      parser: astroParser,
+      parserOptions: {
+        parser: tseslint.parser,
+        extraFileExtensions: ['.astro'],
+      },
+    },
+    rules: {
+      // Frontmatter is TypeScript, so `tsc` already resolves identifiers and
+      // knows the ambient globals. `no-undef` only produces false positives
+      // here (`URL`, `Astro`, …) — typescript-eslint turns it off for .ts for
+      // the same reason, but that config is scoped to TS extensions only.
+      'no-undef': 'off',
+    },
+  },
   {
     plugins: {
       'react-hooks': reactHooks,

@@ -4,10 +4,9 @@ const Bar = tasty({
   as: 'div',
   styles: {
     display: 'flex',
-    flow: 'row',
+    flow: 'row wrap',
     gap: '2x',
     alignItems: 'center',
-    flexWrap: 'wrap',
     padding: '3x 0',
     border: 'top #border',
 
@@ -25,7 +24,9 @@ const Bar = tasty({
       transition: 'color 0.15s',
     },
     Spacer: {
-      flex: '1 1 auto',
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 'auto',
     },
     Follow: {
       display: 'flex',

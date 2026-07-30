@@ -32,9 +32,8 @@ const PostCard = tasty({
     },
     Tags: {
       display: 'flex',
-      flow: 'row',
+      flow: 'row wrap',
       gap: '1x',
-      flexWrap: 'wrap',
     },
   },
   elements: {

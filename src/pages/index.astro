@@ -51,13 +51,17 @@ const Hero = tasty({
       display: 'flex',
       flow: 'column',
       gap: '3x',
-      flex: '1 1 auto',
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 'auto',
     },
     Avatar: {
       display: 'block',
       width: '160px',
       height: 'auto',
-      flex: '0 0 auto',
+      flexGrow: 0,
+      flexShrink: 0,
+      flexBasis: 'auto',
     },
     Heading: {
       $: 'h1',
@@ -82,10 +86,9 @@ const Hero = tasty({
     },
     Links: {
       display: 'flex',
-      flow: 'row',
+      flow: 'row wrap',
       gap: '1x',
       alignItems: 'center',
-      flexWrap: 'wrap',
       justifyContent: {
         '': 'flex-start',
         '@mobile': 'center',
@@ -109,7 +112,7 @@ const SocialLink = tasty({
       ':hover': '#accent-text-2',
     },
     fill: {
-      '': 'transparent',
+      '': '#clear',
       ':hover': '#accent-surface.08',
     },
     transition: 'theme',

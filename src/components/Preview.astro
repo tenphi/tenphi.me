@@ -83,7 +83,7 @@ const srcdoc = hasJs
 </head>
 <body>
 ${html}
-<script>${js}<\/script>
+<script>${js}</script>
 ${heightReporter}
 </body>
 </html>`
@@ -91,7 +91,7 @@ ${heightReporter}
 
 const srcdocAttr = JSON.stringify(srcdoc);
 
-const sources: Array<{ lang: 'html' | 'css' | 'js'; code: string }> = [];
+const sources: { lang: 'html' | 'css' | 'js'; code: string }[] = [];
 if (html) sources.push({ lang: 'html', code: dedent(html) });
 if (css) sources.push({ lang: 'css', code: dedent(css) });
 if (js) sources.push({ lang: 'js', code: dedent(js) });

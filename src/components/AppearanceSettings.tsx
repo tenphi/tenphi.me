@@ -37,8 +37,7 @@ const AppearanceSettingsEl = tasty({
     },
     Popover: {
       position: 'absolute',
-      top: '100%',
-      right: 0,
+      inset: '100% top, 0 right',
       margin: '1x 0',
       padding: '1x',
       gap: '.5x',

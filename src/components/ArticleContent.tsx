@@ -47,7 +47,7 @@ const ArticleContent = tasty({
         '': '0 0 2x',
         '@own(:last-child)': '0',
       },
-      paddingLeft: '3x',
+      padding: '3x left',
     },
     Ol: {
       $: 'ol',
@@ -55,7 +55,7 @@ const ArticleContent = tasty({
         '': '0 0 2x',
         '@own(:last-child)': '0',
       },
-      paddingLeft: '3x',
+      padding: '3x left',
     },
     Li: {
       $: 'li',
@@ -67,7 +67,7 @@ const ArticleContent = tasty({
         '': '0 0 2x',
         '@own(:last-child)': '0',
       },
-      padding: '0 0 0 2x',
+      padding: '2x left',
       border: '3bw left',
       preset: 'italic',
       color: '#text-soft',
@@ -115,11 +115,11 @@ const ArticleContent = tasty({
     },
     SummaryMarker: {
       $: 'summary::marker',
-      display: 'none',
+      hide: true,
     },
     SummaryWebkitMarker: {
       $: 'summary::-webkit-details-marker',
-      display: 'none',
+      hide: true,
     },
     SummaryChevron: {
       $: 'summary::before',
@@ -161,7 +161,7 @@ const ArticleContent = tasty({
     },
     PreCode: {
       $: 'pre code',
-      fill: 'transparent',
+      fill: '#clear',
       padding: '0',
       whiteSpace: 'pre',
     },
@@ -180,7 +180,7 @@ const ArticleContent = tasty({
       textAlign: 'left',
       padding: '1x 2x',
       border: 'bottom 2bw',
-      fontWeight: 600,
+      preset: 'code / strong',
     },
     Td: {
       $: 'td',
