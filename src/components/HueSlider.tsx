@@ -27,9 +27,10 @@ const HueSliderEl = tasty({
     // a visually hidden radio; the checked radio drives `--primary-hue` through
     // the `:root:has(...)` rules emitted below. Hidden once `data-js` is set.
     Track: {
-      display: {
-        '': 'flex',
-        '@root([data-js])': 'none',
+      display: 'flex',
+      hide: {
+        '': false,
+        '@root([data-js])': true,
       },
       flow: 'row',
       position: 'relative',
@@ -83,9 +84,10 @@ const HueSliderEl = tasty({
     // --- Native range slider (shown when JS is present) -------------------
     Slider: {
       $: 'input[type="range"]',
-      display: {
-        '': 'none',
-        '@root([data-js])': 'block',
+      display: 'block',
+      hide: {
+        '': true,
+        '@root([data-js])': false,
       },
       width: '100%',
       height: '2x',
