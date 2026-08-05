@@ -46,6 +46,10 @@ All styling uses `tasty()` components and `useGlobalStyles()`. No `tastyStatic`.
 
 ### Astro Integration
 
+`islands: false` is load-bearing: it selects a middleware variant that emits no
+class-list `<script>`, which is what makes the "zero client JS" claim true.
+Requires `@tenphi/tasty` > 3.0.0 — see the note under Static Output.
+
 ```ts
 // astro.config.ts
 import { defineConfig } from 'astro/config';

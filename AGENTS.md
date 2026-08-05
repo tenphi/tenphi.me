@@ -120,7 +120,9 @@ src/
 
 ## Styling Approach
 
-All styling uses runtime `tasty()` components — no `tastyStatic`. The Astro integration (`tastyIntegration({ islands: false })`) collects styles at build time and inlines them as CSS. No style-related JavaScript reaches the client.
+All styling uses runtime `tasty()` components — no `tastyStatic`. The Astro integration (`tastyIntegration({ islands: false })`) collects styles at build time and inlines them as a single `<style data-tasty-ssr>` per page. `islands: false` is what keeps the class-list transfer script out of the output, so no style-related JavaScript reaches the client.
+
+Requires `@tenphi/tasty` > 3.0.0: in 3.0.0 the integration failed the build outright, and in 2.x `islands: false` was silently ignored so the transfer script shipped anyway.
 
 ### Color System
 
