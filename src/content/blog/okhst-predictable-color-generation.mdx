@@ -514,14 +514,34 @@ shipped yet), the ramp looks like this:
 />
 
 The playground reads final colors with `getComputedStyle`, but CSS performs the
-calculation. The first version repeated too much color math for every swatch and
-took around one second per slider interaction. After I showed it to
-[Roman Komarov](https://kizu.dev/), his proof-of-concept led me to cache the
-hue-dependent setup and separate the expensive paths, bringing interactions
-down to around 30ms. Runtime cost was no longer the main obstacle; browser
-support was. CSS `@function` is Chromium-only today (Chrome/Edge 139+), while
-Firefox and Safari have not shipped it, so broad production use is likely still
-years away.
+calculation. The first version was slow enough that dragging the hue slider
+visibly lagged. After I showed it to [Roman Komarov](https://kizu.dev/), his
+proof-of-concept explained why: a function-local is re-substituted at every
+`var()` that reads it, so one call to the cusp solver expanded its branch gates
+hundreds of times. Moving those sub-expressions into their own `@function`s
+collapses the expansion, because a function call resolves to a single number at
+the call boundary.
+
+Three factorings of the same math are now published side by side, and the
+**Measure** button in the playground times a style recalc on whichever one is
+open:
+
+| Version                                                       | ms/recalc |
+| ------------------------------------------------------------ | --------: |
+| [naive](https://tenphi.github.io/okhst/naive/)                |       282 |
+| [sub-functions](https://tenphi.github.io/okhst/subfunctions/) |        46 |
+| [optimized](https://tenphi.github.io/okhst/)                  |        28 |
+
+Numbers from an M1 Max, 51-step ramp, dark scheme. `naive` keeps every
+intermediate as a function-local, `sub-functions` applies Roman's factoring
+unchanged, and `optimized` adds a cache on top: the hue-only cusp setup is
+hoisted to `:root` so it resolves once per hue instead of once per swatch, and
+the OKHST and OKHSL paths are split so each swatch evaluates only the transfer
+it needs.
+
+Runtime cost was no longer the main obstacle; browser support was. CSS
+`@function` is Chromium-only today (Chrome/Edge 139+), while Firefox and Safari
+have not shipped it, so broad production use is likely still years away.
 
 The experiment still proves that CSS can preserve palette rules instead of
 flattening them into static values. The platform is expressive enough for the
