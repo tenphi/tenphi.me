@@ -37,6 +37,15 @@ primary.colors({
     tone: ['-15', '-30'],
     saturation: 0.21,
   },
+  // Glass rim for the sticky header. `mode: 'fixed'` keeps it on the light
+  // end of both schemes (unlike `surface`, which inverts), so the edge reads
+  // as a highlight in dark mode instead of a dark hairline. Near-neutral on
+  // purpose — the rim should catch light, not tint it.
+  'glass-border': {
+    tone: 100,
+    saturation: 0.05,
+    mode: 'fixed',
+  },
   'accent-text': {
     base: 'surface',
     tone: 50,
