@@ -76,14 +76,14 @@
     "id": "cube-cloud-uikit",
     "title": "Cube UI Kit",
     "href": "https://main--626ee6db91d1c8004a912249.chromatic.com/",
-    "description": "UIKit for Cube Cloud. Built with React, React Aria, and Tasty CSS generator.",
+    "description": "Design system behind Cube, an enterprise data platform — 100+ accessible React components built on React Aria, styled with Tasty, and themed with Glaze. Documented in Storybook and running in production across the product.",
     "tags": ["React", "React Aria", "Design System", "Tasty", "Glaze"],
     "icon": {
       "light": "/projects/cube-light.svg",
       "dark": "/projects/cube-dark.svg"
     },
     "section": "Product Work",
-    "featured": false
+    "featured": true
   },
   {
     "id": "subtly-media",
