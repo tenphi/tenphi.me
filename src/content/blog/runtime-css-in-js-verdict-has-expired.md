@@ -82,7 +82,7 @@ That answers how runtime CSS-in-JS can avoid its old failure modes. It leaves a 
 
 ## “Build-time CSS is always faster”
 
-At runtime, yes. Work that was completed during a build is cheaper than work that still has to happen in the browser.
+Build-time CSS is usually faster in the browser. Work completed during a build is cheaper than work that still has to happen at runtime.
 
 That is why Tasty also has `tastyStatic`. It runs the style engine during the build, writes a CSS file, and leaves class names in the application code. No styling runtime is needed in the browser.
 
