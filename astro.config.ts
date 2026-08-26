@@ -16,6 +16,14 @@ const tastyLang = {
 export default defineConfig({
   site: 'https://tenphi.me',
   server: { host: '0.0.0.0' },
+  vite: {
+    server: {
+      watch: {
+        useFsEvents: false,
+        usePolling: true,
+      },
+    },
+  },
   markdown: {
     shikiConfig: {
       theme: tastyCodeTheme,
