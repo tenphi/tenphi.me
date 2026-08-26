@@ -48,11 +48,11 @@ These are internal profiles rather than a controlled public benchmark, and the w
 
 This claim is simply too strong. Adding a rule marks styles as changed, but it does not by itself synchronously recalculate the whole page. Modern browsers normally batch style and layout work until it is needed.
 
-The problem starts when something asks for the result too early. If code changes styles and then reads a layout value, the browser must catch up before it can answer. Repeat that pattern across many components and it becomes layout thrashing. [Chrome's current performance guidance](https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing) describes exactly this read-after-write behavior. React can create another version of the problem during concurrent rendering: it may yield while a tree is still being rendered, giving the browser a chance to recalculate between slices. This is why React introduced [\`useInsertionEffect\`](https://react.dev/reference/react/useInsertionEffect) for CSS-in-JS libraries.
+The risk is timing. If code changes styles and then reads a layout value, the browser must catch up before it can answer. Repeat that pattern and it becomes layout thrashing. [Chrome's current performance guidance](https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing) describes exactly this read-after-write behavior. Concurrent React introduces another opportunity: if stylesheet mutations happen during each rendering slice, the browser may recalculate between them. It often will not, because browsers already coalesce invalidations, but it can.
 
-Tasty's batch mode is designed for this actual problem. Components can generate rules during a React render, but Tasty queues the stylesheet writes and applies them together before any layout effect can read the result. Many components therefore create one style update instead of many opportunities for recalculation.
+React's [\`useInsertionEffect\`](https://react.dev/reference/react/useInsertionEffect) provides CSS-in-JS libraries with a commit-phase point for installing styles before layout effects run. Tasty's `TastyBatchProvider` collects stylesheet mutations while descendants render and flushes them during that insertion phase. This keeps render-time CSSOM writes from being spread across concurrent rendering slices while ensuring that layout effects see the complete styles.
 
-The browser still has work to do. The difference is that inserting a rule is not the same as immediately recalculating the page, and batching prevents other code from repeatedly forcing that recalculation.
+Tasty also applies the queued changes in one CSSOM operation. That reduces insertion overhead and invalidations further, but it is a secondary optimization. The main protection comes from controlling when the stylesheet is mutated, not from assuming that every unbatched insertion would force a recalculation.
 
 ## “Generated styles keep accumulating”
 
