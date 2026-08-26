@@ -46,13 +46,11 @@ These are internal profiles rather than a controlled public benchmark, and the w
 
 ## “Every inserted rule recalculates the whole page”
 
-This claim is simply too strong. Adding a rule marks styles as changed, but it does not by itself synchronously recalculate the whole page. Modern browsers normally batch style and layout work until it is needed.
+This claim is too strong. Adding a rule does not immediately recalculate the whole page. Modern browsers usually collect style changes and process them together.
 
-The risk is timing. If code changes styles and then reads a layout value, the browser must catch up before it can answer. Repeat that pattern and it becomes layout thrashing. [Chrome's current performance guidance](https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing) describes exactly this read-after-write behavior. Concurrent React introduces another opportunity: if stylesheet mutations happen during each rendering slice, the browser may recalculate between them. It often will not, because browsers already coalesce invalidations, but it can.
+React may split rendering into several parts. If a library changes the stylesheet during each part, the browser gets several chances to recalculate styles. It often will not, but it can.
 
-React's [\`useInsertionEffect\`](https://react.dev/reference/react/useInsertionEffect) provides CSS-in-JS libraries with a commit-phase point for installing styles before layout effects run. Tasty's `TastyBatchProvider` collects stylesheet mutations while descendants render and flushes them during that insertion phase. This keeps render-time CSSOM writes from being spread across concurrent rendering slices while ensuring that layout effects see the complete styles.
-
-Tasty also applies the queued changes in one CSSOM operation. That reduces insertion overhead and invalidations further, but it is a secondary optimization. The main protection comes from controlling when the stylesheet is mutated, not from assuming that every unbatched insertion would force a recalculation.
+Tasty's `TastyBatchProvider` avoids that uncertainty. It holds new rules while components render, then applies them in React's [\`useInsertionEffect\`](https://react.dev/reference/react/useInsertionEffect), before layout effects can measure the page. Applying all queued rules in one stylesheet update saves a little more work, but predictable timing is the main benefit.
 
 ## “Generated styles keep accumulating”
 
