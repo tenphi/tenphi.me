@@ -88,9 +88,9 @@ This is not an admission that runtime CSS-in-JS failed. Runtime and build-time m
 
 ## What runtime generation actually buys you
 
-A live value does not by itself require runtime CSS generation. A statically styled component can pass a user-selected color or dimension through React's `style` prop or a CSS custom property, and that is enough for many cases.
+A live value does not by itself require runtime CSS generation. A statically styled component can pass a user-selected color or dimension through React's `style` prop, either directly or via a CSS custom property, and that is enough for many cases.
 
-The difference appears when those values must participate in CSS states. Consider a user-editable theme with dark and high-contrast modes. A static solution must render the selectors for those modes in advance, expose custom properties for the values in every state, and then set several properties at runtime. Every route from application data into CSS has to be designed before the build.
+The difference appears when those values must participate in CSS states. Consider a customizable button with different background colors for its default, hover, pressed, and disabled states. A static solution must define those state selectors in advance, expose a separate custom property for each background, and set every property at runtime. Every route from application data into CSS has to be designed before the build.
 
 At runtime, Tasty works more like a lazy compiler. It receives the actual style object and maps it directly to whatever properties, states, and conditions the application requests, generating only the combinations that are used. There is no need to predeclare custom properties merely as pipes into every possible state. This structural freedom—not merely accepting live values—is what runtime generation uniquely provides.
 
