@@ -25,13 +25,20 @@ const AppearanceSettingsEl = tasty({
       border: true,
       image: {
         '': 'linear-gradient(to bottom, #surface.75, #surface-down.1)',
-        '@high-contrast': 'none',
+        '@dark': 'linear-gradient(to bottom, #surface-down.1, #surface.75)',
         '@own(:active) | :focus-within':
           'linear-gradient(to bottom, #surface-down.1, #surface.75)',
+        '@dark & (@own(:active) | :focus-within)':
+          'linear-gradient(to bottom, #surface.75, #surface-down.1)',
         '[data-collapsed]':
           'linear-gradient(to bottom, #surface.75, #surface-down.1)',
+        '@dark & [data-collapsed]':
+          'linear-gradient(to bottom, #surface-down.1, #surface.75)',
         '[data-collapsed] & @own(:active)':
           'linear-gradient(to bottom, #surface-down.1, #surface.75)',
+        '@dark & [data-collapsed] & @own(:active)':
+          'linear-gradient(to bottom, #surface.75, #surface-down.1)',
+        '@high-contrast': 'none',
       },
       transition: 'color 0.15s, fill 0.15s, image 0.15s',
     },
