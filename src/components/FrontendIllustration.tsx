@@ -39,7 +39,7 @@ const Scene = tasty({
       border: '2px solid #text-soft',
       fill: '#surface-2',
       overflow: 'hidden',
-      shadow: '0 1x 0 #accent-text.14',
+      shadow: '0 1x 0 #illustration-shadow',
     },
     Toolbar: {
       display: 'flex',

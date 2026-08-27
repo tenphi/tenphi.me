@@ -89,6 +89,12 @@ primary.colors({
     bg: 'surface',
     intensity: 15,
   },
+  'illustration-shadow': {
+    type: 'shadow',
+    bg: 'surface-2',
+    fg: 'accent-text',
+    intensity: 12,
+  },
   'tiny-shadow': {
     type: 'shadow',
     bg: 'accent-surface',
