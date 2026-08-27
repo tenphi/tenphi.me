@@ -67,7 +67,7 @@ primary.colors({
   'accent-surface': {
     base: 'accent-surface-text',
     tone: '-48',
-    contrast: { apca: 'content' },
+    contrast: { wcag: 'AA' },
     saturation: 100,
     mode: 'fixed',
   },
