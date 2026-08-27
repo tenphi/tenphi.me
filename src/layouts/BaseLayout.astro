@@ -266,9 +266,11 @@ const ogImageUrl = ogImage
       <slot />
     </main>
     <Footer />
+    <!-- Umami tracker, self-hosted to avoid a third-party request. Refresh with `pnpm update:analytics`. -->
     <script
+      is:inline
       defer
-      src="https://cloud.umami.is/script.js"
+      src="/umami.js"
       data-website-id="070eff0b-1d9d-4e04-bbe2-8cff06879500"></script>
   </body>
 </html>
