@@ -19,7 +19,6 @@ Repository: <https://github.com/tenphi/tenphi.me>
 | `pnpm format:check` | Check formatting |
 | `pnpm hygiene` | Run lint + format check |
 | `pnpm hygiene:fix` | Auto-fix lint + format |
-| `pnpm update:analytics` | Re-vendor the self-hosted Umami tracker |
 
 ## Before Pushing Changes
 
@@ -65,7 +64,6 @@ docs/
 
 scripts/
   publish-atproto.ts      standard.site publisher (records + announcement posts)
-  update-umami.ts         Re-vendors public/umami.js (`pnpm update:analytics`)
 
 src/
   config/

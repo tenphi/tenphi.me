@@ -9,7 +9,6 @@
     "preview": "astro preview",
     "astro": "astro",
     "publish:atproto": "tsx scripts/publish-atproto.ts",
-    "update:analytics": "tsx scripts/update-umami.ts",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,astro}\"",
