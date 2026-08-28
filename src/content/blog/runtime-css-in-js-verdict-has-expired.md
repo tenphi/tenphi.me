@@ -22,25 +22,25 @@ I want to revisit that case through [Tasty](https://github.com/tenphi/tasty). Ta
 
 That would indeed be slow. It is also unnecessary.
 
-When a Tasty component renders with the same styles, it remembers the class names it produced before and skips CSS generation. When styles are dynamic, Tasty does not treat the entire component as one indivisible block. It splits the result into reusable chunks, such as layout, dimensions, typography, and appearance.
-
-Imagine that a component changes only its padding. Tasty can reuse its existing color, typography, and layout classes and generate only the changed spacing chunk. Another component using the same chunk can reuse it too.
+When a Tasty component renders with the same styles, it remembers the class names it produced before and skips CSS generation. Dynamic styles are split into reusable chunks such as layout, dimensions, typography, and appearance. If only padding changes, Tasty reuses the other chunks and generates just the new spacing; another component can reuse that chunk too.
 
 There are additional caches inside the parser and the style pipeline, but the important idea is simple: repeated work should stop at the earliest possible layer. A React render does not have to mean another CSS render.
 
 ## “Every inserted rule recalculates the whole page”
 
-This claim is too strong. Adding a rule invalidates style, but it does not immediately recalculate the whole page. Browsers can collect several changes and resolve them together when styles are needed.
+This claim is too strong. Adding a rule invalidates style, but browsers can collect several changes and resolve them together when styles are needed. React may split rendering into parts, though, giving the browser several chances to recalculate if stylesheet writes are interleaved with reads.
 
-React may split rendering into several parts. If a library changes the stylesheet during each part, the browser gets several chances to recalculate styles. It often will not, but it can.
-
-Tasty's `TastyBatchProvider` avoids that uncertainty. It holds new rules while components render, then applies them in React's [`useInsertionEffect`](https://react.dev/reference/react/useInsertionEffect) before layout effects can measure the page. The browser can resolve those writes together; predictable timing is the main benefit.
+With [batched injection](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/configuration.md#batched-injection) enabled, Tasty's `TastyBatchProvider` avoids that uncertainty. It holds new rules while components render, then applies them in React's [`useInsertionEffect`](https://react.dev/reference/react/useInsertionEffect) before layout effects can measure the page. The browser can resolve those writes together; predictable timing is the main benefit.
 
 ## “Generated styles keep accumulating”
 
 They can, especially when every combination of props produces another complete class.
 
-Tasty reduces that growth by reusing chunks and deduplicating identical output. A hundred component instances using the same appearance do not need a hundred copies of the same CSS. The injector also tracks which rules are still in use. Its stylesheet garbage collector keeps a bounded cache for quick reuse, then removes the oldest unused rules during browser idle time when that cache grows too large. Rules still referenced by components or still present in the DOM are never collected.
+Tasty reduces that growth by reusing chunks and deduplicating identical output. A hundred component instances using the same appearance do not need a hundred copies of the same CSS.
+
+[The collector takes a deliberately cautious approach](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/injector.md#garbage-collection). During browser idle time, it checks which generated classes are still present on the page. When a class disappears, its rules are not removed immediately: they receive a 10-second grace period, then the most recently unused styles remain available in a bounded cache while older ones are deleted.
+
+That delay matters because React can generate a class before its element reaches the DOM. Treating every absent class as dead could delete a rule in the middle of a render. The grace period covers that gap without adding lifecycle tracking to every styled element, so ordinary renders do not pay extra bookkeeping costs.
 
 This does not make unlimited dynamic CSS free. An application that continuously creates unique values that remain active can still grow its stylesheet and should measure that behavior. The point is that accumulation can be controlled rather than accepted as an unavoidable feature of CSS-in-JS.
 
@@ -52,29 +52,23 @@ Tasty components do not need hooks or React context to generate styles. A warmed
 
 ## What does the runtime cost in practice?
 
-Generation, injection, and wrapper overhead are different costs. Tasty's public benchmarks measure them separately. On an Apple M3 Pro, the current results are:
+Generation, injection, and wrapper overhead are different costs. I reran Tasty's current public benchmarks three times on an Apple M1 Max. The Node suite used Node 22; the browser suites used production React 19.2.8 and Chromium 151.
 
 | Measured work | Added time |
-| --- | --- |
-| Render one warmed `tasty()` wrapper | ~1 µs per element |
-| Generate a new style | ~12–33 µs |
-| Reuse a cached style | ~0.09 µs |
-| Generate, inject, and resolve one new rule | ~0.11 ms |
-| Generate and inject 1,000 new rules, then resolve styles once | ~7–8 ms total |
+| --- | ---: |
+| Render one warmed `tasty()` wrapper | ~1.1 µs per element |
+| Generate a new style | ~16–47 µs |
+| Reuse a cached style | ~0.12–0.13 µs |
+| Generate, inject, and resolve one new rule | ~0.16–0.18 ms |
+| Generate and inject 1,000 new rules, then resolve styles once | ~10.1–10.5 ms total |
 
-The wrapper and injection results come from production builds with React 19.2.4 and Chromium 151; generation and cache results come from Node 24. The numbers should not be added together: the end-to-end injection benchmark already includes generation and subtracts the same DOM update and style resolution performed with equivalent CSS already present.
+The numbers should not be added together: the end-to-end injection benchmark already includes generation and subtracts the same DOM update and style resolution performed with equivalent CSS already present.
 
-The [style-pipeline benchmark](https://github.com/tenphi/tasty/blob/cda0696a96d46d812ab99981b3409cd63437235e/docs/runtime-benchmarks.md#core-style-pipeline), [wrapper-overhead benchmark](https://github.com/tenphi/tasty/blob/cda0696a96d46d812ab99981b3409cd63437235e/docs/runtime-benchmarks.md#empty-wrapper-overhead), and [cold-generation-and-injection benchmark](https://github.com/tenphi/tasty/blob/cda0696a96d46d812ab99981b3409cd63437235e/docs/runtime-benchmarks.md#cold-generation-and-injection) are public and reproducible. The injection curve measures groups of 1, 10, 100, and 1,000 new rules with one style-resolution boundary per group. Exact results will vary by machine, but the shape is more important: cached work is extremely cheap, while a large burst of unique rules can become meaningful even when the browser resolves the changes together.
+The [style-pipeline benchmark](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/runtime-benchmarks.md#core-style-pipeline), [wrapper-overhead benchmark](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/runtime-benchmarks.md#empty-wrapper-overhead), and [cold-generation-and-injection benchmark](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/runtime-benchmarks.md#cold-generation-and-injection) are public and reproducible. The single-rule case crosses the injection-to-resolution boundary for every rule; the 1,000-rule case makes all writes before one resolution. The latter cost only about 59–65 times as much in total, not 1,000 times as much, because fixed work was amortized and the browser could resolve the writes together.
 
-A [representative React benchmark](https://github.com/tenphi/tasty/blob/cda0696a96d46d812ab99981b3409cd63437235e/docs/runtime-benchmarks.md#representative-react-tree) puts those costs in one update. With 1,000 elements sharing 20 style combinations, existing CSS took 1.64–1.70 ms, warm Tasty took 4.17–4.43 ms, and introducing 20 new shared combinations took 4.62–4.80 ms. In this deliberately busy tree, the new styles added only 0.38–0.55 ms over the warm Tasty path because each combination was generated once and reused across many elements.
+Product profiles complete the picture. In internal Sentry profiles from [Cube](https://cubecloud.dev/), an enterprise application built with the Tasty-powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit), style processing accounts for roughly 10–20% of measured CPU work during loading and navigation. A separate trace put Tasty at 12.4% of main-thread busy time. These are observations, not controlled benchmarks, but in both cases the overhead was measurable without being the dominant cost. Products that create many unique styles in one interaction should still profile that workload.
 
-Product profiles complete the picture. In Sentry profiles from [Cube](https://cubecloud.dev/), an enterprise application built with the Tasty-powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit), style processing accounts for roughly 10–20% of measured CPU work during loading and navigation. A separate navigation trace put Tasty at 12.4% of main-thread busy time; it was never the dominant cost in any task and caused no noticeable freezes or interaction stalls.
-
-Those production figures are internal measurements, not controlled public benchmarks. Together with the reproducible tests, they show overhead that is measurable but difficult to call a bottleneck in this application. A product that creates many unique styles in one interaction should still profile that workload.
-
-CSS and browser rendering are already complex runtime systems. Poorly timed layout reads, expensive paint, or simply too much DOM work can drop frames regardless of how styles were authored, just as unnecessary renders can in React.
-
-> Profiling is routine engineering hygiene, not an admission that a styling model has failed.
+> Every meaningful part of an application should be profiled and monitored. Performance can fail for many reasons, especially in the places nobody measures.
 
 ## “SSR is slow and flawed, and Server Components are unsupported”
 
@@ -98,11 +92,13 @@ This is not an admission that runtime CSS-in-JS failed. Runtime and build-time m
 
 ## What runtime generation actually buys you
 
-A live value does not by itself require runtime CSS generation. A statically styled component can pass a user-selected color or dimension through React's `style` prop, either directly or via a CSS custom property, and that is enough for many cases.
+Live values are only a small part of the answer. An inline style or CSS custom property is often enough for a user-selected color or dimension. The more important benefit is that a reusable component can leave structural decisions open until it is used.
 
-The difference appears when those values must participate in CSS states. Consider a customizable button with different background colors for its default, hover, pressed, and disabled states. A static solution must define those state selectors in advance, expose a separate custom property for each background, and set every property at runtime. Every route from application data into CSS has to be designed before the build.
+Consider a general-purpose `Grid`. Its author cannot know whether a consumer will need two equal columns, a fixed sidebar, named areas, or a template calculated from application data. That decision naturally belongs where the component is used. Runtime generation can take the actual `columns`, `areas`, states, and responsive conditions and produce the precise rules they require.
 
-At runtime, Tasty works more like a lazy compiler. It receives the actual style object and maps it directly to whatever properties, states, and conditions the application requests, generating only the combinations that are used. There is no need to predeclare custom properties merely as pipes into every possible state. This structural freedom—not merely accepting live values—is what runtime generation uniquely provides.
+Static systems often handle this by defining a large set of utilities, allowed values, or component variants in advance. That can be a useful constraint when the vocabulary is intentionally bounded, but it does not provide the same open-ended API: the library still has to predict the layouts its consumers will need. Build-time extraction can go further when it can see and understand every use, but that is another constraint on where and how the component may be consumed.
+
+At runtime, Tasty acts as a lazy compiler. It receives the styling decision at the point of use and generates only the requested structure. Values can also flow into hover, pressed, disabled, media, and container-query states without predeclaring a custom-property channel for every possibility. That structural freedom is what the runtime buys.
 
 The DSL itself is a separate benefit. The same parser and generator can run during the build, on the server, or in the browser.
 
@@ -118,9 +114,7 @@ backgroundColor: 'color-mix(in oklch, var(--purple-color) 10%, transparent)',
 fill: '#purple.1',
 ```
 
-Owning both the parser and the generator can also turn the DSL into a compatibility layer. Earlier Tasty versions emulated `gap` in flex layouts; the [fallback was removed in 2022](https://github.com/cube-js/cube-ui-kit/commit/cb3b543bc88a7fa3a33d4bb7c3a5749a39a5d8c4) when native support was sufficient for Tasty's target browsers. Tasty's [`gap` still works in ordinary block and inline layouts](https://github.com/tenphi/tasty/blob/cda0696a96d46d812ab99981b3409cd63437235e/src/styles/gap.ts), where native CSS `gap` has no effect, by generating spacing between children.
-
-Experimental CSS `@function` rules show the same idea. The developer chooses whether Tasty emits native rules or [inlines their calls into ordinary CSS](https://github.com/tenphi/tasty/blob/cda0696a96d46d812ab99981b3409cd63437235e/README.md#css-functions-function) at parse time. Tasty never makes that choice through browser feature detection: the same input must produce the same result on the server and client, so SSR remains deterministic.
+Owning the parser and generator can also turn the DSL into a compatibility layer. For experimental CSS `@function` rules, for example, the developer chooses whether Tasty emits native rules or [inlines their calls into ordinary CSS](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/README.md#css-functions-function). The choice is explicit rather than based on browser detection, keeping server and client output deterministic.
 
 A DSL creates maintenance work. Owning the transformation also lets Tasty extend CSS instead of merely following it.
 
@@ -128,15 +122,7 @@ A DSL creates maintenance work. Owning the transformation also lets Tasty extend
 
 Sometimes it is. CSS properties are not independent keys: `padding` can reset `paddingTop`, so naively merging two objects and emitting their declarations in a different order can change the result. A library promising predictable composition cannot ignore that.
 
-Tasty reduces the problem by recommending canonical style families such as `padding`, `fill`, and `flow`, plus predefined style sets that avoid exposing overlapping properties. When shorthand and longhand forms still meet, Tasty resolves the family before generating CSS using a fixed priority order rather than object order. For padding, the broad `padding` value is applied first, block and inline values override it, and individual sides win last.
-
-For intentional customization, tokens are often cleaner than competing declarations:
-
-```tsx
-padding: '$v-padding $h-padding',
-```
-
-A component can expose those tokens instead of asking consumers to override one part of a shorthand. This is not a perfect object model of every CSS cascade rule, but it is a deliberate and stable interpretation—predictable enough that authors do not have to manage declaration order themselves.
+Tasty reduces the problem with canonical style families such as `padding`, `fill`, and `flow`. When shorthand and longhand forms meet, it resolves them in a fixed priority order rather than relying on object order. Components can also expose tokens such as `$v-padding` and `$h-padding` instead of asking consumers to override part of a shorthand. It is not a perfect object model of the cascade, but it is deliberate and predictable.
 
 Optional tooling can enforce that contract before runtime. Tasty's [ESLint plugin](https://github.com/tenphi/eslint-plugin-tasty) validates style syntax, project tokens, states, and design-system conventions while steering styles toward the project's preferred, conflict-resistant form.
 
@@ -152,17 +138,13 @@ Once those primitives exist, everyday styling can be just as direct. Cube UI Kit
 </Grid>
 ```
 
-The concise API is only the visible part. Behind it, style props can expose nearly any CSS capability while the design system still governs tokens, recipes, and component APIs. Compound components share state without prop drilling, and intersecting states resolve without source-order or specificity fights. The result is less styling code, deeper design-system integration, and faster development—a substantial return for a runtime cost that remains small in production.
+Behind that concise API, style props can expose nearly any CSS capability while the design system still governs tokens, recipes, and component APIs. Compound components can share state without prop drilling, and intersecting states resolve without source-order or specificity fights.
 
 Tailwind remains an excellent rapid-building framework. Tasty is not trying to beat it at being a utility framework; it is an engine for creating a design-system-owned language. The fair comparison begins after that system has defined its primitives.
 
 ## Three products, three execution models
 
-[Cube](https://cubecloud.dev/) and its open-source [Cube UI Kit](https://cube-ui-kit.vercel.app/) ([source](https://github.com/cube-js/cube-ui-kit)) use Tasty fully at runtime—the most demanding case.
-
-[tasty.style](https://tasty.style) ([source](https://github.com/tenphi/tasty.style)) uses Next.js, React Server Components, and streaming SSR, with excellent Lighthouse performance.
-
-[tenphi.me](https://tenphi.me) ([source](https://github.com/tenphi/tenphi.me)) uses Astro to render Tasty React components and collect their styles during the build. The browser receives static HTML and CSS with no Tasty runtime.
+[Cube](https://cubecloud.dev/) and its open-source [Cube UI Kit](https://cube-ui-kit.vercel.app/) ([source](https://github.com/cube-js/cube-ui-kit)) use Tasty fully at runtime. [tasty.style](https://tasty.style) ([source](https://github.com/tenphi/tasty.style)) uses Next.js, React Server Components, and streaming SSR. [tenphi.me](https://tenphi.me) ([source](https://github.com/tenphi/tenphi.me)) uses Astro to generate static HTML and CSS with no Tasty runtime in the browser.
 
 The same engine can therefore run in the browser, on the server, or during the build. The right choice depends on where a product needs flexibility and where it wants to pay the cost.
 
