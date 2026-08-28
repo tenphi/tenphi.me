@@ -30,5 +30,10 @@ export default defineConfig({
       langs: [tastyLang],
     },
   },
-  integrations: [react(), mdx(), tastyIntegration({ islands: false }), sitemap()],
+  integrations: [
+    react(),
+    mdx(),
+    tastyIntegration({ islands: false, css: { mode: 'extract' } }),
+    sitemap(),
+  ],
 });
