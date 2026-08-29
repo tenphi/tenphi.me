@@ -14,9 +14,27 @@ Those charges did not come from nowhere. In 2019, Aggelos Arvanitakis described 
 
 The measurements were valid. They answered “were these runtime CSS-in-JS implementations expensive?” They did not answer “must runtime CSS generation be expensive?” What has expired is the blanket verdict drawn from that evidence.
 
-Performance is only half of the case against it. A CSS DSL will supposedly fall years behind the platform, while a framework like Tailwind will always be faster to build with.
+The rest of the case concerns capability and developer experience: whether a CSS DSL can keep up with the platform, and whether a framework like Tailwind will always be faster to build with.
 
-I want to revisit that case through [Tasty](https://github.com/tenphi/tasty). This is not an argument that every runtime CSS-in-JS library is now fast. Tasty is useful as an existence proof because it parses values, resolves states, generates rules, and injects them at runtime. If the common failure modes can be addressed there, they are engineering choices rather than laws of the category.
+I want to revisit that case through [Tasty](https://github.com/tenphi/tasty), which I created and maintain. This is not an argument that every runtime CSS-in-JS library is now fast. Tasty is useful as an existence proof because it parses values, resolves states, generates rules, and injects them at runtime. If the common failure modes can be addressed there, they are engineering choices rather than laws of the category.
+
+## What runtime generation actually buys you
+
+Live values are only a small part of the answer. A reusable component can own its appearance and internal layout, but it cannot know how every consumer will place it in the surrounding layout. Whether it should stretch, shrink, align itself, fill an available dimension, or sit against an edge is usually decided where the component is used. Properties such as `width`, `height`, `position`, `inset`, `flex-grow`, `flex-shrink`, `flex-basis`, and `place-self` are not exceptional styling needs; nearly every component participates in some combination of them.
+
+A general-purpose `Grid` makes the same boundary easy to see: its author cannot know whether a consumer will need equal columns, a fixed sidebar, named areas, or a template calculated from application data. But `Grid` is only an obvious example of a decision that naturally belongs at the point of use.
+
+A design system can encode those decisions as component-specific props, named variants, utility classes, custom-property channels, or wrapper elements. Some components should deliberately restrict some properties, but modeling every permitted combination separately creates a growing collection of contracts and escape hatches.
+
+This was not theoretical for Cube UI Kit. The component library could not always evolve at the same pace as the product. When a developer needed a state or styling capability that a component did not expose, the formal process was to add an API to the UI Kit first. In practice, product work could not always wait. Developers added local CSS overrides and JavaScript conditions, and the eventual UI Kit change was followed by a difficult migration away from that workaround.
+
+Tasty turned that workaround into a controlled extension point. A developer can express the immediate need through the same styling language, contained in a single `styles` prop at the point of use. If the need remains local, so does the extension. If it proves reusable, it can be factored into a product-local component or absorbed by the UI Kit when it is broadly useful. Because each scope uses the same styling language, migration means moving an explicit style declaration rather than untangling a separate layer of JavaScript and CSS overrides. Product development and design-system development no longer have to happen in lockstep.
+
+This does not remove the need for a component API when new behavior, semantics, or accessibility are involved. It means a missing styling capability no longer has to block product work or force an unrelated abstraction into existence.
+
+Static systems can provide much of the same ergonomics when an extension is discoverable during the build. Runtime generation keeps that extension point open when the values, states, selectors, or responsive and container conditions cannot be enumerated ahead of time. Tasty acts as a lazy compiler: it receives the styling decision at the point of use and generates only the requested structure. It does not eliminate abstraction; it replaces many narrow abstractions that must predict their use cases with a shared language that can leave those decisions open.
+
+That flexibility matters only if its runtime costs can be controlled. The old objections point to four places to look.
 
 ## “CSS is generated again on every render”
 
@@ -36,13 +54,9 @@ With [batched injection](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa
 
 They can, especially when every combination of props produces another complete class.
 
-Tasty reduces that growth by reusing chunks and deduplicating identical output. A hundred component instances using the same appearance do not need a hundred copies of the same CSS.
+Tasty limits that growth by reusing chunks and deduplicating identical output. During browser idle time, [its collector](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/injector.md#garbage-collection) removes old rules that are no longer present on the page, after a short grace period. The delay matters because React may generate a class before committing its element; deleting every temporarily absent class could remove a rule mid-render.
 
-[The collector takes a deliberately cautious approach](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/injector.md#garbage-collection). During browser idle time, it checks which generated classes are still present on the page. When a class disappears, its rules are not removed immediately: they receive a 10-second grace period, then the most recently unused styles remain available in a bounded cache while older ones are deleted.
-
-That delay matters because React can generate a class before its element reaches the DOM. Treating every absent class as dead could delete a rule in the middle of a render. The grace period covers that gap without adding lifecycle tracking to every styled element, so ordinary renders do not pay extra bookkeeping costs.
-
-This does not make unlimited dynamic CSS free. An application that continuously creates unique values that remain active can still grow its stylesheet and should measure that behavior. The point is that accumulation can be controlled rather than accepted as an unavoidable feature of CSS-in-JS.
+Unique styles that remain active still grow the stylesheet, so applications with highly dynamic styling should measure that workload. The point is that accumulation can be controlled rather than accepted as an unavoidable feature of CSS-in-JS.
 
 ## “Every styled element adds React overhead”
 
@@ -55,7 +69,7 @@ Tasty components do not need hooks or React context to generate styles. A warmed
 Generation, injection, and wrapper overhead are different costs. I reran Tasty's current public benchmarks three times on an Apple M1 Max. The Node suite used Node 22; the browser suites used production React 19.2.8 and Chromium 151.
 
 | Measured work | Added time |
-| --- | ---: |
+| --- | --: |
 | Render one warmed `tasty()` wrapper | ~1.1 µs per element |
 | Generate a new style | ~16–47 µs |
 | Reuse a cached style | ~0.12–0.13 µs |
@@ -70,8 +84,6 @@ The [style-pipeline benchmark](https://github.com/tenphi/tasty/blob/299eec7e2aae
 
 Product profiles complete the picture. In internal Sentry profiles from [Cube](https://cubecloud.dev/), an enterprise application built with the Tasty-powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit), style processing accounts for roughly 10–20% of measured CPU work during loading and navigation. A separate trace put Tasty at 12.4% of main-thread busy time. These are observations, not controlled benchmarks, but in both cases the overhead was measurable without being the dominant cost. Products that create many unique styles in one interaction should still profile that workload.
 
-> Every meaningful part of an application should be profiled and monitored. Performance can fail for many reasons, especially in the places nobody measures.
-
 ## “SSR is slow and flawed, and Server Components are unsupported”
 
 Tasty components can run as React Server Components without adding a `'use client'` boundary. On a server-only page, they produce HTML and CSS without sending the Tasty runtime to the browser.
@@ -80,29 +92,11 @@ In an interactive server-rendered application, Tasty collects the CSS while Reac
 
 Server rendering therefore does not have to mean a flash of unstyled content followed by duplicated client work. Avoiding both requires an implementation designed for the server from the beginning.
 
-That answers how runtime CSS-in-JS can avoid its old failure modes. It leaves a harder question:
-
-> If build-time CSS is cheaper, why keep a runtime at all?
-
 ## “Build-time CSS is always faster”
 
-A build-time solution does less work in the browser. It delivers CSS that has already been generated, while a runtime solution still has to generate some of it.
+Build-time CSS is indeed cheaper in the browser. It is the right choice when the necessary styling paths can be known ahead of time; runtime generation serves the decisions that cannot.
 
 That is why Tasty also has `tastyStatic`. It runs the style engine during the build, writes a CSS file, and leaves class names in the application code. No styling runtime is needed in the browser.
-
-This is not an admission that runtime CSS-in-JS failed. Runtime and build-time modes solve different problems, and static extraction is ideal when the required styling paths can be defined ahead of time.
-
-## What runtime generation actually buys you
-
-Live values are only a small part of the answer. The more important benefit is that a reusable component can leave structural decisions open until it is used.
-
-Consider a general-purpose `Grid`. Its author cannot know whether a consumer will need two equal columns, a fixed sidebar, named areas, or a template calculated from application data. That decision naturally belongs where the component is used. Runtime generation can take the actual `columns`, `areas`, states, and responsive conditions and produce the precise rules they require.
-
-Static systems can preserve open-ended values through inline styles, custom properties, or build-time extraction, but each moves the boundary somewhere. Inline styles cannot express selectors or at-rules. Custom properties can carry values only through surrounding rules the component authored in advance. Extraction requires the styling decision to be statically discoverable. Large sets of utilities or predefined variants can be useful when the vocabulary is intentionally bounded, but that predefined vocabulary still has to anticipate what consumers will need.
-
-Runtime generation allows that decision to remain unresolved until the component is actually used. Tasty acts as a lazy compiler: it receives the styling decision at the point of use and generates only the requested structure, including hover, pressed, disabled, media, and container-query states, without predeclaring the surrounding rules or a custom-property channel for every supported property and condition. That structural freedom is what the runtime buys.
-
-Runtime is therefore one way to execute the styling language, not the language itself. The same parser and generator can run during the build, on the server, or in the browser.
 
 ## “A CSS abstraction cannot express real CSS”
 
@@ -120,7 +114,7 @@ That does not make Tasty equivalent to arbitrary CSS. Document-wide rules built 
 
 ## “Tailwind is faster for building interfaces”
 
-On the first day, it often is. Tailwind arrives with a utility vocabulary ready to use. Tasty asks a design system to define that vocabulary, so comparing the unopened engine with a ready-made framework is not quite one-to-one.
+On the first day, it often is. Tailwind arrives with a utility vocabulary ready to use. Tasty asks a design system to define that vocabulary, so comparing an engine with a ready-made framework is not quite one-to-one.
 
 Once those primitives exist, everyday styling can be just as direct. Cube UI Kit's [`Grid`](https://github.com/cube-js/cube-ui-kit/blob/main/src/components/layout/Grid.tsx), for example, can be used like this:
 
@@ -130,9 +124,9 @@ Once those primitives exist, everyday styling can be just as direct. Cube UI Kit
 </Grid>
 ```
 
-Behind that concise API, style props can expose nearly any CSS capability while the design system still governs tokens, recipes, and component APIs. Tailwind remains an excellent rapid-building framework; Tasty is an engine for creating a design-system-owned language. The fair comparison begins after that system has defined its primitives.
+That example demonstrates concise ergonomics, not equal development speed. Speed depends on the maturity of the design system, its tooling, and how often a product departs from predefined utilities. Tailwind is often faster when its vocabulary fits. Tasty requires more up-front design-system work in exchange for a product-specific language and styling decisions that can remain open until use.
 
-## Three products, three execution models
+## Three products, three ways to generate CSS
 
 [Cube](https://cubecloud.dev/) and its open-source [Cube UI Kit](https://cube-ui-kit.vercel.app/) ([source](https://github.com/cube-js/cube-ui-kit)) use Tasty fully at runtime. [tasty.style](https://tasty.style) ([source](https://github.com/tenphi/tasty.style)) uses Next.js, React Server Components, and streaming SSR. [tenphi.me](https://tenphi.me) ([source](https://github.com/tenphi/tenphi.me)) uses Astro to generate static HTML and CSS with no Tasty runtime in the browser.
 
@@ -140,10 +134,8 @@ The same engine can therefore run in the browser, on the server, or during the b
 
 ## A better verdict
 
-Runtime CSS-in-JS is not free. A wrapper adds a small recurring cost, and genuinely new styles must still be generated and inserted. Caching removes repeated style work, batching controls when stylesheet changes become visible, and build-time extraction can remove the styling runtime entirely.
+Runtime generation earns its place when it lets product teams solve legitimate styling needs without waiting for every use case to become a component API. A shared extension point lets consumers decide how components participate in the surrounding layout, contains local exceptions, and gives reusable patterns a clear path back into the design system. It remains available even when the required values and conditions cannot be enumerated during the build.
 
-So the verdict is simple: deliver CSS statically where you can, use runtime generation where it buys something concrete, and measure the actual product. Runtime CSS-in-JS is a trade-off, not an automatic performance failure.
+That flexibility has a cost. A wrapper adds a small amount of recurring work, and genuinely new styles must still be generated and inserted. Caching and batching can control that work; static extraction can remove it when the styling paths are known ahead of time.
 
-Tasty is one set of answers, not the only possible one. If you prefer another styling model, build it—the entire project is MIT-licensed, including its caching, batching, SSR, and extraction code.
-
-> The point is that the old problems can be solved—and a category should not be condemned forever for implementation choices made years ago.
+The better rule is to generate CSS statically when the styling space is known, and keep runtime generation where the same shared language needs to accept decisions that cannot be defined ahead of time—or where the alternative is a growing collection of special-case APIs and overrides. Then measure the actual product. The old performance problems were real. They were evidence against particular implementations, not a law of the category.
