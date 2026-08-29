@@ -102,19 +102,21 @@ Static systems can preserve open-ended values through inline styles, custom prop
 
 Runtime generation allows that decision to remain unresolved until the component is actually used. Tasty acts as a lazy compiler: it receives the styling decision at the point of use and generates only the requested structure, including hover, pressed, disabled, media, and container-query states, without predeclaring the surrounding rules or a custom-property channel for every supported property and condition. That structural freedom is what the runtime buys.
 
-The DSL itself is a separate benefit. The same parser and generator can run during the build, on the server, or in the browser.
+Runtime is therefore one way to execute the styling language, not the language itself. The same parser and generator can run during the build, on the server, or in the browser.
 
-## “A CSS abstraction can’t express real CSS”
+## “A CSS abstraction cannot express real CSS”
 
-There are two concerns hiding inside this criticism.
+CSS is not just a dictionary of properties. Selectors, conditions, declaration order, overlapping shorthands, and the cascade all carry meaning. This criticism therefore contains three real concerns.
 
 The first is platform lag. A library cannot design a dedicated API for a CSS feature before that feature exists. It does not need to: Tasty accepts standard properties and values directly, while more convenient syntax can be added later. For experimental CSS `@function` rules, for example, Tasty can emit the native rule or [inline the function into ordinary CSS](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/README.md#css-functions-function).
 
-The second is object notation. A flat object containing only `color` and `padding` cannot represent selectors, states, at-rules, or nested conditions. But a style object does not have to be flat. In Tasty, an object can describe hover states, responsive and container conditions, and relationships between elements; the compiler turns that structure into CSS rules.
+The second is structure. A flat object containing only `color` and `padding` cannot represent selectors, states, at-rules, or nested conditions. Tasty does not use its objects as a JavaScript version of `CSSStyleDeclaration`; they are the source syntax of a DSL. An object can describe hover states, responsive and container conditions, and relationships between elements, which the compiler turns into CSS rules.
 
-JavaScript objects are only the notation. What matters is the styling language they represent.
+Object notation is only the surface syntax. Its expressive power depends on the grammar assigned to it.
 
-That does not make Tasty equivalent to arbitrary CSS. Its model is deliberately opinionated, and some CSS is clearer in a stylesheet. These are also separate questions: the DSL determines what a component can describe; where and when styles are generated determines how late the final decision can be made.
+The third is composition. CSS properties overlap: `padding` can reset `paddingTop`, so naive object merging can change the result. Tasty resolves canonical style families in a fixed priority rather than relying on object insertion order. Components can also expose tokens instead of asking consumers to override part of a shorthand. This is an opinionated model, but it is deliberate and deterministic.
+
+That does not make Tasty equivalent to arbitrary CSS. Document-wide rules built around complex selectors or the global cascade can still be clearer as ordinary CSS. But losing access to complex CSS is not an inherent limitation of object notation; it depends on what language the abstraction provides.
 
 ## “Tailwind is faster for building interfaces”
 
