@@ -92,6 +92,8 @@ The [style-pipeline benchmark](https://github.com/tenphi/tasty/blob/299eec7e2aae
 
 Product profiles complete the picture. In internal Sentry profiles from [Cube](https://cubecloud.dev/), an enterprise application built with the Tasty-powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit), style processing accounts for roughly 10–20% of measured CPU work during loading and navigation. A separate trace put Tasty at 12.4% of main-thread busy time. These are observations, not controlled benchmarks, but in both cases the overhead was measurable without being the dominant cost. Products that create many unique styles in one interaction should still profile that workload.
 
+One possible cold-path optimization is intentionally absent. Tasty can ship predefined classes today, but prewarming its style cache from state maps would require a separate pipeline: a build step would discover statically declared state maps and seed that cache on the client before the first render. I have not added it because there is no evidence yet of a perceptible product benefit, while it would increase bundle size and couple build-time analysis to runtime cache logic. It could improve a cold-path benchmark; a failure in that extra coordination would be much more visible to users. The option remains open if product measurements justify it.
+
 ## Where CSS generation can happen
 
 Runtime styling is often treated as synonymous with client-side injection. The style engine does not have to run in only one place.
