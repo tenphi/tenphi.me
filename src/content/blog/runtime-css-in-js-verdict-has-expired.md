@@ -52,7 +52,7 @@ Tasty components do not need hooks or React context to generate styles. A warmed
 
 ## What does the runtime cost in practice?
 
-Generation, injection, and wrapper overhead are different costs. I reran Tasty's current public benchmarks three times on an Apple M1 Max. The Node suite used Node 22; the browser suites used production React 19.2.8 and Chromium 151. The important pattern is not that runtime work reaches zero: new work remains measurable, while repeated styling becomes extremely cheap.
+Generation, injection, and wrapper overhead are different costs. I reran Tasty's current public benchmarks three times on an Apple M1 Max. The Node suite used Node 22; the browser suites used production React 19.2.8 and Chromium 151.
 
 | Measured work | Added time |
 | --- | ---: |
@@ -61,6 +61,8 @@ Generation, injection, and wrapper overhead are different costs. I reran Tasty's
 | Reuse a cached style | ~0.12–0.13 µs |
 | Generate, inject, and resolve one new rule | ~0.16–0.18 ms |
 | Generate and inject 1,000 new rules, then resolve styles once | ~10.1–10.5 ms total |
+
+The important distinction is between cold work and repeated work: generating a genuinely new style has a measurable cost, while reusing an existing one is negligible by comparison.
 
 The numbers should not be added together: the end-to-end injection benchmark already includes generation and subtracts the same DOM update and style resolution performed with equivalent CSS already present.
 
@@ -96,23 +98,23 @@ Live values are only a small part of the answer. The more important benefit is t
 
 Consider a general-purpose `Grid`. Its author cannot know whether a consumer will need two equal columns, a fixed sidebar, named areas, or a template calculated from application data. That decision naturally belongs where the component is used. Runtime generation can take the actual `columns`, `areas`, states, and responsive conditions and produce the precise rules they require.
 
-Static systems can preserve open-ended values through inline styles, custom properties, or build-time extraction, but each moves the boundary somewhere. Inline styles cannot express selectors or at-rules. Custom properties require the component to predeclare where values may flow. Extraction requires the styling decision to be statically discoverable. Large sets of utilities or predefined variants can be useful when the vocabulary is intentionally bounded, but they still ask the library to predict what consumers will need.
+Static systems can preserve open-ended values through inline styles, custom properties, or build-time extraction, but each moves the boundary somewhere. Inline styles cannot express selectors or at-rules. Custom properties can carry values only through surrounding rules the component authored in advance. Extraction requires the styling decision to be statically discoverable. Large sets of utilities or predefined variants can be useful when the vocabulary is intentionally bounded, but that predefined vocabulary still has to anticipate what consumers will need.
 
-Runtime generation allows that decision to remain unresolved until the component is actually used. Tasty acts as a lazy compiler: it receives the styling decision at the point of use and generates only the requested structure, including hover, pressed, disabled, media, and container-query states. That structural freedom is what the runtime buys.
+Runtime generation allows that decision to remain unresolved until the component is actually used. Tasty acts as a lazy compiler: it receives the styling decision at the point of use and generates only the requested structure, including hover, pressed, disabled, media, and container-query states, without predeclaring the surrounding rules or a custom-property channel for every supported property and condition. That structural freedom is what the runtime buys.
 
 The DSL itself is a separate benefit. The same parser and generator can run during the build, on the server, or in the browser.
 
-## “A CSS DSL will always fall behind CSS”
+## “A CSS abstraction can’t express real CSS”
 
-That risk is real. Any abstraction has to follow a moving platform, and an abandoned DSL freezes on the day its maintainers stop.
+There are two concerns hiding inside this criticism.
 
-Tasty stays close to CSS: it accepts standard properties and values, with design-system syntax as optional sugar. Owning the parser creates maintenance work, but it can also provide a compatibility layer. For experimental CSS `@function` rules, for example, Tasty can emit native rules or [inline their calls into ordinary CSS](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/README.md#css-functions-function). The choice is explicit, keeping server and client output deterministic.
+The first is platform lag. A library cannot design a dedicated API for a CSS feature before that feature exists. It does not need to: Tasty accepts standard properties and values directly, while more convenient syntax can be added later. For experimental CSS `@function` rules, for example, Tasty can emit the native rule or [inline the function into ordinary CSS](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/README.md#css-functions-function).
 
-## “Object notation is a bad abstraction for CSS”
+The second is object notation. A flat object containing only `color` and `padding` cannot represent selectors, states, at-rules, or nested conditions. But a style object does not have to be flat. In Tasty, an object can describe hover states, responsive and container conditions, and relationships between elements; the compiler turns that structure into CSS rules.
 
-Sometimes it is. CSS properties are not independent keys: `padding` can reset `paddingTop`, so naive object merging can change the result.
+JavaScript objects are only the notation. What matters is the styling language they represent.
 
-Tasty uses canonical style families and a fixed priority for overlapping forms rather than relying on object order. Components can expose tokens instead of asking consumers to override part of a shorthand. It is not a perfect object model of the cascade, but it is deliberate and predictable; Tasty's [ESLint plugin](https://github.com/tenphi/eslint-plugin-tasty) can validate that contract before runtime.
+That does not make Tasty equivalent to arbitrary CSS. Its model is deliberately opinionated, and some CSS is clearer in a stylesheet. These are also separate questions: the DSL determines what a component can describe; where and when styles are generated determines how late the final decision can be made.
 
 ## “Tailwind is faster for building interfaces”
 
