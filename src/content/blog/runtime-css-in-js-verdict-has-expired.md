@@ -122,7 +122,21 @@ Controlling runtime cost is not enough if the abstraction cannot express CSS or 
 
 CSS is not just a dictionary of properties. Selectors, conditions, declaration order, overlapping shorthands, and the cascade all carry meaning. This criticism therefore contains three real concerns.
 
-The first is platform lag. A library cannot design a dedicated API for a CSS feature before that feature exists. It does not need to: Tasty accepts standard properties and values directly, while more convenient syntax can be added later. For experimental CSS `@function` rules, for example, Tasty can emit the native rule or [inline the function into ordinary CSS](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/README.md#css-functions-function).
+The first is platform lag. A library cannot design a dedicated API for a CSS feature before that feature exists. It does not need to: Tasty accepts standard properties and values directly, while more convenient syntax can be added later.
+
+```tsx
+const standardCSS = {
+  backgroundColor: 'color-mix(in oklch, var(--purple-color) 10%, transparent)',
+};
+
+const tastySugar = {
+  fill: '#purple.10',
+};
+```
+
+Both style objects can be passed to Tasty. The first uses a standard CSS property and value; the second expresses the same result through Tasty's background alias, design token, and opacity suffix.
+
+For experimental CSS `@function` rules, Tasty can likewise emit the native rule or [inline the function into ordinary CSS](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/README.md#css-functions-function).
 
 The second is structure. A flat object containing only `color` and `padding` cannot represent selectors, states, at-rules, or nested conditions. Tasty does not use its objects as a JavaScript version of `CSSStyleDeclaration`; they are the source syntax of a DSL. Object notation is only the surface syntax; its expressive power depends on the grammar assigned to it.
 
