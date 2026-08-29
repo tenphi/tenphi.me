@@ -14,9 +14,11 @@ Those charges did not come from nowhere. In 2019, Aggelos Arvanitakis described 
 
 The measurements were valid. They answered “were these runtime CSS-in-JS implementations expensive?” They did not answer “must runtime CSS generation be expensive?” What has expired is the blanket verdict drawn from that evidence.
 
-That performance question is only part of the case. Runtime generation first has to justify what it buys, then show that its costs can be controlled. The remaining questions concern capability and developer experience: whether it can work across browser, server, and build environments, whether a CSS DSL can keep up with the platform, and whether a framework like Tailwind will always be faster to build with.
+That performance question is only part of the case. The case also concerns capability and developer experience: whether runtime styling can work across browser, server, and build environments, whether a CSS DSL can keep up with the platform, and whether a framework like Tailwind will always be faster to build with.
 
 I want to revisit that case through [Tasty](https://github.com/tenphi/tasty), which I created and maintain. This is not an argument that every runtime CSS-in-JS library is now fast. Tasty is useful as an existence proof because it parses values, resolves states, generates rules, and injects them at runtime. If the common failure modes can be addressed there, they are engineering choices rather than laws of the category.
+
+Clearing that bar would make runtime generation viable, not automatically worthwhile. It still has to justify why any styling work should remain at runtime.
 
 ## What runtime generation actually buys you
 
