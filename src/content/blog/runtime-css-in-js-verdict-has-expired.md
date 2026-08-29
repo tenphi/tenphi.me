@@ -1,6 +1,6 @@
 ---
 title: 'The runtime CSS-in-JS verdict has expired'
-description: 'Runtime CSS-in-JS was judged by old implementations. Its costs depend on implementation, while its flexibility and design-system benefits remain.'
+description: 'The verdict on runtime CSS-in-JS came from earlier implementations. Its costs depend on implementation, while its flexibility and design-system benefits remain.'
 date: 2026-08-21
 tags: ['css', 'performance', 'react', 'webdev']
 draft: true
@@ -20,21 +20,21 @@ I want to revisit that case through [Tasty](https://github.com/tenphi/tasty), wh
 
 ## What runtime generation actually buys you
 
-Live values are only a small part of the answer. The stronger case is that a reusable component and its consumer own different styling decisions. A component can own its appearance and internal layout, but it cannot know how every consumer will place it in the surrounding layout.
+Live values are only a small part of the answer. The broader design-system need is that a reusable component and its consumer own different styling decisions. A component can own its appearance and internal layout, but it cannot know how every consumer will place it in the surrounding layout. That boundary is not unique to runtime styling; runtime matters when the decision itself cannot be discovered during the build.
 
 This was not theoretical for Cube UI Kit. The component library could not always evolve at the same pace as the product. When a developer needed a state or styling capability that a component did not expose, the formal process was to add an API to the UI Kit first. In practice, product work could not always wait. Developers added local CSS overrides and JavaScript conditions, and the eventual UI Kit change was followed by a difficult migration away from that workaround.
 
-Tasty turned that workaround into a controlled extension point. A developer can express the immediate need through the same styling language, contained in a single `styles` prop at the point of use. If the need remains local, so does the extension. If it proves reusable, it can be factored into a product-local component or absorbed by the UI Kit when it is broadly useful. Because each scope uses the same styling language, migration means moving an explicit style declaration rather than untangling a separate layer of JavaScript and CSS overrides. Product development and design-system development no longer have to happen in lockstep.
+Tasty turned that workaround into a controlled extension point. A developer can express the immediate need through a single `styles` prop at the point of use. If the need remains local, so does the extension. If it proves reusable, it can be factored into a product-local component or absorbed by the UI Kit when it is broadly useful. Because each scope uses the same styling language, migration means moving an explicit style declaration rather than untangling a separate layer of JavaScript and CSS overrides. Product development and design-system development no longer have to happen in lockstep.
 
 This does not remove the need for a component API when new behavior, semantics, or accessibility are involved. It means a missing styling capability no longer has to block product work or force an unrelated abstraction into existence.
 
 The same distinction appears in ordinary layout. Whether a component should stretch, shrink, align itself, fill an available dimension, or sit against an edge is usually decided where it is used. Width, position, flex behavior, and grid placement are not exceptional styling needs; nearly every component participates in some combination of them.
 
-A general-purpose `Grid` makes the boundary easy to see: its author cannot know whether a consumer will need equal columns, a fixed sidebar, named areas, or a template calculated from application data. But `Grid` is only an obvious example of a decision that naturally belongs at the point of use.
+A general-purpose `Grid` makes the boundary easy to see: its author cannot know whether a consumer will need equal columns, a fixed sidebar, named areas, or a template assembled from application data at runtime. But `Grid` is only an obvious example of a decision that naturally belongs at the point of use.
 
-A design system can encode those decisions as component-specific props, named variants, utility classes, custom-property channels, or wrapper elements. Those restrictions can be intentional, but modeling every permitted combination separately creates a growing collection of contracts and escape hatches.
+A design system can encode those decisions as component-specific props, named variants, utility classes, custom-property channels, or wrapper elements. Restricting a component's styling surface can be intentional. The problem begins when each new need requires another component-specific contract or escape hatch.
 
-Static systems can provide much of the same ergonomics when an extension is discoverable during the build. Runtime generation keeps that extension point open when styling inputs or combinations cannot be enumerated ahead of time.
+Static systems can provide much of the same ergonomics when an extension is discoverable during the build, and custom properties can carry some dynamic values. Runtime generation keeps the same styling language open when the required inputs or combinations cannot be enumerated or accommodated through predefined channels.
 
 Tasty acts as a lazy compiler: it receives the styling decision at the point of use and generates only the requested structure. It does not eliminate abstraction; it replaces many narrow abstractions that must predict their use cases with a shared language that can leave those decisions open.
 
@@ -66,7 +66,7 @@ Unique styles that remain active still grow the stylesheet, so applications with
 
 ### “Every styled element adds React overhead”
 
-Older implementations often wrapped each styled component in hooks or theme context consumers. Even a simple element paid that cost whenever React rendered it.
+Older implementations often made every styled component run hooks or consume theme context. Even a simple element paid that cost whenever React rendered it.
 
 Tasty components do not need hooks or React context to generate styles. A warmed component follows a short path, but its wrapper still handles props and abstractions, so it is not free.
 
@@ -106,11 +106,11 @@ Server rendering therefore does not have to mean a flash of unstyled content fol
 
 Build-time CSS is indeed cheaper in the browser. It is the right choice when the necessary styling paths can be known ahead of time; runtime generation serves the decisions that cannot.
 
-That is why Tasty also has `tastyStatic`. It runs the style engine during the build, writes a CSS file, and leaves class names in the application code. No styling runtime is needed in the browser.
+Tasty can move that work out of the browser in two ways. `tastyStatic` analyzes application code during the build, writes a CSS file, and leaves class names in the application code. A framework that renders pages at build time can instead run regular Tasty components during that render and collect their CSS. A fully static page needs no Tasty runtime in the browser with either approach.
 
-## One language, three execution points
+### One language, three execution points
 
-These execution modes are already in use. [Cube](https://cubecloud.dev/) and its open-source [Cube UI Kit](https://cube-ui-kit.vercel.app/) ([source](https://github.com/cube-js/cube-ui-kit)) use Tasty fully at runtime. [tasty.style](https://tasty.style) ([source](https://github.com/tenphi/tasty.style)) generates CSS during React Server Component rendering in Next.js and streams it with the page. [tenphi.me](https://tenphi.me) ([source](https://github.com/tenphi/tenphi.me)) uses Astro to generate static HTML and CSS with no Tasty runtime in the browser.
+These execution modes are already in use. [Cube](https://cubecloud.dev/) and its open-source [Cube UI Kit](https://cube-ui-kit.vercel.app/) ([source](https://github.com/cube-js/cube-ui-kit)) use Tasty fully at runtime. [tasty.style](https://tasty.style) ([source](https://github.com/tenphi/tasty.style)) generates CSS during React Server Component rendering in Next.js and streams it with the page. [tenphi.me](https://tenphi.me) ([source](https://github.com/tenphi/tenphi.me)) runs regular Tasty components during Astro's static build and ships the collected CSS with no Tasty runtime in the browser.
 
 The examples are not a claim that one placement wins. They show that the same engine and styling language can run in the browser, on the server, or during the build. The right choice depends on where a product needs flexibility and where it wants to pay the cost.
 
@@ -152,12 +152,12 @@ On the first day, it often is. Tailwind arrives with a utility vocabulary ready 
 Once those primitives exist, everyday styling can be just as direct. Cube UI Kit's [`Grid`](https://github.com/cube-js/cube-ui-kit/blob/main/src/components/layout/Grid.tsx), for example, exposes a controlled set of Tasty style props and maps them into the shared style pipeline:
 
 ```tsx
-<Grid columns="1fr 1fr" flow="row" width="100%" gap="2x">
+<Grid columns={{ '': '1fr', '@tablet': '1fr 1fr' }} width="100%" gap="2x">
   …
 </Grid>
 ```
 
-Those are styling decisions expressed through one typed interface, not four predefined `Grid` variants. The same props can accept Tasty state maps when their values change across conditions.
+Here `columns`, `width`, and `gap` are typed styling inputs exposed by the design-system primitive rather than names for predefined layout variants. `@tablet` is a condition alias defined by the design system, and `columns` uses it through the same state-map grammar as the rest of the DSL. The interface remains concise without closing off responsive decisions.
 
 That example demonstrates concise ergonomics, not equal development speed. Speed depends on the maturity of the design system, its tooling, and how often a product departs from predefined utilities. Tailwind is often faster when its vocabulary fits. Tasty requires more up-front design-system work in exchange for a product-specific language and styling decisions that can remain open until use.
 
@@ -165,6 +165,6 @@ That example demonstrates concise ergonomics, not equal development speed. Speed
 
 Runtime generation earns its place when it lets product teams solve legitimate styling needs without waiting for every use case to become a component API. A shared extension point lets consumers decide how components participate in the surrounding layout, contains local exceptions, and gives reusable patterns a clear path back into the design system. It remains available even when the required values and conditions cannot be enumerated during the build.
 
-That flexibility has a cost. A wrapper adds a small amount of recurring work, and genuinely new styles must still be generated and inserted. Caching and batching can control that work; static extraction can remove it when the styling paths are known ahead of time.
+That flexibility has a cost. A wrapper adds a small amount of recurring work, and genuinely new styles must still be generated and inserted. Caching and batching can control that work in the browser; when the styling paths are known ahead of time, moving generation to the build removes the browser-side cost.
 
 The better rule is to generate CSS statically when the styling space is known, and keep runtime generation where the same shared language needs to accept decisions that cannot be defined ahead of time—or where the alternative is a growing collection of special-case APIs and overrides. Then measure the actual product. The old performance problems were real. They were evidence against particular implementations, not a law of the category.
