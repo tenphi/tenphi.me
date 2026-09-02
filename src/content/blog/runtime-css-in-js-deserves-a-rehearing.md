@@ -16,9 +16,9 @@ The measurements were valid. They answered, “Were these runtime CSS-in-JS impl
 
 Those results also captured a particular generation of libraries. Browsers, React, rendering frameworks, and hardware have all evolved, but faster machinery is not the main reason to revisit the verdict. Style engines can also change where they perform work and how often they repeat it.
 
-People often use _runtime CSS-in-JS_ to mean generating CSS in the browser. I will distinguish that placement from runtime capability: the ability to generate styles from program values wherever those values become known.
+People often use _runtime CSS-in-JS_ as shorthand for generating CSS in the browser. Here I separate capability from placement. A runtime-capable system can generate styles wherever its inputs become known: during the build, on the server, or in the browser.
 
-The useful question is not whether runtime CSS-in-JS is simply fast or slow, but how early each styling decision can be made and whether the flexibility left for later justifies its cost. The point is not that CSS should always be generated in the browser. It is that browser generation should remain available when the final composition genuinely remains open.
+The useful question is not simply whether runtime CSS-in-JS is fast or slow. It is which styling decisions can be made earlier, and whether keeping the rest open justifies the cost. CSS should not always be generated in the browser, but browser generation should remain available when the final composition genuinely remains open.
 
 I will use [Tasty](https://github.com/tenphi/tasty), which I created and maintain, as a case study rather than a neutral survey. It is a demanding test: in the browser, Tasty parses values, resolves states and conditions, composes extensions, and generates and injects CSS rather than merely selecting precompiled output. The same components can do that work on a server or during a static build.
 
@@ -86,7 +86,7 @@ These placements are not hypothetical. [Cube UI Kit](https://github.com/cube-js/
 
 Static tooling can provide the same composition when it can see all the inputs. A closed styling vocabulary can be a deliberate and useful design-system constraint. The tradeoff appears when the product needs a combination outside that vocabulary.
 
-Consider one such edge case: a form renderer that chooses both a component and its extension from a registry:
+Consider a form renderer that chooses both a component and its extension from a registry:
 
 ```tsx
 function Field({ schema }) {
@@ -98,7 +98,7 @@ function Field({ schema }) {
 
 To reproduce this composition exactly, an extractor has to trace every possible `Component` back to its original style declaration. It must also find every possible extension and reproduce how each combination merges. That works when `fieldTypes` is local, finite, and statically visible, and when the schema selects only known entries. The assumption breaks once a package or plugin extends the registry, or application or server configuration supplies additional styles.
 
-Static tooling can accommodate each of those patterns. A team can enumerate variants, safelist output, add compiler annotations, route values through custom properties, or constrain how components are composed. But each accommodation makes source visibility a permanent constraint on application design: every wrapper, registry, package boundary, and data-driven abstraction has to remain legible to the extractor.
+Static tooling can accommodate each of those patterns. A team can enumerate variants, safelist output, add compiler annotations, route values through custom properties, or constrain how components are composed. But each accommodation makes source visibility part of the application architecture: every wrapper, registry, package boundary, and data-driven abstraction has to remain legible to the extractor.
 
 Runtime generation is not needed for ordinary static declarations. It is useful when the final combination does not exist until the program runs. At that point, the component and its styles have already met; the engine can combine their concrete values without reconstructing how they traveled through the source.
 
@@ -106,7 +106,7 @@ That visibility requirement extends through the toolchain. The compiler has to p
 
 A library can publish compiled class names and CSS instead, but then it owns CSS delivery. One global stylesheet can force every consumer to load every component's styles. Splitting the output requires the compiler and bundler to agree on which CSS belongs to each module or route, and the generated CSS, JavaScript class names, caches, and package versions must remain in sync.
 
-Static extraction may still be the right choice, but zero browser runtime is not zero system cost. What bothers me is how often it ends the accounting: browser work is quantified, while source restrictions, build integration, and CSS delivery remain implicit. These costs are not interchangeable—runtime work is paid by users, while tooling and coordination are paid by teams—but every placement should be judged by the costs it creates and the problems it solves.
+Static extraction may still be the right choice, but zero browser runtime is not zero system cost. Too often, browser work is quantified while source restrictions, build integration, and CSS delivery remain implicit. These costs are not interchangeable—runtime work is paid by users, while tooling and coordination are paid by teams—but every placement should be judged by the costs it creates and the problems it solves.
 
 ## The browser costs that remain
 
@@ -159,15 +159,15 @@ I reran Tasty's current public benchmarks three times on an Apple M1 Max. The No
 
 These figures describe separate paths and should not be added. The end-to-end injection benchmark already includes generation and subtracts a baseline that performs the same DOM update and style resolution with equivalent CSS already present. React wrapper work is measured separately. The [full benchmark report](https://tasty.style/docs/runtime-benchmarks) publishes the methods, results, and source code.
 
-The pattern matters more than the individual numbers: reuse takes the cached path, and grouped writes amortize fixed work. In the injection cases, 1,000 insertions followed by one resolution took about 60 times—not 1,000 times—the single-rule case.
+The pattern matters more than the individual numbers: cached styles avoid most of the work, and grouped writes amortize fixed costs. In round numbers, cold generation took tens of microseconds, cached reuse took a fraction of a microsecond, and generating, injecting, and resolving a new rule took tenths of a millisecond. The 1,000-insertion case took about 60 times as long as the single-rule case, not 1,000 times as long.
 
-Benchmarks isolate the costs; product profiles show whether they matter in context. In production Sentry traces from real user sessions on one of Cube's heaviest pages, Tasty accounted for roughly 12.5% of main-thread busy time during startup; local profiling produced a similar result. This is an observation from ordinary user sessions, not a controlled benchmark.
+Benchmarks isolate the costs; product profiles show whether they matter in context. In production Sentry traces from real user sessions on one of Cube's heaviest pages, Tasty accounted for roughly 12.5% of main-thread busy time during startup; local profiling produced a similar result. That share is material, and whether it is acceptable depends on the product and what the runtime enables. This is an observation from ordinary user sessions, not a controlled benchmark.
 
 In latency-sensitive interactions, especially animation-rich UI, creating many previously unseen styles at once deserves scrutiny. That pattern may also reveal a broader workload problem: too much UI mounting in one frame, poor style reuse, or per-frame values expressed as new rules. Precompilation can remove one source of work, but it does not address React, DOM, layout, or paint costs.
 
 ## Runtime is only half the design
 
-A runtime-capable system still has to express the product's CSS, which is not just a dictionary of properties: selectors, conditions, declaration order, overlapping shorthands, and the cascade all carry meaning.
+A runtime-capable system still has to express the product's CSS. CSS is more than a dictionary of properties: selectors, conditions, declaration order, overlapping shorthands, and the cascade all carry meaning.
 
 Tasty accepts standard properties and values directly, while its style objects use a small grammar to represent selectors and conditions:
 
@@ -200,4 +200,4 @@ Runtime capability earns its place when final styles depend on information unava
 - **On the server** when the decision is request-specific but complete before the HTML is sent or streamed.
 - **In the browser** when values or composition remain open after server rendering, or when making every consumer participate in extraction would cost more than the browser work being removed.
 
-Whatever approach you choose, profile the actual product rather than the category. The old evidence described real costs in particular implementations and workloads; it did not settle every use of runtime generation. Judge that cost against the composition and ownership problems it solves. When those problems matter, runtime generation may be justified. When they do not, choose a simpler or earlier-executing approach.
+Profile products, not categories. The old evidence described real costs in particular implementations and workloads; it did not settle every use of runtime generation. The relevant question is whether the composition and ownership it enables are worth the cost in your product. If they are not, generate the CSS earlier or choose a simpler approach.
