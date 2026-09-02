@@ -8,11 +8,11 @@ draft: true
 
 The case against runtime CSS-in-JS seems settled. It was tried, measured, and found slow.
 
-The charges are familiar: style generation runs during React rendering, inserted rules make the browser resolve styles, generated CSS accumulates, and every styled element adds React overhead. Server rendering was awkward, React Server Components seemed incompatible, and build-time CSS appeared to eliminate the entire class of problems.
+The charges are familiar: styles are rebuilt on every React render, stylesheet writes interleaved with rendering cause repeated style resolution, generated CSS accumulates, and every styled element adds React overhead. Server rendering was awkward, React Server Components seemed incompatible, and build-time CSS appeared to eliminate the entire class of problems.
 
 Those charges did not come from nowhere. In 2019, Aggelos Arvanitakis described [the hidden costs of the CSS-in-JS libraries of the time](https://calendar.perfplanet.com/2019/the-unseen-performance-costs-of-css-in-js-in-react-apps/). In 2022, Emotion maintainer Sam Magura reported in [Why We're Breaking Up with CSS-in-JS](https://dev.to/srmagura/why-were-breaking-up-wiht-css-in-js-4g9b) that replacing Emotion with Sass Modules cut the render time of a large screen almost in half.
 
-The measurements were valid. They answered, “Were these runtime CSS-in-JS implementations expensive?” They left two broader questions open: “Must a runtime-capable styling system pay those costs in the browser?” and “When generation does happen there, does the resulting flexibility justify the cost?”
+The measurements were valid. They answered, “Were these runtime CSS-in-JS implementations expensive?” They left two broader questions open: “Must every runtime-capable styling system pay those costs in the browser?” and “When generation does happen there, does the resulting flexibility justify the cost?”
 
 Those results also captured a particular generation of libraries and the platform around them. Browsers, React, rendering frameworks, and hardware have all evolved, but faster machinery is not the main reason to revisit the verdict. Style engines can also change where they perform work and how often they repeat it.
 
