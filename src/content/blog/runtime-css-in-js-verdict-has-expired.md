@@ -108,6 +108,10 @@ A library can publish compiled class names and CSS instead, but then it owns CSS
 
 Static extraction is valuable when those constraints fit the system, but zero browser runtime is not zero system cost. It moves work from rendering into source restrictions, build tooling, distribution, and coordination.
 
+What bothers me is not the popularity of static extraction, but how often it ends the discussion. In conversations with developers, I hear careful accounts of browser runtime costs followed by “so we moved to static extraction, ordinary CSS, or a preprocessor.” The replacement rarely receives the same accounting. Static extraction may still be the right choice; what I find dispiriting is not the choice, but the absence of the same curiosity about its consequences.
+
+I am glad runtime and hybrid systems are still exploring other points on this spectrum and accounting for the browser work they retain. That does not make them right by default; it means every placement can be judged by the same standard.
+
 ## The browser costs that remain
 
 When the final styling decision reaches the browser, four areas still matter: generation and reuse, stylesheet writes, stylesheet growth, and React wrapper work.
