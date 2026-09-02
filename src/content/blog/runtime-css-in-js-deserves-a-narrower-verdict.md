@@ -1,5 +1,5 @@
 ---
-title: 'The runtime CSS-in-JS verdict has expired'
+title: 'Runtime CSS-in-JS deserves a narrower verdict'
 description: 'The old case against runtime CSS-in-JS identified real costs, but not all of them are inherent. The better question is where styling decisions become known: at build time, on the server, or in the browser.'
 date: 2026-08-21
 tags: ['css', 'performance', 'react', 'webdev']
@@ -106,7 +106,7 @@ That visibility requirement extends through the toolchain. The compiler has to p
 
 A library can publish compiled class names and CSS instead, but then it owns CSS delivery. One global stylesheet can force every consumer to load every component's styles. Splitting the output requires the compiler and bundler to agree on which CSS belongs to each module or route, and the generated CSS, JavaScript class names, caches, and package versions must remain in sync.
 
-Static extraction is valuable when those constraints fit the system, but zero browser runtime is not zero system cost. It moves work from rendering into source restrictions, build tooling, distribution, and coordination.
+Static extraction is valuable when those constraints fit, but zero browser runtime is not zero system cost. Work moves into source restrictions, build tooling, distribution, and coordination. My concern is not the choice but the unequal accounting: browser runtime costs are measured carefully, while the costs of the replacement often end the discussion. Every placement deserves the same standard.
 
 What bothers me is not the popularity of static extraction, but how often it ends the discussion. In conversations with developers, I hear careful accounts of browser runtime costs followed by “so we moved to static extraction, ordinary CSS, or a preprocessor.” The replacement rarely receives the same accounting. Static extraction may still be the right choice; what I find dispiriting is not the choice, but the absence of the same curiosity about its consequences.
 
@@ -123,6 +123,8 @@ When a Tasty component renders with the same styles, it remembers the class name
 The parser and style pipeline have their own caches, and identical state branches can be collapsed before output is generated. Repeated work stops at the earliest layer that recognizes it. A React render therefore need not trigger another round of parsing, generation, or insertion.
 
 ### Stylesheet writes and style resolution
+
+For generated component rules, Tasty normally creates one managed `<style>` element per root and inserts rules into its stylesheet, opening another only when the configured per-sheet limit is reached. The cost here is not repeated `<style>` element creation, but mutating a live stylesheet; when the browser resolves that change determines how much work can be grouped.
 
 Adding a rule marks styles as needing resolution, but the browser does not necessarily recalculate the page at that moment. It can collect several changes and resolve them together when styles are needed. React may split rendering into parts, however, giving the browser several opportunities to resolve styles if stylesheet writes are interleaved with reads.
 
@@ -142,6 +144,8 @@ Older implementations often made every styled component run hooks or consume the
 
 Tasty does not need hooks or React context to generate styles. Cached styles remove the generation work, but the wrapper still processes props and returns the underlying element. That React work remains.
 
+Browser execution also means shipping the Tasty runtime. Its current bundle is substantial because it includes the parser, state and condition handling, composition, injection, and collection machinery. That is a deliberate current tradeoff: Tasty prioritizes a rich composition model and predictable execution over minimal delivery size, while reducing download and parse cost remains optimization work. A product that does not need that capability has less reason to pay for it.
+
 ### Practical cost
 
 Generation, injection, and wrapper overhead are different costs. The practical distinction is between first-time and repeated work: generating a genuinely new style has a measurable cost, while reusing an existing style takes the cached path.
@@ -151,16 +155,19 @@ I reran Tasty's current public benchmarks three times on an Apple M1 Max. The No
 | Measured work | Added time |
 | --- | --: |
 | Render one warmed `tasty()` wrapper | ~1.1 µs per element |
-| Generate a new style | ~16–47 µs |
+| Generate a new five-property style | ~16 µs |
+| Generate a new style with states and conditions | ~47 µs |
 | Reuse a cached style | ~0.12–0.13 µs |
 | Generate, inject, and resolve one new rule | ~0.16–0.18 ms |
 | Generate and inject 1,000 new rules, then resolve styles once | ~10.1–10.5 ms total |
 
 The numbers should not be added together. The end-to-end injection benchmark already includes generation. It subtracts a baseline that performs the same DOM update and style resolution with equivalent CSS already present.
 
-The methods for the [style-pipeline benchmark](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/runtime-benchmarks.md#core-style-pipeline), [wrapper-overhead benchmark](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/runtime-benchmarks.md#empty-wrapper-overhead), and [cold-generation-and-injection benchmark](https://github.com/tenphi/tasty/blob/299eec7e2aae62a8aa940190dc77fde82bde9ac8/docs/runtime-benchmarks.md#cold-generation-and-injection) are public and reproducible. The single-rule case crosses the injection-to-resolution boundary for every rule; the batched case performs all writes before one resolution. The batched case costs only about 59–65 times as much in total, not 1,000 times as much, because fixed work is amortized and the browser can resolve the writes together.
+The [full benchmark report](https://tasty.style/docs/runtime-benchmarks) publishes the methods, results, and source code. The cold-injection benchmark excludes React and the `tasty()` wrapper, which are measured separately.
 
-Benchmarks isolate the costs; product profiles show whether they matter in context. On one of the heaviest pages in [Cube](https://cubecloud.dev/), an enterprise application built with the Tasty-powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit), local profiling and internal Sentry traces both put Tasty at roughly 12.5% of main-thread busy time during startup. This is a product observation, not a controlled benchmark or a claim about every interaction; it shows overhead that is measurable without dominating this workload.
+The injection cases compare a single rule followed by style resolution with 1,000 rule insertions followed by one resolution. The grouped workload takes about 60 times—not 1,000 times—the single-rule cost because fixed work is amortized and the browser resolves the writes together.
+
+Benchmarks isolate the costs; product profiles show whether they matter in context. Across production Sentry traces from real user sessions on one of the heaviest pages in [Cube](https://cubecloud.dev/), an enterprise application built with the Tasty-powered [Cube UI Kit](https://github.com/cube-js/cube-ui-kit), Tasty accounted for roughly 12.5% of main-thread busy time during startup; local profiling produced a similar result. This is a product observation rather than a controlled benchmark, but it shows the cost in ordinary user sessions rather than only on the benchmark machine.
 
 In latency-sensitive interactions, especially animation-rich UI, creating many previously unseen styles at once deserves scrutiny. It may also reveal a broader workload problem: too much UI mounting in one frame, poor style reuse, or per-frame values expressed as new rules. Precompilation can remove one source of work, but it does not address React, DOM, layout, or paint costs.
 
@@ -197,8 +204,6 @@ Browser-side generation should not be the default merely because the styling lan
 - **On the server** when the decision is request-specific but complete before the HTML is sent or streamed.
 - **In the browser** when values or composition remain open after server rendering, or when making every consumer participate in extraction would cost more than the browser work being removed.
 
-Each placement shifts the cost. Static extraction adds source constraints, compiler integration, and CSS delivery work. For one application, that integration may be modest; for a component library used by many independent products, its versioning, testing, and chunking requirements are multiplied across consumers. Browser generation instead adds wrapper work, generation and injection for new styles, and active rules to the stylesheet.
-
-Runtime generation earns its place when an open extension point lets product teams solve legitimate styling needs without turning every use case into a component API. When those decisions are known earlier, build and server rendering can avoid paying that cost in the browser.
+Each placement shifts the cost. Static extraction adds source constraints, compiler integration, and CSS delivery work; for a component library, its versioning, testing, and chunking requirements are multiplied across consumers. Browser generation instead adds wrapper work, runtime delivery, generation and injection for new styles, and active rules to the stylesheet. It earns its place when an open extension point solves legitimate product needs; decisions known earlier should stay at the build or server.
 
 Whichever placement you choose, profile the actual product rather than the category. The old performance evidence was real. What expired was not that evidence, but the assumption that those costs were inherent—and that runtime capability necessarily meant browser execution.
