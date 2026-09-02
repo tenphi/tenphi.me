@@ -1,6 +1,6 @@
 ---
-title: 'Runtime CSS-in-JS deserves a narrower verdict'
-description: 'The old case against runtime CSS-in-JS identified real costs, but not all of them are inherent. The better question is where styling decisions become known: at build time, on the server, or in the browser.'
+title: 'Runtime CSS-in-JS still has a case'
+description: 'Runtime CSS-in-JS has real costs, but runtime-capable systems can solve real composition problems. Their cost should be judged against what they enable.'
 date: 2026-08-21
 tags: ['css', 'performance', 'react', 'webdev']
 draft: true
@@ -18,11 +18,11 @@ Those results also captured a particular generation of libraries and the platfor
 
 People often use _runtime CSS-in-JS_ to mean generating CSS in the browser. I will distinguish that placement from runtime capability: the ability to generate styles from program values wherever those values become known.
 
-The useful question today is therefore not whether runtime CSS-in-JS is simply fast or slow, but when each styling decision becomes known: during the build, on the server, or only in the browser.
+The useful question today is therefore not whether runtime CSS-in-JS is simply fast or slow, but what runtime capability enables, whether that justifies its cost, and how early each styling decision can be made.
 
 I will use [Tasty](https://github.com/tenphi/tasty), which I created and maintain, as a case study, not a neutral survey of libraries. It is a demanding counterexample: in the browser, Tasty parses values, resolves states and conditions, composes extensions, and generates and injects CSS rather than merely selecting precompiled output. The same components can also produce CSS on a server or during a static build.
 
-My claim is narrow: if such a system can control where and how often those costs are paid, they are not all inherent to the category. That does not make every CSS-in-JS library fast or make browser generation free.
+My claim is narrow: a runtime-capable system can justify its cost when it controls where and how often that cost is paid and solves composition problems that matter to the product. That does not make every CSS-in-JS library fast or make browser generation free.
 
 ## Runtime capability does not dictate runtime placement
 
@@ -196,14 +196,16 @@ Composition needs rules too. CSS properties overlap: `padding` can reset `paddin
 
 This is an opinionated component model, not a replacement for every use of CSS. Tasty does not model features such as `@layer` or `!important`, and rules whose intent is genuinely document-wide may be clearer as ordinary CSS. Tasty prioritizes local, explicit ownership; ordinary CSS exposes the full cascade and structural reach. Choosing an execution point does not erase that design tradeoff.
 
-## Choose the earliest viable execution point
+## Runtime capability has to earn its place
 
-Browser-side generation should not be the default merely because the styling language supports it. Generate CSS as soon as the required styles are known, and defer only what remains open:
+Runtime-capable styling is one choice in a wider landscape. Teams can use ordinary CSS, preprocessors, utility or variant vocabularies, static extraction, server generation, browser generation, or combinations of them. Each makes different tradeoffs in cascade control, source visibility, tooling, delivery, composition, and browser work. None is right by category alone.
+
+Runtime capability earns its place when it preserves a legitimate composition point that an earlier phase or narrower component API cannot close without losing something the product needs. For a system that offers it, the execution rule is still to generate CSS as soon as the required styles are known and defer only what remains open:
 
 - **During the build** when the complete set of styles is known, a predefined utility or variant vocabulary fits the product, and the compiler and delivery pipeline can extract, split, and load the resulting CSS.
 - **On the server** when the decision is request-specific but complete before the HTML is sent or streamed.
 - **In the browser** when values or composition remain open after server rendering, or when making every consumer participate in extraction would cost more than the browser work being removed.
 
-Each placement shifts the cost. Static extraction adds source constraints, compiler integration, and CSS delivery work; for a component library, its versioning, testing, and chunking requirements are multiplied across consumers. Browser generation instead adds wrapper work, runtime delivery, generation and injection for new styles, and active rules to the stylesheet. It earns its place when an open extension point solves legitimate product needs; decisions known earlier should stay at the build or server.
+Within such a system, each placement shifts the cost. Static extraction adds source constraints, compiler integration, and CSS delivery work; for a component library, its versioning, testing, and chunking requirements are multiplied across consumers. Browser generation instead adds wrapper work, runtime delivery, generation and injection for new styles, and active rules to the stylesheet. Decisions known earlier should stay at the build or server.
 
-Whichever placement you choose, profile the actual product rather than the category. The old performance evidence was real. What expired was not that evidence, but the assumption that those costs were inherent—and that runtime capability necessarily meant browser execution.
+Whatever approach you choose, profile the actual product rather than the category. The old performance evidence was real, but it described particular implementations and workloads; it did not settle the case against runtime capability. Its cost should be judged against the composition and ownership problems it solves. When those problems matter, that cost may be justified; when they do not, a simpler or earlier-executing approach is the better choice.
