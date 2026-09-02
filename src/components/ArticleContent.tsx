@@ -5,15 +5,17 @@ const ArticleContent = tasty({
   styles: {
     display: 'flex',
     flow: 'column',
+    preset: 'prose',
+    width: 'initial 100% $prose-width',
 
     H2: {
       $: 'h2',
       preset: 'h2',
       color: '#text',
       margin: {
-        '': '3x 0 1.5x',
-        '@own(:first-child)': '0 0 1.5x',
-        '@own(:last-child)': '3x 0 0',
+        '': '5x 0 2x',
+        '@own(:first-child)': '0 0 2x',
+        '@own(:last-child)': '5x 0 0',
       },
     },
     H3: {
@@ -21,15 +23,15 @@ const ArticleContent = tasty({
       preset: 'h3',
       color: '#text',
       margin: {
-        '': '2.5x 0 1x',
-        '@own(:first-child)': '0 0 1x',
-        '@own(:last-child)': '2.5x 0 0',
+        '': '4x 0 1.5x',
+        '@own(:first-child)': '0 0 1.5x',
+        '@own(:last-child)': '4x 0 0',
       },
     },
     P: {
       $: 'p',
       margin: {
-        '': '0 0 2x',
+        '': '0 0 2.5x',
         '@own(:last-child) & !@own(:is(summary +))': '0',
       },
     },
@@ -44,7 +46,7 @@ const ArticleContent = tasty({
     Ul: {
       $: 'ul',
       margin: {
-        '': '0 0 2x',
+        '': '0 0 2.5x',
         '@own(:last-child)': '0',
       },
       padding: '3x left',
@@ -52,19 +54,19 @@ const ArticleContent = tasty({
     Ol: {
       $: 'ol',
       margin: {
-        '': '0 0 2x',
+        '': '0 0 2.5x',
         '@own(:last-child)': '0',
       },
       padding: '3x left',
     },
     Li: {
       $: 'li',
-      margin: '0 0 .5x',
+      margin: '0 0 1x',
     },
     Blockquote: {
       $: 'blockquote',
       margin: {
-        '': '0 0 2x',
+        '': '0 0 2.5x',
         '@own(:last-child)': '0',
       },
       padding: '2x left',
@@ -98,7 +100,7 @@ const ArticleContent = tasty({
       radius: true,
       padding: '1x 2x',
       margin: {
-        '': '0 0 2x',
+        '': '0 0 2.5x',
         '@own(:last-child)': '0',
       },
     },
@@ -155,7 +157,7 @@ const ArticleContent = tasty({
       border: true,
       scrollbar: 'thin',
       margin: {
-        '': '0 0 2x',
+        '': '0 0 2.5x',
         '@own(:last-child)': '0',
       },
     },
@@ -170,7 +172,7 @@ const ArticleContent = tasty({
       width: '100%',
       borderCollapse: 'collapse',
       margin: {
-        '': '0 0 2x',
+        '': '0 0 2.5x',
         '@own(:last-child)': '0',
       },
       preset: 'code',

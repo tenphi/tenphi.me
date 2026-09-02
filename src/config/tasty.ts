@@ -4,22 +4,26 @@ import { colorTokens } from './theme';
 
 const typographyTokens = generateTypographyTokens({
   h1: {
-    fontSize: '32px',
-    lineHeight: '1.2',
-    letterSpacing: '-0.02em',
+    fontSize: {
+      '': '36px',
+      '@mobile': '32px',
+    },
+    lineHeight: '1.15',
+    letterSpacing: '-0.025em',
     fontWeight: '700',
     boldFontWeight: '700',
   },
   h2: {
-    fontSize: '24px',
-    lineHeight: '1.3',
-    letterSpacing: '-0.01em',
+    fontSize: '26px',
+    lineHeight: '1.25',
+    letterSpacing: '-0.015em',
     fontWeight: '700',
     boldFontWeight: '700',
   },
   h3: {
-    fontSize: '20px',
-    lineHeight: '1.4',
+    fontSize: '21px',
+    lineHeight: '1.35',
+    letterSpacing: '-0.01em',
     fontWeight: '700',
     boldFontWeight: '700',
   },
@@ -32,6 +36,12 @@ const typographyTokens = generateTypographyTokens({
   t2: {
     fontSize: '16px',
     lineHeight: '1.5',
+    fontWeight: '400',
+    boldFontWeight: '600',
+  },
+  prose: {
+    fontSize: '17px',
+    lineHeight: '1.7',
     fontWeight: '400',
     boldFontWeight: '600',
   },
@@ -84,7 +94,8 @@ configure({
     $gap: '8px',
     $radius: '6px',
     '$card-radius': '12px',
-    '$max-width': '720px',
+    '$max-width': '760px',
+    '$prose-width': '720px',
     $font: '"Onest", system-ui, -apple-system, sans-serif',
     '$monospace-font': '"Source Code Pro", ui-monospace, monospace',
     '$default-font-size': '16px',

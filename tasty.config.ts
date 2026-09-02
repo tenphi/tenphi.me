@@ -7,6 +7,7 @@ export default {
     '$gap',
     '$radius',
     '$max-width',
+    '$prose-width',
     '$font',
     '$monospace-font',
     '$default-font-size',
@@ -17,5 +18,17 @@ export default {
 
   states: ['@mobile', '@tablet', '@desktop', '@dark', '@high-contrast'],
 
-  presets: ['h1', 'h2', 'h3', 't1', 't2', 't3', 'nav', 'code', 'label', 'overline'],
+  presets: [
+    'h1',
+    'h2',
+    'h3',
+    't1',
+    't2',
+    'prose',
+    't3',
+    'nav',
+    'code',
+    'label',
+    'overline',
+  ],
 };
