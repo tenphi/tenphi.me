@@ -1,9 +1,8 @@
 ---
 title: 'Runtime CSS-in-JS deserves a rehearing'
 description: 'Runtime CSS-in-JS has real costs, but runtime-capable systems can solve real composition problems. Their cost should be judged against what they enable.'
-date: 2026-08-21
+date: 2026-09-03
 tags: ['css', 'performance', 'react', 'webdev']
-draft: true
 ---
 
 Runtime CSS-in-JS has largely been written off as too expensive for the browser.
