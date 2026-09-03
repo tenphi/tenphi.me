@@ -1,5 +1,10 @@
 import { tasty } from '@tenphi/tasty';
-import { IconBrandGithub, IconPalette } from '@tabler/icons-react';
+import {
+  IconBook,
+  IconBrain,
+  IconBrandGithub,
+  IconPalette,
+} from '@tabler/icons-react';
 import Tag from './ui/Tag';
 
 const Card = tasty({
@@ -125,6 +130,8 @@ const Card = tasty({
 });
 
 const icons = {
+  book: IconBook,
+  brain: IconBrain,
   github: IconBrandGithub,
   palette: IconPalette,
 };

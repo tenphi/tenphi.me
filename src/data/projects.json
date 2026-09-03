@@ -60,6 +60,26 @@
     "featured": false
   },
   {
+    "id": "akno",
+    "title": "Akno",
+    "href": "https://akno.tenphi.me",
+    "description": "Memory layer for AI agents built on a Markdown knowledge base you own — cited retrieval, grounded answers, journalled and undoable writes.",
+    "tags": ["Node.js", "TypeScript", "AI Agents", "CLI"],
+    "icon": "brain",
+    "section": "Developer Tools",
+    "featured": true
+  },
+  {
+    "id": "cookbook",
+    "title": "Cookbook",
+    "href": "https://cookbook.tenphi.me",
+    "description": "Turns repository Markdown or the docs shipped in an npm package into a static documentation site — Astro and Starlight with a Tasty/Glaze theme and strict content validation.",
+    "tags": ["Astro", "Starlight", "Tasty", "Glaze"],
+    "icon": "book",
+    "section": "Developer Tools",
+    "featured": false
+  },
+  {
     "id": "cube-cloud",
     "title": "Cube",
     "href": "https://cubecloud.dev",
