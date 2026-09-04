@@ -20,6 +20,14 @@
         "uri": "at://did:plc:npwyvb3iv3fqdsfqxoslxpzc/app.bsky.feed.post/3mqosfvnmd32n",
         "cid": "bafyreihqad32s7rjrukcec4ahc2te5myrxhfnlpnk3svftwqcxugefhihi"
       }
+    },
+    "runtime-css-in-js-deserves-a-rehearing": {
+      "rkey": "3mumqaw7ko725",
+      "atUri": "at://did:plc:npwyvb3iv3fqdsfqxoslxpzc/site.standard.document/3mumqaw7ko725",
+      "bskyPost": {
+        "uri": "at://did:plc:npwyvb3iv3fqdsfqxoslxpzc/app.bsky.feed.post/3mumqauvudu2a",
+        "cid": "bafyreibsqq5jxewpqhlqnl2rxasfyst5spvrbjzq2mccnlyofs26icg4dm"
+      }
     }
   }
 }
