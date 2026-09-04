@@ -19,7 +19,7 @@ People often use _runtime CSS-in-JS_ as shorthand for generating CSS in the brow
 
 The useful question is not simply whether runtime CSS-in-JS is fast or slow. It is which styling decisions can be made earlier, and whether keeping the rest open justifies the cost. CSS should not always be generated in the browser, but browser generation should remain available when the final composition genuinely remains open.
 
-I will use [Tasty](https://github.com/tenphi/tasty), which I created and maintain, as a case study rather than a neutral survey. It is a demanding test: in the browser, Tasty parses values, resolves states and conditions, composes extensions, and generates and injects CSS rather than merely selecting precompiled output. The same components can do that work on a server or during a static build.
+I will use [Tasty](https://tasty.style), which I created and maintain, as a case study rather than a neutral survey. It is a demanding test: in the browser, Tasty parses values, resolves states and conditions, composes extensions, and generates and injects CSS rather than merely selecting precompiled output. The same components can do that work on a server or during a static build.
 
 My claim is narrow: a runtime-capable system can justify its cost when it controls where and how often that cost is paid and solves composition problems that matter to the product. That does not make every CSS-in-JS library fast or make browser generation free.
 
