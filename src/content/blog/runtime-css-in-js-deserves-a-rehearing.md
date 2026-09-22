@@ -143,24 +143,26 @@ Browser execution also means shipping the Tasty runtime. Its current bundle is s
 
 ### Practical cost
 
+_Updated September 22, 2026: refreshed the benchmarks and product profile after the optimizations in Tasty 3.9._
+
 Generation, injection, and wrapper overhead are different costs. The useful distinction is between cold and repeated work: new styles pay for generation and injection, while familiar styles take the cached path. The figures below measure those costs separately.
 
-I reran Tasty's current public benchmarks three times on an Apple M1 Max. The Node suite used Node 22; the browser suites used production React 19.2.8 and Chromium 151.
+Tasty's latest published benchmarks report three consecutive runs on an Apple M3 Pro, with Node 24.18.0 on AC power for the style pipeline and production React 19.2.8 and Chromium 151 for the browser suites. The earlier figures in this article used an M1 Max and Node 22, so this is an updated snapshot rather than a controlled before-and-after comparison.
 
-| Measured work | Added time |
+| Measured work | Time |
 | --- | --: |
-| Render one warmed `tasty()` wrapper | ~1.1 µs per element |
-| Generate a new five-property style | ~16 µs |
-| Generate a new style with states and conditions | ~47 µs |
-| Reuse a cached style | ~0.12–0.13 µs |
-| Generate, inject, and resolve one new rule | ~0.16–0.18 ms |
-| Generate and inject 1,000 new rules, then resolve styles once | ~10.1–10.5 ms total |
+| Render one warmed empty `tasty()` wrapper | ~0.5 µs extra per element |
+| Generate a new five-property style | 6.3–7.0 µs |
+| Generate a new style with media, hover, and modifier states | 28–32 µs |
+| Reuse a cached style | ~0.10 µs |
+| Generate, inject, and resolve one new rule | ~0.100–0.104 ms extra |
+| Generate and inject 1,000 new rules, then resolve styles once | 5.73–5.94 ms extra in total |
 
-These figures describe separate paths and should not be added. The end-to-end injection benchmark already includes generation and subtracts a baseline that performs the same DOM update and style resolution with equivalent CSS already present. React wrapper work is measured separately. The [full benchmark report](https://tasty.style/docs/runtime-benchmarks) publishes the methods, results, and source code.
+These figures describe separate paths and should not be added. Generation and cache timings measure the operation directly; wrapper and injection timings are the extra time over matching baselines. The end-to-end injection benchmark already includes generation and subtracts a baseline that performs the same DOM update and style resolution with equivalent CSS already present. React wrapper work is measured separately: the roughly 0.5 µs figure covers mounting/removing or rerendering with unchanged host props; changing a host attribute raises it to 0.86–0.91 µs per element. The [full benchmark report](https://github.com/tenphi/tasty/blob/eaf64ea973855bb394bd48e1aef5406e7b2c6225/docs/runtime-benchmarks.md) publishes the methods, results, and source code.
 
-The pattern matters more than the individual numbers: cached styles avoid most of the work, and grouped writes amortize fixed costs. In round numbers, cold generation took tens of microseconds, cached reuse took a fraction of a microsecond, and generating, injecting, and resolving a new rule took tenths of a millisecond. The 1,000-insertion case took about 60 times as long as the single-rule case, not 1,000 times as long.
+The pattern matters more than the individual numbers: cached styles avoid most of the work, and grouped writes amortize fixed costs. In these cases, cold generation took a few to a few dozen microseconds, cached reuse took a fraction of a microsecond, and generating, injecting, and resolving a new rule added about a tenth of a millisecond. The 1,000-insertion case added about 55–59 times as much time as the single-rule case, not 1,000 times as much.
 
-Benchmarks isolate the costs; product profiles show whether they matter in context. In production Sentry traces from real user sessions on one of Cube's heaviest pages, Tasty accounted for roughly 12.5% of main-thread busy time during startup; local profiling produced a similar result. This is an observation from ordinary user sessions, not a controlled benchmark. That share is material, and whether it is acceptable depends on the product and what the runtime enables.
+Benchmarks isolate the costs; product profiles show whether they matter in context. After the optimizations in Tasty 3.9, Tasty now accounts for roughly **8.3% of main-thread busy time during startup** in production Sentry traces from real user sessions on one of Cube's heaviest pages, down from the 12.5% reported here originally. These are observations from ordinary user sessions, not a controlled benchmark or a measure of total page-load time. That share is still material, and whether it is acceptable depends on the product and what the runtime enables.
 
 In latency-sensitive interactions, especially animation-rich UI, creating many previously unseen styles at once deserves scrutiny. That pattern may also reveal a broader workload problem: too much UI mounting in one frame, poor style reuse, or per-frame values expressed as new rules. Precompilation can remove one source of work, but it does not address React, DOM, layout, or paint costs.
 
