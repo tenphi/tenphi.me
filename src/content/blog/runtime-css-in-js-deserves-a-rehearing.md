@@ -13,7 +13,9 @@ Those concerns did not come from nowhere. In 2019, Aggelos Arvanitakis described
 
 The measurements were valid. They answered, “Were these runtime CSS-in-JS implementations expensive?” They left two broader questions open: “Must every runtime-capable styling system pay those costs in the browser?” and “When generation does happen there, does the resulting flexibility justify the cost?”
 
-Those results also captured a particular generation of libraries. Browsers, React, rendering frameworks, and hardware have all evolved, but faster machinery is not the main reason to revisit the verdict. Style engines can also change where they perform work and how often they repeat it.
+The same concerns drive more recent migrations. [GitHub](https://github.blog/engineering/architecture-optimization/improving-site-performance-by-shipping-more-css/) replaced styled-components with CSS Modules to reduce server and client costs; [Linear](https://linear.app/now/styling-linear-for-the-future-stylex) moved to StyleX for performance and clearer component boundaries; [Atlassian](https://community.developer.atlassian.com/t/rfc-73-migrating-our-components-to-compiled-css-in-js/85953) adopted Compiled to reduce runtime overhead and support concurrent rendering and streaming SSR.
+
+Those choices strengthen the case for generating known styles early and making styling contracts explicit. Improvements in browsers, React, rendering frameworks, and hardware help, but the stronger reason to revisit the verdict is architectural: style engines can change where they perform work and how often they repeat it. Linear still generates theme rules at runtime, showing how that capability can remain useful within a mostly compiled system. A runtime-capable engine has to justify both the work it leaves in the browser and the freedom it gives consumers to restyle shared components.
 
 People often use _runtime CSS-in-JS_ as shorthand for generating CSS in the browser. Here I separate capability from placement. A runtime-capable system can generate styles wherever its inputs become known: during the build, on the server, or in the browser.
 
