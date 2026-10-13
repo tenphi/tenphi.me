@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Personal website and blog for Andrey Yamanov at [https://tenphi.me](https://tenphi.me). Fully static Astro 6 site with React components rendered at build time — no client-side JavaScript shipped (except a small inline theme-persistence script).
+Personal website and blog for Andrey Yamanov at [https://tenphi.me](https://tenphi.me). Fully static Astro 6 site with React components rendered at build time — no hydrated React islands. Small scripts enhance appearance controls and blog previews; Astro's client router loads lazily on internal-link intent.
 
 Repository: <https://github.com/tenphi/tenphi.me>
 
@@ -91,6 +91,7 @@ src/
 
   components/
     Header.tsx            Site header with nav + theme switcher
+    LazyRouter.astro      Link-intent bootstrap + lazy Astro client router
     Footer.tsx            Site footer
     GlobalStyles.tsx      useGlobalStyles + useRawCSS (reset, typography, body)
     PostCard.tsx          Blog post card for listings
@@ -225,5 +226,6 @@ Local dev without credentials works with whatever is already in the committed ma
 - Functional components only — `tasty()` factory + hooks
 - Astro pages (`.astro`) compose React components for layout and styling
 - No `client:*` directives — everything renders at build time
+- Client scripts must handle Astro page swaps. Reinitialize page-specific controls on `astro:page-load` (or use `data-astro-rerun` for inline scripts), and restore visual preferences before `astro:before-swap` paints the new document.
 - All style values use Tasty DSL — design tokens (`#color`, `$token`), custom units (`2x`, `1r`), state maps
 - Follow existing Prettier config: use `prettier-plugin-astro` for `.astro` files

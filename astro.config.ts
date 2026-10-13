@@ -17,6 +17,16 @@ export default defineConfig({
   site: 'https://tenphi.me',
   server: { host: '0.0.0.0' },
   vite: {
+    // Discover the lazy router's dependencies up front in dev, so its first
+    // import doesn't trigger Vite's dependency-optimization page reload.
+    optimizeDeps: {
+      include: [
+        'astro/virtual-modules/transitions-router.js',
+        'astro/virtual-modules/transitions-types.js',
+        'astro/virtual-modules/transitions-events.js',
+        'astro/virtual-modules/transitions-swap-functions.js',
+      ],
+    },
     server: {
       watch: {
         useFsEvents: false,

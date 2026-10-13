@@ -1,0 +1,81 @@
+<!-- Match ClientRouter's page opt-in without eagerly loading its runtime. -->
+<meta name="astro-view-transitions-enabled" content="true" />
+<meta name="astro-view-transitions-fallback" content="swap" />
+
+<script>
+  import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
+
+  // Importing Astro's public client API initializes its history/scroll handlers.
+  // Keep the import dynamic so readers only download the router on link intent.
+  let router: Promise<typeof import('astro:transitions/client')> | undefined;
+  let latestNavigation = 0;
+
+  function loadRouter() {
+    return (router ??= import('astro:transitions/client').catch((error) => {
+      router = undefined;
+      throw error;
+    }));
+  }
+
+  function internalLink(event: Event) {
+    if (event.defaultPrevented) return;
+    const target = event.composedPath()[0];
+    if (!(target instanceof Element)) return;
+    const link = target.closest<HTMLAnchorElement>('a[href]');
+    if (
+      !link ||
+      link.hasAttribute('download') ||
+      link.hasAttribute('data-astro-reload') ||
+      (link.target && link.target !== '_self')
+    ) {
+      return;
+    }
+    const url = new URL(link.href);
+    if (url.origin !== location.origin) return;
+    return link;
+  }
+
+  function warmRouter(event: Event) {
+    if (internalLink(event)) void loadRouter().catch(() => {});
+  }
+
+  document.addEventListener('pointerover', warmRouter, { passive: true });
+  document.addEventListener('focusin', warmRouter);
+  document.addEventListener('pointerdown', warmRouter, { passive: true });
+
+  document.addEventListener('astro:before-swap', (event) => {
+    // A newer navigation can skip an active animation. `ready` then rejects
+    // even though the DOM swap succeeds; consume that expected rejection.
+    const { viewTransition } = event as TransitionBeforeSwapEvent;
+    void viewTransition.ready.catch(() => {});
+  });
+
+  document.addEventListener('click', async (event) => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+    const link = internalLink(event);
+    if (!link) return;
+
+    event.preventDefault();
+    const href = link.href;
+    const navigation = ++latestNavigation;
+    try {
+      const { navigate } = await loadRouter();
+      if (navigation !== latestNavigation) return;
+      await navigate(href, {
+        history: link.dataset.astroHistory === 'replace' ? 'replace' : 'auto',
+        sourceElement: link,
+      });
+    } catch {
+      // A missing/offline router chunk must never strand a clicked link.
+      if (navigation === latestNavigation) location.assign(href);
+    }
+  });
+</script>

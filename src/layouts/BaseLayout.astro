@@ -3,6 +3,7 @@ import '../config/tasty';
 import GlobalStyles from '../components/GlobalStyles';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import LazyRouter from '../components/LazyRouter.astro';
 
 interface Props {
   title: string;
@@ -37,6 +38,7 @@ const ogImageUrl = ogImage
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <LazyRouter />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
@@ -111,6 +113,32 @@ const ogImageUrl = ogImage
     <Header />
     <script is:inline>
       (function () {
+        // Apply preferences to the incoming document before it is painted.
+        // Root attributes (including the inline hue) are replaced by Astro.
+        document.addEventListener('astro:before-swap', function (event) {
+          var doc = event.newDocument;
+          ['theme', 'highContrast'].forEach(function (name) {
+            var key =
+              name === 'theme'
+                ? 'theme-preference'
+                : 'high-contrast-preference';
+            var saved = localStorage.getItem(key);
+            doc
+              .querySelectorAll('input[name="' + name + '"]')
+              .forEach(function (radio) {
+                if (radio.value === saved) radio.checked = true;
+              });
+          });
+          doc.documentElement.setAttribute('data-js', '');
+          var hue = localStorage.getItem('hue-preference');
+          if (hue != null) {
+            doc.documentElement.style.setProperty('--primary-hue', hue);
+          }
+        });
+      })();
+    </script>
+    <script is:inline data-astro-rerun>
+      (function () {
         var STORAGE_KEY = 'theme-preference';
         var radios = document.querySelectorAll('input[name="theme"]');
 
@@ -129,7 +157,7 @@ const ogImageUrl = ogImage
         });
       })();
     </script>
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       (function () {
         var KEY = 'high-contrast-preference';
         var radios = document.querySelectorAll('input[name="highContrast"]');
@@ -149,7 +177,7 @@ const ogImageUrl = ogImage
         });
       })();
     </script>
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       (function () {
         var STORAGE_KEY = 'hue-preference';
         var root = document.documentElement;
@@ -202,7 +230,7 @@ const ogImageUrl = ogImage
         });
       })();
     </script>
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       (function () {
         // Progressive enhancement for the appearance popover. The panel opens
         // purely via CSS `:focus-within`; this adds the accessible extras that
