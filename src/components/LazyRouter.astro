@@ -44,9 +44,13 @@
   document.addEventListener('pointerdown', warmRouter, { passive: true });
 
   document.addEventListener('astro:before-swap', (event) => {
-    // A newer navigation can skip an active animation. `ready` then rejects
-    // even though the DOM swap succeeds; consume that expected rejection.
     const { viewTransition } = event as TransitionBeforeSwapEvent;
+    // Astro has prepared the destination and loaded its styles at this point.
+    // Swap atomically: native snapshot fades/morphs can overlap article text
+    // and make the otherwise seamless client navigation look like a flicker.
+    // Skipping the animation preserves the DOM swap, history, and scroll logic.
+    viewTransition.skipTransition();
+    // A skipped animation rejects `ready` even though its DOM update succeeds.
     void viewTransition.ready.catch(() => {});
   });
 

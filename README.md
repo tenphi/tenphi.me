@@ -32,6 +32,8 @@ Internal navigation uses Astro's client router, loaded on link hover, focus,
 pointer press, or click. The initial page only loads a small navigation bootstrap;
 React components remain rendered at build time. Appearance preferences are
 restored before each page swap, and blog previews reinitialize after navigation.
+Client navigation swaps the prepared page without snapshot fades or morphs, so
+article text stays sharp and the outgoing page remains visible while loading.
 External links, downloads, modified clicks, and `data-astro-reload` links retain
 their browser behavior. Without JavaScript, navigation uses ordinary page loads.
 

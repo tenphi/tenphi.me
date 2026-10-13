@@ -88,11 +88,7 @@ export default function PostCardView({
       >
         {title}
       </PostCard.Title>
-      <PostCard.Description
-        style={{ viewTransitionName: `description-${slug}` }}
-      >
-        {description}
-      </PostCard.Description>
+      <PostCard.Description>{description}</PostCard.Description>
       {tags && tags.length > 0 && (
         <PostCard.Tags style={{ viewTransitionName: `tags-${slug}` }}>
           {tags.map((tag) => (
