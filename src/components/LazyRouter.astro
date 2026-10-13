@@ -45,12 +45,8 @@
 
   document.addEventListener('astro:before-swap', (event) => {
     const { viewTransition } = event as TransitionBeforeSwapEvent;
-    // Astro has prepared the destination and loaded its styles at this point.
-    // Swap atomically: native snapshot fades/morphs can overlap article text
-    // and make the otherwise seamless client navigation look like a flicker.
-    // Skipping the animation preserves the DOM swap, history, and scroll logic.
-    viewTransition.skipTransition();
-    // A skipped animation rejects `ready` even though its DOM update succeeds.
+    // Rapid navigation can skip an active animation. Its `ready` promise then
+    // rejects even though the DOM update succeeds; consume that rejection.
     void viewTransition.ready.catch(() => {});
   });
 
