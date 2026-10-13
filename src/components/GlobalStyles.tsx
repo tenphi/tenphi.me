@@ -6,6 +6,12 @@ export default function GlobalStyles() {
       navigation: auto;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-group(*),
+      ::view-transition-old(*),
+      ::view-transition-new(*) { animation: none !important; }
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     img { max-width: 100%; height: auto; display: block; }
     .sr-only {
@@ -35,6 +41,16 @@ export default function GlobalStyles() {
     preset: 't2',
     margin: '0',
     padding: '0',
+  });
+
+  useGlobalStyles('.astro-route-announcer', {
+    position: 'absolute',
+    inset: '0 top left',
+    width: '1px',
+    height: '1px',
+    overflow: 'hidden',
+    clipPath: 'inset(50%)',
+    whiteSpace: 'nowrap',
   });
 
   return null;

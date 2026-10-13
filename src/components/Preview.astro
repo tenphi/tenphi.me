@@ -297,22 +297,7 @@ if (js) sources.push({ lang: 'js', code: dedent(js) });
 </style>
 
 <script>
-  document.querySelectorAll('.preview-code-toggle').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const panels = btn.previousElementSibling;
-      if (!(panels instanceof HTMLElement)) return;
-
-      const expanded = panels.dataset.expanded === 'true';
-      panels.dataset.expanded = String(!expanded);
-      btn.setAttribute('aria-expanded', String(!expanded));
-      btn.textContent = expanded ? 'Show code' : 'Hide code';
-    });
-  });
-
-  const iframes = document.querySelectorAll<HTMLIFrameElement>(
-    'iframe[data-preview-srcdoc]',
-  );
-
+  const initialized = new WeakSet<Element>();
   const io = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -341,7 +326,33 @@ if (js) sources.push({ lang: 'js', code: dedent(js) });
     { rootMargin: '200px' },
   );
 
-  iframes.forEach((frame) => io.observe(frame));
+  function initializePreviews() {
+    document.querySelectorAll('.preview-code-toggle').forEach((btn) => {
+      if (initialized.has(btn)) return;
+      initialized.add(btn);
+      btn.addEventListener('click', () => {
+        const panels = btn.previousElementSibling;
+        if (!(panels instanceof HTMLElement)) return;
+
+        const expanded = panels.dataset.expanded === 'true';
+        panels.dataset.expanded = String(!expanded);
+        btn.setAttribute('aria-expanded', String(!expanded));
+        btn.textContent = expanded ? 'Show code' : 'Hide code';
+      });
+    });
+
+    document
+      .querySelectorAll<HTMLIFrameElement>('iframe[data-preview-srcdoc]')
+      .forEach((frame) => {
+        if (initialized.has(frame)) return;
+        initialized.add(frame);
+        io.observe(frame);
+      });
+  }
+
+  initializePreviews();
+  document.addEventListener('astro:page-load', initializePreviews);
+  document.addEventListener('astro:before-swap', () => io.disconnect());
 
   window.addEventListener('message', (event) => {
     const data = event.data as

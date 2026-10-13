@@ -28,6 +28,13 @@ Built with [Astro](https://astro.build), [React](https://react.dev), [@tenphi/ta
 | Package manager | pnpm 10 |
 | Hosting | GitHub Pages |
 
+Internal navigation uses Astro's client router, loaded on link hover, focus,
+pointer press, or click. The initial page only loads a small navigation bootstrap;
+React components remain rendered at build time. Appearance preferences are
+restored before each page swap, and blog previews reinitialize after navigation.
+External links, downloads, modified clicks, and `data-astro-reload` links retain
+their browser behavior. Without JavaScript, navigation uses ordinary page loads.
+
 ## Getting Started
 
 ```bash
