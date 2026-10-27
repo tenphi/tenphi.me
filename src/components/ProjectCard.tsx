@@ -25,7 +25,7 @@ const Card = tasty({
     },
     fill: {
       '': '#surface',
-      ':hover': '#surface #accent-surface.04',
+      ':hover': '#accent-surface 4%, #surface',
     },
     color: '#text',
     textDecoration: 'none',
