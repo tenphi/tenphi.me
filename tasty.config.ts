@@ -6,6 +6,8 @@ export default {
 
     '$gap',
     '$radius',
+    '#glass-rim',
+    '$glass-rim',
     '$max-width',
     '$prose-width',
     '$font',

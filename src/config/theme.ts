@@ -46,6 +46,11 @@ primary.colors({
     saturation: 0.05,
     mode: 'fixed',
   },
+  'glass-edge': {
+    tone: 0,
+    saturation: 0,
+    mode: 'static',
+  },
   'accent-text': {
     base: 'surface',
     tone: 50,

@@ -15,18 +15,17 @@ const Card = tasty({
     gap: '3x',
     alignItems: 'flex-start',
     padding: {
-      '': '2x',
-      '@mobile': '1.5x',
+      '': '(2x - 1bw)',
+      '@mobile': '(1.5x - 1bw)',
     },
     radius: '1cr',
     border: {
-      '': 'none',
+      '': '1bw solid #glass-rim',
       '@high-contrast': '1bw solid #border',
     },
+    backgroundClip: 'padding-box',
     shadow: {
-      '': '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), inset 0 .75px .75px #glass-highlight.75, inset 0 -.75px .75px #border.3',
-      '@dark':
-        '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), inset 0 .75px .75px #glass-highlight.1, inset 0 -.75px .75px #glass-highlight.1',
+      '': '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), $glass-rim',
       '@high-contrast': 'none',
     },
     fill: {
@@ -46,16 +45,19 @@ const Card = tasty({
       flexBasis: '8x',
       width: '8x',
       height: '8x',
-      padding: '1x',
+      padding: '(1x - 1bw)',
       boxSizing: 'border-box',
       radius: '(1r + 1x)',
+      border: {
+        '': '1bw solid #glass-rim',
+        '@high-contrast': '1bw solid #border',
+      },
+      backgroundClip: 'padding-box',
       overflow: 'hidden',
       fill: '#surface-2',
       color: '#accent-text',
       shadow: {
-        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), inset 0 .75px .75px #glass-highlight.75, inset 0 -.75px .75px #border.3',
-        '@dark':
-          '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), inset 0 .75px .75px #glass-highlight.1, inset 0 -.75px .75px #glass-highlight.1',
+        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-rim',
         '@high-contrast': 'none',
       },
     },

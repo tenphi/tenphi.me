@@ -11,6 +11,28 @@ const AppearanceSettingsEl = tasty({
     position: 'relative',
     Button: {
       $: 'button',
+      '$appearance-press-duration': {
+        '': '150ms',
+        '@media(prefers-reduced-motion: reduce)': '0ms',
+      },
+      // Registered color properties interpolate while the gradient stays fixed.
+      // A dismissed popover can keep focus on the button without looking pressed.
+      '#appearance-gradient-top': {
+        '': '#surface.75',
+        '@dark': '#surface-down.1',
+        '@own(:active) | (:focus-within & !:is([data-collapsed]))':
+          '#surface-down.1',
+        '@dark & (@own(:active) | (:focus-within & !:is([data-collapsed])))':
+          '#surface.75',
+      },
+      '#appearance-gradient-bottom': {
+        '': '#surface-down.1',
+        '@dark': '#surface.75',
+        '@own(:active) | (:focus-within & !:is([data-collapsed]))':
+          '#surface.75',
+        '@dark & (@own(:active) | (:focus-within & !:is([data-collapsed])))':
+          '#surface-down.1',
+      },
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -22,25 +44,21 @@ const AppearanceSettingsEl = tasty({
         '@own(:hover)': '#accent-text-2',
       },
       fill: '#surface-2',
-      border: true,
-      image: {
-        '': 'linear-gradient(to bottom, #surface.75, #surface-down.1)',
-        '@dark': 'linear-gradient(to bottom, #surface-down.1, #surface.75)',
-        '@own(:active) | :focus-within':
-          'linear-gradient(to bottom, #surface-down.1, #surface.75)',
-        '@dark & (@own(:active) | :focus-within)':
-          'linear-gradient(to bottom, #surface.75, #surface-down.1)',
-        '[data-collapsed]':
-          'linear-gradient(to bottom, #surface.75, #surface-down.1)',
-        '@dark & [data-collapsed]':
-          'linear-gradient(to bottom, #surface-down.1, #surface.75)',
-        '[data-collapsed] & @own(:active)':
-          'linear-gradient(to bottom, #surface-down.1, #surface.75)',
-        '@dark & [data-collapsed] & @own(:active)':
-          'linear-gradient(to bottom, #surface.75, #surface-down.1)',
+      border: {
+        '': '1bw solid #glass-rim',
+        '@high-contrast': '1bw solid #border',
+      },
+      backgroundClip: 'padding-box',
+      shadow: {
+        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-rim',
         '@high-contrast': 'none',
       },
-      transition: 'color 0.15s, fill 0.15s, image 0.15s',
+      image: {
+        '': 'linear-gradient(to bottom, #appearance-gradient-top, #appearance-gradient-bottom)',
+        '@high-contrast': 'none',
+      },
+      transition:
+        'color $appearance-press-duration, fill $appearance-press-duration, ##appearance-gradient-top $appearance-press-duration, ##appearance-gradient-bottom $appearance-press-duration',
     },
     Popover: {
       position: 'absolute',

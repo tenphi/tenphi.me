@@ -29,12 +29,15 @@ const HeaderEl = tasty({
     viewTransitionName: 'header',
     position: 'relative',
     radius: '1cr',
-    padding: '1.5x',
+    padding: '(1.5x - 1bw)',
+    border: {
+      '': '1bw solid #glass-rim',
+      '@high-contrast': '1bw solid #border',
+    },
+    backgroundClip: 'padding-box',
     shadow: {
-      '': '0 .5x 1x #shadow, inset 0 .75px .75px #glass-highlight.75, inset 0 -.75px .75px #border.3',
-      '@dark':
-        '0 .5x 1x #shadow, inset 0 .75px .75px #glass-highlight.1, inset 0 -.75px .75px #glass-highlight.1',
-      '@high-contrast': '0 .5x 1x #shadow, inset 0 0 0 1bw #border',
+      '': '0 .5x 1x #shadow, $glass-rim',
+      '@high-contrast': '0 .5x 1x #shadow',
     },
     fill: {
       '': '#surface.5',

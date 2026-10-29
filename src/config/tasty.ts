@@ -103,6 +103,18 @@ configure({
     '$default-font-weight': '400',
     ...typographyTokens,
     ...colorTokens,
+    // Paint the outer rim as a real border and clip fills to the padding box,
+    // so background antialiasing cannot fringe outside the rim. The inset
+    // shadows provide just the adjacent 1px white highlight.
+    '#glass-rim': {
+      '': 'color-mix(in oklab, #surface 94%, #glass-edge)',
+      '@dark': 'color-mix(in oklab, #surface 93%, #glass-edge)',
+    },
+    '$glass-rim': {
+      '': 'inset 0 1bw .25bw #glass-highlight.65, inset 0 -1bw .25bw #glass-highlight.65',
+      '@dark':
+        'inset 0 1bw .25bw #glass-highlight.07, inset 0 -1bw .25bw #glass-highlight.07',
+    },
     '#scrollbar-thumb': '#border',
     '#scrollbar-track': '#border.4',
   },
@@ -122,12 +134,14 @@ configure({
     },
     a: {
       fontWeight: '600',
+      radius: '1r',
       outline: {
         '': 'none',
         ':focus-visible': '2bw solid #focus / 1bw',
       },
     },
     button: {
+      radius: '1r',
       outline: {
         '': 'none',
         ':focus-visible': '2bw solid #focus / 1bw',
