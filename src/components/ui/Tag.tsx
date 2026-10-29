@@ -9,7 +9,12 @@ const Tag = tasty({
     color: '#accent-surface-text',
     fill: '#accent-surface',
     whiteSpace: 'nowrap',
-    shadow: '0 1px 1px #tiny-shadow',
+    shadow: {
+      '': '0 1bw 1bw #tiny-shadow, inset 0 1bw .25bw #glass-highlight.3, inset 0 -1bw .25bw #glass-highlight.3',
+      '@dark':
+        '0 1bw 1bw #tiny-shadow, inset 0 1bw .25bw #glass-highlight.18, inset 0 -1bw .25bw #glass-highlight.18',
+      '@high-contrast': 'none',
+    },
   },
 });
 
