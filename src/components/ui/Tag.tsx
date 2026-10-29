@@ -4,7 +4,7 @@ const Tag = tasty({
   as: 'span',
   styles: {
     preset: 'label',
-    padding: '0 .5x',
+    padding: '1bw (.5x + 1bw)',
     radius: '1r',
     color: '#accent-surface-text',
     fill: '#accent-surface',
