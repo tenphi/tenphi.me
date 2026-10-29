@@ -20,8 +20,14 @@ const Card = tasty({
     },
     radius: '1cr',
     border: {
-      '': '1bw solid #border',
-      ':hover': '1bw solid #accent-text.40',
+      '': 'none',
+      '@high-contrast': '1bw solid #border',
+    },
+    shadow: {
+      '': '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), inset 0 .75px .75px #glass-highlight.75, inset 0 -.75px .75px #border.3',
+      '@dark':
+        '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), inset 0 .75px .75px #glass-highlight.1, inset 0 -.75px .75px #glass-highlight.1',
+      '@high-contrast': 'none',
     },
     fill: {
       '': '#surface',
@@ -29,7 +35,7 @@ const Card = tasty({
     },
     color: '#text',
     textDecoration: 'none',
-    transition: 'theme .2s',
+    transition: 'fill .2s',
 
     Icon: {
       display: 'flex',
@@ -46,6 +52,12 @@ const Card = tasty({
       overflow: 'hidden',
       fill: '#surface-2',
       color: '#accent-text',
+      shadow: {
+        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), inset 0 .75px .75px #glass-highlight.75, inset 0 -.75px .75px #border.3',
+        '@dark':
+          '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), inset 0 .75px .75px #glass-highlight.1, inset 0 -.75px .75px #glass-highlight.1',
+        '@high-contrast': 'none',
+      },
     },
     IconImage: {
       display: 'block',
@@ -98,11 +110,7 @@ const Card = tasty({
     Title: {
       preset: 'h3',
       margin: '0',
-      color: {
-        '': '#text',
-        '@own(:hover)': '#accent-text',
-      },
-      transition: 'color 0.15s',
+      color: '#text',
     },
     Description: {
       preset: 't2',

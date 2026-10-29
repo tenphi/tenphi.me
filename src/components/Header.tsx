@@ -30,7 +30,12 @@ const HeaderEl = tasty({
     position: 'relative',
     radius: '1cr',
     padding: '1.5x',
-    shadow: '0 .5x 1x #shadow',
+    shadow: {
+      '': '0 .5x 1x #shadow, inset 0 .75px .75px #glass-highlight.75, inset 0 -.75px .75px #border.3',
+      '@dark':
+        '0 .5x 1x #shadow, inset 0 .75px .75px #glass-highlight.1, inset 0 -.75px .75px #glass-highlight.1',
+      '@high-contrast': '0 .5x 1x #shadow, inset 0 0 0 1bw #border',
+    },
     fill: {
       '': '#surface.5',
       '@high-contrast': '#surface-topbar',
@@ -46,20 +51,6 @@ const HeaderEl = tasty({
     backdropFilter: {
       '': 'blur(1x)',
       '@high-contrast': 'none',
-    },
-
-    Border: {
-      $: '&::before',
-      content: '""',
-      radius: '1cr',
-      border: {
-        '': '#glass-border.5',
-        '@dark': '#glass-border.12',
-        '@high-contrast': '#border',
-      },
-      position: 'absolute',
-      inset: 0,
-      pointerEvents: 'none',
     },
 
     Nav: {
