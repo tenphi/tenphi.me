@@ -7,6 +7,7 @@ export default {
     '$gap',
     '$radius',
     '#glass-rim',
+    '#glass-light-highlight',
     '$glass-rim',
     '$max-width',
     '$prose-width',

@@ -110,8 +110,10 @@ configure({
       '': 'color-mix(in oklab, #surface 94%, #glass-edge)',
       '@dark': 'color-mix(in oklab, #surface 93%, #glass-edge)',
     },
+    // Extended-range white for light surfaces; SDR rendering may clamp it.
+    '#glass-light-highlight': 'color(srgb-linear 1.08 1.08 1.08)',
     '$glass-rim': {
-      '': 'inset 0 1bw .25bw #glass-highlight.65, inset 0 -1bw .25bw #glass-highlight.65',
+      '': 'inset 0 1bw .25bw #glass-light-highlight.65, inset 0 -1bw .25bw #glass-light-highlight.65',
       '@dark':
         'inset 0 1bw .25bw #glass-highlight.07, inset 0 -1bw .25bw #glass-highlight.07',
     },
