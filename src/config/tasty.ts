@@ -120,16 +120,24 @@ configure({
       '.5px 0 .5px #glass-shade inset, -.5px 0 .5px #glass-shade inset',
     '$glass-tint': '0 1px 1px #glass-tint inset, 0 -1px 1px #glass-tint inset',
     '$glass-shadow': '$glass-shade, $glass-tint',
-    // Accent fills sit darker than the light page, where the full tint glares.
-    // A separate layer is needed because `$glass-tint` resolves its color on
-    // :root, so overriding `#glass-tint` on an element would not reach it.
+    // Accent fills keep the same color in both schemes, so their edge layers
+    // can't follow the page: the light-mode tint glares on them and the
+    // dark-mode shade outlines them in black. Separate layers are needed
+    // because `$glass-shade` and `$glass-tint` resolve their colors on :root,
+    // so overriding the colors on an element would not reach them.
+    '#glass-accent-shade': {
+      '': 'rgba(0 0 0 / .3)',
+      '@high-contrast': 'rgba(0 0 0 / .6)',
+    },
     '#glass-accent-tint': {
       '': 'rgba(255 255 255 / .3)',
       '@dark': '#glass-tint',
     },
+    '$glass-accent-shade':
+      '.5px 0 .5px #glass-accent-shade inset, -.5px 0 .5px #glass-accent-shade inset',
     '$glass-accent-tint':
       '0 1px 1px #glass-accent-tint inset, 0 -1px 1px #glass-accent-tint inset',
-    '$glass-accent-shadow': '$glass-shade, $glass-accent-tint',
+    '$glass-accent-shadow': '$glass-accent-shade, $glass-accent-tint',
     '#scrollbar-thumb': '#border',
     '#scrollbar-track': '#border.4',
   },
