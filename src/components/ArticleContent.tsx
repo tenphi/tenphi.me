@@ -151,7 +151,7 @@ const ArticleContent = tasty({
       fill: '#syntax-bg',
       color: '#syntax-text',
       padding: '1x 2x',
-      radius: '1r',
+      radius: '1cr',
       overflow: 'auto',
       preset: 'code',
       border: true,

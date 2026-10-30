@@ -40,7 +40,7 @@ const Card = tasty({
       height: '8x',
       padding: '1x',
       boxSizing: 'border-box',
-      radius: '(1r + 1x)',
+      radius: '1cr',
       overflow: 'hidden',
       fill: '#surface-2',
       color: '#accent-text',

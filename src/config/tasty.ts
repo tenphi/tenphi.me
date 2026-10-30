@@ -90,10 +90,14 @@ configure({
     '@high-contrast':
       '@root(:has(input[name="highContrast"][value="on"]:checked)) | (@media(prefers-contrast: more) & @root(:has(input[name="highContrast"][value="system"]:checked)))',
   },
+  units: {
+    // Matches the project icon tile (1r + 1x), so cards share its rounding.
+    cr: '14px',
+  },
   tokens: {
     $gap: '8px',
     $radius: '6px',
-    '$card-radius': '12px',
+    '$card-radius': '1cr',
     '$max-width': '760px',
     '$prose-width': '720px',
     '$font-sans': '"Onest", system-ui, -apple-system, sans-serif',
