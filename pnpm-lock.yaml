@@ -27,8 +27,8 @@ importers:
         specifier: ^3.41.1
         version: 3.41.1(react@19.2.4)
       '@tenphi/glaze':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 2.0.2
+        version: 2.0.2
       '@tenphi/tasty':
         specifier: 3.16.0
         version: 3.16.0(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4)
@@ -1155,8 +1155,8 @@ packages:
       typescript:
         optional: true
 
-  '@tenphi/glaze@2.0.1':
-    resolution: {integrity: sha512-XXb21YOEvHYfCyR1y+mRSYTjEi9wveI3BrcDdN8d6UUGSHc5+6HItbdWML9TlSBD1FuX5x1s1riB2Cp1EXnhPw==}
+  '@tenphi/glaze@2.0.2':
+    resolution: {integrity: sha512-2wkrqjDvAofzY0/dYbU6W5drzkaDZKLhaqj1KlyFHvbZU/CoIFezi6p4AYGXfS82bg9jefb8X4ILEIE7FSXaFQ==}
     engines: {node: '>=20'}
 
   '@tenphi/tasty@3.16.0':
@@ -1361,6 +1361,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@vitejs/plugin-react@5.2.0':
     resolution: {integrity: sha512-YmKkfhOAi3wsB1PhJq5Scj3GXMn3WvtQ/JC0xoopuHoXSdmtdStOpFrYaT1kie2YgFBcIe64ROzMYRjCrYOdYw==}
@@ -3850,7 +3851,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tenphi/glaze@2.0.1': {}
+  '@tenphi/glaze@2.0.2': {}
 
   '@tenphi/tasty@3.16.0(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4)':
     dependencies:
