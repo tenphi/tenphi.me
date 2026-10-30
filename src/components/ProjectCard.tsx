@@ -23,7 +23,7 @@ const Card = tasty({
       '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), $glass-shadow',
     fill: {
       '': '#surface',
-      ':hover': '#accent-surface 4%, #surface',
+      ':hover': '#surface+#accent-surface.04',
     },
     color: '#text',
     textDecoration: 'none',
