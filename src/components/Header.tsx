@@ -35,14 +35,6 @@ const HeaderEl = tasty({
       '': '#surface.5',
       '@high-contrast': '#surface-topbar',
     },
-    // Lit from above so the bar reads as raised. The stops swap per scheme
-    // because the tokens invert: `surface` is the lighter of the pair in
-    // light mode and the darker one in dark mode.
-    image: {
-      '': 'linear-gradient(to bottom, #surface.75, #surface-down.1)',
-      '@dark': 'linear-gradient(to bottom, #surface-down.1, #surface.75)',
-      '@high-contrast': 'none',
-    },
     backdropFilter: {
       '': 'blur(1x)',
       '@high-contrast': 'none',

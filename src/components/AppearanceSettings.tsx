@@ -9,29 +9,18 @@ const AppearanceSettingsEl = tasty({
   as: 'div',
   styles: {
     position: 'relative',
+    // The popover is open (see Popover below for why both conditions).
+    '@open': ':focus-within & !:is([data-collapsed])',
+    // Touch screens emulate hover after a tap, which would leave it stuck on.
+    '@hover': '@media(hover: hover) & @own(:hover)',
     Button: {
       $: 'button',
+      // Press in quickly so the click registers at once, then settle back
+      // more slowly on release.
       '$appearance-press-duration': {
         '': '150ms',
+        '@own(:active)': '60ms',
         '@media(prefers-reduced-motion: reduce)': '0ms',
-      },
-      // Registered color properties interpolate while the gradient stays fixed.
-      // A dismissed popover can keep focus on the button without looking pressed.
-      '#appearance-gradient-top': {
-        '': '#surface.75',
-        '@dark': '#surface-down.1',
-        '@own(:active) | (:focus-within & !:is([data-collapsed]))':
-          '#surface-down.1',
-        '@dark & (@own(:active) | (:focus-within & !:is([data-collapsed])))':
-          '#surface.75',
-      },
-      '#appearance-gradient-bottom': {
-        '': '#surface-down.1',
-        '@dark': '#surface.75',
-        '@own(:active) | (:focus-within & !:is([data-collapsed]))':
-          '#surface.75',
-        '@dark & (@own(:active) | (:focus-within & !:is([data-collapsed])))':
-          '#surface-down.1',
       },
       display: 'flex',
       alignItems: 'center',
@@ -41,18 +30,30 @@ const AppearanceSettingsEl = tasty({
       radius: '1r',
       color: {
         '': '#accent-text',
-        '@own(:hover)': '#accent-text-2',
+        '@hover | @open': '#accent-text-2',
       },
-      fill: '#surface-2',
+      // State layers: the icon color washed over the fill, strongest while
+      // pressed. Open stays tinted so the trigger reads as tied to its panel.
+      fill: {
+        '': '#surface-2',
+        '@hover': '#surface-2+#accent-text.08',
+        '@open': '#surface-2+#accent-text.12',
+        '@own(:active)': '#surface-2+#accent-text.16',
+      },
       border: 'none',
-      shadow:
-        '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-shadow',
-      image: {
-        '': 'linear-gradient(to bottom, #appearance-gradient-top, #appearance-gradient-bottom)',
-        '@high-contrast': 'none',
+      // Pressing lowers the button onto the bar: the drop shadow collapses
+      // (keeping its layer count so it animates) while the glass edge stays.
+      shadow: {
+        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-shadow',
+        '@own(:active)': '0 0 0 #clear, $glass-shadow',
+      },
+      scale: {
+        '': '1',
+        '@own(:active)': '.92',
+        '@media(prefers-reduced-motion: reduce)': '1',
       },
       transition:
-        'color $appearance-press-duration, fill $appearance-press-duration, ##appearance-gradient-top $appearance-press-duration, ##appearance-gradient-bottom $appearance-press-duration',
+        'color $appearance-press-duration, fill $appearance-press-duration, shadow $appearance-press-duration, scale $appearance-press-duration ease-out',
     },
     Popover: {
       position: 'absolute',
