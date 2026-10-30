@@ -103,20 +103,33 @@ configure({
     '$default-font-weight': '400',
     ...typographyTokens,
     ...colorTokens,
-    // Paint the outer rim as a real border and clip fills to the padding box,
-    // so background antialiasing cannot fringe outside the rim. The inset
-    // shadows provide just the adjacent 1px white highlight.
-    '#glass-rim': {
-      '': 'color-mix(in oklab, #surface 94%, #glass-edge)',
-      '@dark': 'color-mix(in oklab, #surface 93%, #glass-edge)',
+    // Glass edge: a dark shade along the sides and a light tint along the top
+    // and bottom. High contrast strengthens whichever layer is faint in the
+    // current scheme (the shade in light mode, the tint in dark mode).
+    '#glass-shade': {
+      '': 'rgba(0 0 0 / .1)',
+      '@high-contrast': 'rgba(0 0 0 / .4)',
+      '@dark': 'rgba(0 0 0 / .8)',
     },
-    // Extended-range white for light surfaces; SDR rendering may clamp it.
-    '#glass-light-highlight': 'color(srgb-linear 1.08 1.08 1.08)',
-    '$glass-rim': {
-      '': 'inset 0 1bw .25bw #glass-light-highlight.65, inset 0 -1bw .25bw #glass-light-highlight.65',
-      '@dark':
-        'inset 0 1bw .25bw #glass-highlight.07, inset 0 -1bw .25bw #glass-highlight.07',
+    '#glass-tint': {
+      '': 'rgba(255 255 255 / .8)',
+      '@dark': 'rgba(255 255 255 / .1)',
+      '@dark & @high-contrast': 'rgba(255 255 255 / .4)',
     },
+    '$glass-shade':
+      '.5px 0 .5px #glass-shade inset, -.5px 0 .5px #glass-shade inset',
+    '$glass-tint': '0 1px 1px #glass-tint inset, 0 -1px 1px #glass-tint inset',
+    '$glass-shadow': '$glass-shade, $glass-tint',
+    // Accent fills sit darker than the light page, where the full tint glares.
+    // A separate layer is needed because `$glass-tint` resolves its color on
+    // :root, so overriding `#glass-tint` on an element would not reach it.
+    '#glass-accent-tint': {
+      '': 'rgba(255 255 255 / .3)',
+      '@dark': '#glass-tint',
+    },
+    '$glass-accent-tint':
+      '0 1px 1px #glass-accent-tint inset, 0 -1px 1px #glass-accent-tint inset',
+    '$glass-accent-shadow': '$glass-shade, $glass-accent-tint',
     '#scrollbar-thumb': '#border',
     '#scrollbar-track': '#border.4',
   },

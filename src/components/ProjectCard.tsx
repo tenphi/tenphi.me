@@ -15,19 +15,12 @@ const Card = tasty({
     gap: '3x',
     alignItems: 'flex-start',
     padding: {
-      '': '(2x - 1bw)',
-      '@mobile': '(1.5x - 1bw)',
+      '': '2x',
+      '@mobile': '1.5x',
     },
     radius: '1cr',
-    border: {
-      '': '1bw solid #glass-rim',
-      '@high-contrast': '1bw solid #border',
-    },
-    backgroundClip: 'padding-box',
-    shadow: {
-      '': '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), $glass-rim',
-      '@high-contrast': 'none',
-    },
+    shadow:
+      '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), $glass-shadow',
     fill: {
       '': '#surface',
       ':hover': '#accent-surface 4%, #surface',
@@ -45,21 +38,14 @@ const Card = tasty({
       flexBasis: '8x',
       width: '8x',
       height: '8x',
-      padding: '(1x - 1bw)',
+      padding: '1x',
       boxSizing: 'border-box',
       radius: '(1r + 1x)',
-      border: {
-        '': '1bw solid #glass-rim',
-        '@high-contrast': '1bw solid #border',
-      },
-      backgroundClip: 'padding-box',
       overflow: 'hidden',
       fill: '#surface-2',
       color: '#accent-text',
-      shadow: {
-        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-rim',
-        '@high-contrast': 'none',
-      },
+      shadow:
+        '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-shadow',
     },
     IconImage: {
       display: 'block',

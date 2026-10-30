@@ -37,20 +37,6 @@ primary.colors({
     tone: ['-15', '-30'],
     saturation: 0.21,
   },
-  // Glass highlights for raised surfaces. `mode: 'fixed'` keeps them on the light
-  // end of both schemes (unlike `surface`, which inverts), so the edge reads
-  // as a highlight in dark mode instead of a dark hairline. Near-neutral on
-  // purpose — the rim should catch light, not tint it.
-  'glass-highlight': {
-    tone: 100,
-    saturation: 0.05,
-    mode: 'fixed',
-  },
-  'glass-edge': {
-    tone: 0,
-    saturation: 0,
-    mode: 'static',
-  },
   'accent-text': {
     base: 'surface',
     tone: 50,
@@ -99,12 +85,6 @@ primary.colors({
     bg: 'surface-2',
     fg: 'accent-text',
     intensity: 12,
-  },
-  'tiny-shadow': {
-    type: 'shadow',
-    bg: 'accent-surface',
-    fg: 'surface',
-    intensity: 20,
   },
 });
 

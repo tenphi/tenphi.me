@@ -36,7 +36,7 @@ const AppearanceSettingsEl = tasty({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '.75x',
+      padding: '(.75x + 1bw)',
       cursor: 'pointer',
       radius: '1r',
       color: {
@@ -44,15 +44,9 @@ const AppearanceSettingsEl = tasty({
         '@own(:hover)': '#accent-text-2',
       },
       fill: '#surface-2',
-      border: {
-        '': '1bw solid #glass-rim',
-        '@high-contrast': '1bw solid #border',
-      },
-      backgroundClip: 'padding-box',
-      shadow: {
-        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-rim',
-        '@high-contrast': 'none',
-      },
+      border: 'none',
+      shadow:
+        '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-shadow',
       image: {
         '': 'linear-gradient(to bottom, #appearance-gradient-top, #appearance-gradient-bottom)',
         '@high-contrast': 'none',

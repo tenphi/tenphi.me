@@ -29,16 +29,8 @@ const HeaderEl = tasty({
     viewTransitionName: 'header',
     position: 'relative',
     radius: '1cr',
-    padding: '(1.5x - 1bw)',
-    border: {
-      '': '1bw solid #glass-rim',
-      '@high-contrast': '1bw solid #border',
-    },
-    backgroundClip: 'padding-box',
-    shadow: {
-      '': '0 .5x 1x #shadow, $glass-rim',
-      '@high-contrast': '0 .5x 1x #shadow',
-    },
+    padding: '1.5x',
+    shadow: '0 .5x 1x #shadow, $glass-shadow',
     fill: {
       '': '#surface.5',
       '@high-contrast': '#surface-topbar',
