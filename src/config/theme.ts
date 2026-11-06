@@ -70,21 +70,21 @@ primary.colors({
     tone: 90,
     mode: 'fixed',
   },
+  // Decorative lighting stays off at the high-contrast black floor.
   shadow: {
     type: 'shadow',
     bg: 'surface',
-    intensity: 5,
+    intensity: [2, 0],
   },
   'small-shadow': {
     type: 'shadow',
     bg: 'surface',
-    intensity: 15,
+    intensity: [4, 0],
   },
   'illustration-shadow': {
     type: 'shadow',
     bg: 'surface-2',
-    fg: 'accent-text',
-    intensity: 12,
+    intensity: [4, 0],
   },
 });
 
