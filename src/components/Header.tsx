@@ -20,6 +20,34 @@ const StickyContainer = tasty(Container, {
       '': 'initial (100dvw - 2x) ($max-width + 2x)',
       '@tablet': 'initial (100dvw - 4x) ($max-width + 2x)',
     },
+
+    // The topbar's frosted blur, on a layer under the bar.
+    // - A `backdrop-filter` only samples what's right behind its element and
+    //   mirrors it at the edges, so content crossing the bar's edge would show
+    //   hard cuts. This layer reaches 3x past the bar on every side, so it
+    //   sees that content, and its mask cuts it back to the bar's rounded box
+    //   (the content box: the 3x padding minus the 3x reach).
+    // - It sits here, beside the header, not inside it: the header has a view
+    //   transition name, which makes it a backdrop root, so a blur inside it
+    //   couldn't see the page.
+    Backdrop: {
+      $: '&::before',
+      content: '""',
+      position: 'absolute',
+      // The header's box (the container's padding), grown by 3x.
+      inset: {
+        '': '-1x -3x',
+        '@mobile': '-2x -3x',
+      },
+      padding: '3x',
+      radius: '(1cr + 3x)',
+      pointerEvents: 'none',
+      mask: 'linear-gradient(white, white) content-box',
+      backdropFilter: {
+        '': 'blur(1x)',
+        '@high-contrast': 'none',
+      },
+    },
   },
 });
 
@@ -30,19 +58,13 @@ const HeaderEl = tasty({
     // The appearance popover (inside the header) is open.
     '@appearance-open':
       ':has([data-appearance]:focus-within:not([data-collapsed]))',
-    // A view transition name or a `backdrop-filter` makes the header a
-    // backdrop root: nothing inside it, the glass popover included, could blur
-    // the page behind. So while the popover is open, the header drops both and
-    // its blur moves to the Backdrop layer below, which looks the same.
-    // Navigating moves focus out of the popover first, so page transitions
-    // still capture the header.
+    // A view transition name makes the header a backdrop root: nothing inside
+    // it, the glass popover included, could blur the page behind. So the
+    // header drops its name while the popover is open. Navigating moves focus
+    // out of the popover first, so page transitions still capture the header.
     viewTransitionName: {
       '': 'header',
       '@appearance-open': 'none',
-    },
-    backdropFilter: {
-      '': 'blur(1x)',
-      '@appearance-open | @high-contrast': 'none',
     },
     radius: '1cr',
     padding: '1.5x',
@@ -59,20 +81,6 @@ const HeaderEl = tasty({
     },
 
     Edge: { $: '&::before', recipe: 'glass-edge' },
-    // The header's blur while the popover is open: a layer behind the bar.
-    Backdrop: {
-      $: '&::after',
-      content: '""',
-      position: 'absolute',
-      inset: 0,
-      zIndex: -1,
-      radius: 'inherit',
-      pointerEvents: 'none',
-      backdropFilter: {
-        '': 'none',
-        '@appearance-open & !@high-contrast': 'blur(1x)',
-      },
-    },
 
     Nav: {
       display: 'flex',
