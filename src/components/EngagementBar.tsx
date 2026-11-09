@@ -40,7 +40,7 @@ const Bar = tasty({
       color: '#accent-surface-text',
       '#glass-fill': {
         '': '#accent-surface',
-        '@own(:hover)': '#accent-surface-text-hover',
+        '@own(:hover)': '#accent-surface-hover',
       },
       textDecoration: 'none',
       whiteSpace: 'nowrap',

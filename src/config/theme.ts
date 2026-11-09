@@ -66,8 +66,14 @@ primary.colors({
     tone: 100,
     mode: 'fixed',
   },
-  'accent-surface-text-hover': {
-    tone: 90,
+  // Hover fill for accent surfaces: a step darker, so the text keeps its
+  // contrast (≈6:1, ≈8.7:1 in high contrast). High contrast takes an absolute
+  // tone, because its AAA floor already darkens `accent-surface`.
+  'accent-surface-hover': {
+    base: 'accent-surface-text',
+    tone: ['-60', 28],
+    contrast: { wcag: 'AA' },
+    saturation: 100,
     mode: 'fixed',
   },
   // Decorative lighting stays off at the high-contrast black floor.
