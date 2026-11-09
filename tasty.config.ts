@@ -23,7 +23,7 @@ export default {
 
   states: ['@mobile', '@tablet', '@desktop', '@dark', '@high-contrast'],
 
-  recipes: ['glass', 'glass-edge', 'glass-accent'],
+  recipes: ['glass', 'glass-edge', 'glass-accent', 'glass-border'],
 
   presets: [
     'h1',

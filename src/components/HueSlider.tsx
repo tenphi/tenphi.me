@@ -6,8 +6,50 @@ const STEP_COUNT = 18;
 const STEPS = Array.from({ length: STEP_COUNT }, (_, i) => i * 20 + 10);
 const DEFAULT_HUE = 210;
 
-const RAINBOW =
-  'linear-gradient(to right, okhst(0 70% 60%), okhst(60 70% 60%), okhst(120 70% 60%), okhst(180 70% 60%), okhst(240 70% 60%), okhst(300 70% 60%), okhst(360 70% 60%))';
+const RAINBOW_HUES = [0, 60, 120, 180, 240, 300, 360];
+
+/**
+ * The hue rainbow, left to right. `shift` moves every stop in OKLCH lightness
+ * (e.g. `- $glass-edge-shade`), so a glass edge keeps each hue's own color.
+ */
+function rainbow(shift?: string) {
+  const stops = RAINBOW_HUES.map((hue) => {
+    const stop = `okhst(${hue} 70% 60%)`;
+    return shift ? `oklch(from ${stop} calc(l ${shift}) c h)` : stop;
+  });
+  return `linear-gradient(to right, ${stops.join(', ')})`;
+}
+
+// The rainbow track as glass. In JS mode the track is a native range input,
+// which can't host the `::before` edge, so both modes draw the edge in a
+// transparent 1bw border instead, with background layers clipped to the
+// border box (like the `glass-border` recipe):
+// - the fill gradient (a little darker toward the top and bottom) and the
+//   rainbow, clipped to the padding box;
+// - the edge: the rainbow lighter along the top and bottom and darker at the
+//   ends, clipped to the border box. Layers can't fade into one another, so
+//   the edge steps from the lighter rainbow (outer 20%) through the plain one
+//   (to 35%) to the darker one (the middle), like the glass edge's gradient.
+const TRACK_LAYERS = [
+  [
+    'linear-gradient(rgb(0 0 0 / .05), transparent 35%, transparent 65%, rgb(0 0 0 / .05))',
+    'padding-box',
+    '100% 100%',
+    'top',
+  ],
+  [rainbow(), 'padding-box', '100% 100%', 'top'],
+  [rainbow('+ $glass-edge-lift'), 'border-box', '100% 20%', 'top'],
+  [rainbow('+ $glass-edge-lift'), 'border-box', '100% 20%', 'bottom'],
+  [rainbow(), 'border-box', '100% 35%', 'top'],
+  [rainbow(), 'border-box', '100% 35%', 'bottom'],
+  [rainbow('- $glass-edge-shade'), 'border-box', '100% 100%', 'top'],
+];
+const TRACK_IMAGE = TRACK_LAYERS.map(([image]) => image).join(', ');
+const TRACK_CLIP = TRACK_LAYERS.map(([, clip]) => clip).join(', ');
+const TRACK_SIZE = TRACK_LAYERS.map(([, , size]) => size).join(', ');
+const TRACK_POSITION = TRACK_LAYERS.map(([, , , position]) => position).join(
+  ', ',
+);
 
 const HueSliderEl = tasty({
   as: 'div',
@@ -37,7 +79,13 @@ const HueSliderEl = tasty({
       width: '100%',
       height: '2x',
       radius: '1r',
-      image: RAINBOW,
+      border: '#clear',
+      image: TRACK_IMAGE,
+      backgroundClip: TRACK_CLIP,
+      backgroundOrigin: 'border-box',
+      backgroundSize: TRACK_SIZE,
+      backgroundPosition: TRACK_POSITION,
+      backgroundRepeat: 'no-repeat',
       outline: {
         '': 'none',
         ':has(input:focus-visible)': '2bw solid #focus / 1bw',
@@ -46,7 +94,11 @@ const HueSliderEl = tasty({
     Option: {
       $: 'label',
       position: 'relative',
+      // Equal segments, even though the thumb is wider than one: it overflows
+      // its segment, centered.
       flexGrow: 1,
+      flexBasis: 0,
+      width: 'min 0',
       height: '100%',
       display: 'flex',
       placeContent: 'center',
@@ -68,12 +120,15 @@ const HueSliderEl = tasty({
     },
     // Slider-style thumb. Only the thumb after a checked (or focused) radio is
     // shown, so it reads exactly like the range thumb sitting on the track.
+    // A glass bead (see the `glass-border` recipe).
     Thumb: {
-      width: '14px',
-      height: '14px',
+      recipe: 'glass-border',
+      '#glass-fill': '#surface',
+      flexShrink: 0,
+      width: '2.25x',
+      height: '2.25x',
       radius: '50%',
-      fill: '#surface',
-      border: '2px solid #text',
+      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
       opacity: {
         '': '0',
         '@own(:is(input:checked ~ *))': '1',
@@ -93,7 +148,13 @@ const HueSliderEl = tasty({
       height: '2x',
       appearance: 'none',
       radius: '1r',
-      image: RAINBOW,
+      border: '#clear',
+      image: TRACK_IMAGE,
+      backgroundClip: TRACK_CLIP,
+      backgroundOrigin: 'border-box',
+      backgroundSize: TRACK_SIZE,
+      backgroundPosition: TRACK_POSITION,
+      backgroundRepeat: 'no-repeat',
       cursor: {
         '': 'pointer',
         '@own([disabled])': 'not-allowed',
@@ -107,24 +168,29 @@ const HueSliderEl = tasty({
         '@own(:focus-visible)': '2bw solid #focus / 1bw',
       },
     },
+    // Glass beads, like the CSS-only Thumb.
     WebkitThumb: {
       $: 'Slider::-webkit-slider-thumb',
+      recipe: 'glass-border',
       '-webkit-appearance': 'none',
       appearance: 'none',
-      width: '14px',
-      height: '14px',
+      '#glass-fill': '#surface',
+      boxSizing: 'border-box',
+      width: '2.25x',
+      height: '2.25x',
       radius: '50%',
-      fill: '#surface',
-      border: '2px solid #text',
+      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
       cursor: 'pointer',
     },
     MozThumb: {
       $: 'Slider::-moz-range-thumb',
-      width: '14px',
-      height: '14px',
+      recipe: 'glass-border',
+      '#glass-fill': '#surface',
+      boxSizing: 'border-box',
+      width: '2.25x',
+      height: '2.25x',
       radius: '50%',
-      fill: '#surface',
-      border: '2px solid #text',
+      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
       cursor: 'pointer',
     },
   },
