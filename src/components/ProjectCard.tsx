@@ -10,6 +10,7 @@ import Tag from './ui/Tag';
 const Card = tasty({
   as: 'a',
   styles: {
+    recipe: 'glass',
     display: 'flex',
     flow: 'row',
     gap: '3x',
@@ -19,17 +20,19 @@ const Card = tasty({
       '@mobile': '1.5x',
     },
     radius: '1cr',
-    shadow:
-      '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), $glass-shadow',
-    fill: {
+    shadow: '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear)',
+    '#glass-fill': {
       '': '#surface',
       ':hover': '#surface+#accent-surface.04',
     },
     color: '#text',
     textDecoration: 'none',
-    transition: 'fill .2s',
+    transition: '##glass-fill .2s',
+
+    Edge: { $: '&::before', recipe: 'glass-edge' },
 
     Icon: {
+      recipe: 'glass',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -42,11 +45,11 @@ const Card = tasty({
       boxSizing: 'border-box',
       radius: '1cr',
       overflow: 'hidden',
-      fill: '#surface-2',
+      '#glass-fill': '#surface-2',
       color: '#accent-text',
-      shadow:
-        '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-shadow',
+      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
     },
+    IconEdge: { $: 'Icon::before', recipe: 'glass-edge' },
     IconImage: {
       display: 'block',
       width: '6x',

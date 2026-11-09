@@ -15,6 +15,7 @@ const AppearanceSettingsEl = tasty({
     '@hover': '@media(hover: hover) & @own(:hover)',
     Button: {
       $: 'button',
+      recipe: 'glass',
       // Press in quickly so the click registers at once, then settle back
       // more slowly on release.
       '$appearance-press-duration': {
@@ -34,7 +35,8 @@ const AppearanceSettingsEl = tasty({
       },
       // State layers: the icon color washed over the fill, strongest while
       // pressed. Open stays tinted so the trigger reads as tied to its panel.
-      fill: {
+      // The glass edge and fill gradient follow each state.
+      '#glass-fill': {
         '': '#surface-2',
         '@hover': '#surface-2+#accent-text.08',
         '@open': '#surface-2+#accent-text.12',
@@ -42,10 +44,10 @@ const AppearanceSettingsEl = tasty({
       },
       border: 'none',
       // Pressing lowers the button onto the bar: the drop shadow collapses
-      // (keeping its layer count so it animates) while the glass edge stays.
+      // while the glass edge stays.
       shadow: {
-        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear), $glass-shadow',
-        '@own(:active)': '0 0 0 #clear, $glass-shadow',
+        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
+        '@own(:active)': '0 0 0 #clear',
       },
       scale: {
         '': '1',
@@ -53,8 +55,9 @@ const AppearanceSettingsEl = tasty({
         '@media(prefers-reduced-motion: reduce)': '1',
       },
       transition:
-        'color $appearance-press-duration, fill $appearance-press-duration, shadow $appearance-press-duration, scale $appearance-press-duration ease-out',
+        'color $appearance-press-duration, ##glass-fill $appearance-press-duration, shadow $appearance-press-duration, scale $appearance-press-duration ease-out',
     },
+    ButtonEdge: { $: 'button::before', recipe: 'glass-edge' },
     Popover: {
       position: 'absolute',
       inset: '100% top, 0 right',

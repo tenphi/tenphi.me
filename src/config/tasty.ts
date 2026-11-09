@@ -1,5 +1,6 @@
 import { configure, generateTypographyTokens } from '@tenphi/tasty';
 
+import { GLASS_RECIPES, GLASS_TOKENS } from './glass';
 import { colorTokens } from './theme';
 
 const typographyTokens = generateTypographyTokens({
@@ -107,44 +108,11 @@ configure({
     '$default-font-weight': '400',
     ...typographyTokens,
     ...colorTokens,
-    // Glass edge: a dark shade along the sides and a light tint along the top
-    // and bottom. High contrast strengthens whichever layer is faint in the
-    // current scheme (the shade in light mode, the tint in dark mode).
-    '#glass-shade': {
-      '': 'rgba(0 0 0 / .1)',
-      '@high-contrast': 'rgba(0 0 0 / .4)',
-      '@dark': 'rgba(0 0 0 / .8)',
-    },
-    '#glass-tint': {
-      '': 'rgba(255 255 255 / .8)',
-      '@dark': 'rgba(255 255 255 / .1)',
-      '@dark & @high-contrast': 'rgba(255 255 255 / .4)',
-    },
-    '$glass-shade':
-      '.5px 0 .5px #glass-shade inset, -.5px 0 .5px #glass-shade inset',
-    '$glass-tint': '0 1px 1px #glass-tint inset, 0 -1px 1px #glass-tint inset',
-    '$glass-shadow': '$glass-shade, $glass-tint',
-    // Accent fills keep the same color in both schemes, so their edge layers
-    // can't follow the page: the light-mode tint glares on them and the
-    // dark-mode shade outlines them in black. Separate layers are needed
-    // because `$glass-shade` and `$glass-tint` resolve their colors on :root,
-    // so overriding the colors on an element would not reach them.
-    '#glass-accent-shade': {
-      '': 'rgba(0 0 0 / .3)',
-      '@high-contrast': 'rgba(0 0 0 / .6)',
-    },
-    '#glass-accent-tint': {
-      '': 'rgba(255 255 255 / .3)',
-      '@dark': '#glass-tint',
-    },
-    '$glass-accent-shade':
-      '.5px 0 .5px #glass-accent-shade inset, -.5px 0 .5px #glass-accent-shade inset',
-    '$glass-accent-tint':
-      '0 1px 1px #glass-accent-tint inset, 0 -1px 1px #glass-accent-tint inset',
-    '$glass-accent-shadow': '$glass-accent-shade, $glass-accent-tint',
+    ...GLASS_TOKENS,
     '#scrollbar-thumb': '#border',
     '#scrollbar-track': '#border.4',
   },
+  recipes: GLASS_RECIPES,
   globalStyles: {
     body: {
       display: 'flex',

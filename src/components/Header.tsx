@@ -26,19 +26,27 @@ const StickyContainer = tasty(Container, {
 const HeaderEl = tasty({
   as: 'header',
   styles: {
+    recipe: 'glass',
     viewTransitionName: 'header',
-    position: 'relative',
     radius: '1cr',
     padding: '1.5x',
-    shadow: '0 .5x 1x #shadow, $glass-shadow',
-    fill: {
+    shadow: '0 .5x 1x #shadow',
+    '#glass-fill': {
       '': '#surface.5',
+      '@high-contrast': '#surface-topbar',
+    },
+    // The bar is translucent, so its edge derives from the opaque surface and
+    // stays a solid line over whatever scrolls underneath.
+    '#glass-edge': {
+      '': '#surface',
       '@high-contrast': '#surface-topbar',
     },
     backdropFilter: {
       '': 'blur(1x)',
       '@high-contrast': 'none',
     },
+
+    Edge: { $: '&::before', recipe: 'glass-edge' },
 
     Nav: {
       display: 'flex',

@@ -6,16 +6,11 @@ export default {
 
     '$gap',
     '$radius',
-    '#glass-shade',
-    '#glass-tint',
-    '$glass-shade',
-    '$glass-tint',
-    '$glass-shadow',
-    '#glass-accent-shade',
-    '#glass-accent-tint',
-    '$glass-accent-shade',
-    '$glass-accent-tint',
-    '$glass-accent-shadow',
+    '#glass-fill',
+    '#glass-edge',
+    '$glass-edge-lift',
+    '$glass-edge-shade',
+    '$glass-fill-shade',
     '$max-width',
     '$prose-width',
     '$font',
@@ -27,6 +22,8 @@ export default {
   ],
 
   states: ['@mobile', '@tablet', '@desktop', '@dark', '@high-contrast'],
+
+  recipes: ['glass', 'glass-edge', 'glass-accent'],
 
   presets: [
     'h1',

@@ -4,43 +4,52 @@ import { IconSun, IconMoon, IconDeviceDesktop } from '@tabler/icons-react';
 const ThemeSwitcherEl = tasty({
   as: 'div',
   styles: {
+    // A glass track with a raised glass chip on the selected option.
+    recipe: 'glass',
     display: 'flex',
     flow: 'row',
     alignSelf: 'flex-start',
-    border: true,
+    padding: '.25x',
     radius: '1r',
-    overflow: 'hidden',
+    '#glass-fill': '#surface-2',
     outline: {
       '': 'none',
       ':has(input:focus-visible:focus-within)': '2bw solid #focus / 1bw',
     },
 
+    Edge: { $: '&::before', recipe: 'glass-edge' },
+
     Option: {
+      recipe: 'glass',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '.75x',
+      // Keeps the switcher as tall as the appearance button (30px).
+      padding: '(.5x + 1bw) .75x',
+      // Concentric with the track's corners.
+      radius: '(1r - .25x)',
       color: {
         '': '#text-soft',
         '@own(:hover)': '#text',
         '@own(:has(input:checked))': '#text',
       },
-      fill: {
-        '': '#surface-2',
+      // Unselected options are clear, which hides their edge too. Hover shows
+      // a faint chip as a preview.
+      '#glass-fill': {
+        '': '#surface.0',
+        '@own(:hover)': '#surface.5',
         '@own(:has(input:checked))': '#surface',
       },
       shadow: {
-        '': 'inset 0 0 .5x #small-shadow.0',
-        '@own(:has(input:checked))': 'inset 0 0 .5x #small-shadow',
+        '': '0 0 0 #clear',
+        '@own(:has(input:checked))':
+          '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
       },
-      transition: 'color 0.15s, fill 0.15s',
+      transition: 'color 0.15s, ##glass-fill 0.15s, shadow 0.15s',
       userSelect: 'none',
-      border: {
-        '': '#border left',
-        '@own(:first-child)': 'none',
-      },
     },
+    OptionEdge: { $: 'Option::before', recipe: 'glass-edge' },
     Input: {
       $: 'input',
       position: 'absolute',

@@ -29,6 +29,7 @@ const Bar = tasty({
       flexBasis: 'auto',
     },
     Follow: {
+      recipe: 'glass glass-accent',
       display: 'flex',
       flow: 'row',
       gap: '.75x',
@@ -37,14 +38,15 @@ const Bar = tasty({
       padding: '.75x 1.5x',
       radius: '1r',
       color: '#accent-surface-text',
-      fill: {
+      '#glass-fill': {
         '': '#accent-surface',
         '@own(:hover)': '#accent-surface-text-hover',
       },
       textDecoration: 'none',
       whiteSpace: 'nowrap',
-      transition: 'fill 0.15s',
+      transition: '##glass-fill 0.15s',
     },
+    FollowEdge: { $: 'Follow::before', recipe: 'glass-edge' },
   },
   elements: {
     Stat: 'a',
