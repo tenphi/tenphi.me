@@ -59,13 +59,23 @@ const AppearanceSettingsEl = tasty({
     },
     ButtonEdge: { $: 'button::before', recipe: 'glass-edge' },
     Popover: {
+      recipe: 'glass',
       position: 'absolute',
       inset: '100% top, 0 right',
       margin: '1x 0',
       padding: '1x',
       gap: '1x',
-      fill: '#surface',
-      border: true,
+      // Translucent glass, like the topbar: the edge derives from the opaque
+      // surface, so it stays a solid line over the blurred page.
+      '#glass-fill': {
+        '': '#surface.5',
+        '@high-contrast': '#surface',
+      },
+      '#glass-edge': '#surface',
+      backdropFilter: {
+        '': 'blur(1x)',
+        '@high-contrast': 'none',
+      },
       radius: '1cr',
       shadow: '0 1x 2x #shadow',
       display: 'flex',
@@ -120,6 +130,7 @@ const AppearanceSettingsEl = tasty({
       width: '260px',
       zIndex: 200,
     },
+    PopoverEdge: { $: 'Popover::before', recipe: 'glass-edge' },
     Setting: {
       display: 'flex',
       flow: 'row',

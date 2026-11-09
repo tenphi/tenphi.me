@@ -27,7 +27,23 @@ const HeaderEl = tasty({
   as: 'header',
   styles: {
     recipe: 'glass',
-    viewTransitionName: 'header',
+    // The appearance popover (inside the header) is open.
+    '@appearance-open':
+      ':has([data-appearance]:focus-within:not([data-collapsed]))',
+    // A view transition name or a `backdrop-filter` makes the header a
+    // backdrop root: nothing inside it, the glass popover included, could blur
+    // the page behind. So while the popover is open, the header drops both and
+    // its blur moves to the Backdrop layer below, which looks the same.
+    // Navigating moves focus out of the popover first, so page transitions
+    // still capture the header.
+    viewTransitionName: {
+      '': 'header',
+      '@appearance-open': 'none',
+    },
+    backdropFilter: {
+      '': 'blur(1x)',
+      '@appearance-open | @high-contrast': 'none',
+    },
     radius: '1cr',
     padding: '1.5x',
     shadow: '0 .5x 1x #shadow',
@@ -41,12 +57,22 @@ const HeaderEl = tasty({
       '': '#surface',
       '@high-contrast': '#surface-topbar',
     },
-    backdropFilter: {
-      '': 'blur(1x)',
-      '@high-contrast': 'none',
-    },
 
     Edge: { $: '&::before', recipe: 'glass-edge' },
+    // The header's blur while the popover is open: a layer behind the bar.
+    Backdrop: {
+      $: '&::after',
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      zIndex: -1,
+      radius: 'inherit',
+      pointerEvents: 'none',
+      backdropFilter: {
+        '': 'none',
+        '@appearance-open & !@high-contrast': 'blur(1x)',
+      },
+    },
 
     Nav: {
       display: 'flex',

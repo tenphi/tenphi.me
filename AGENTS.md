@@ -177,6 +177,7 @@ styles: {
 - Set `#glass-edge` to an opaque color when the fill is translucent (see the topbar).
 - A clear fill (`#surface.0`) hides the ring too.
 - The ring uses `::before`, so a glass surface can't use `::before` for anything else.
+- Translucent glass (topbar, appearance popover) blurs the page with `backdrop-filter`. An ancestor with `backdrop-filter` or `view-transition-name` is a _backdrop root_: blurs inside it can't see the page. That's why the topbar moves its blur to `::after` and drops its view transition name while the popover is open (see `Header.tsx`).
 
 ## Content
 
