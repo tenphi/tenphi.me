@@ -20,6 +20,16 @@
     "featured": true
   },
   {
+    "id": "uniaria",
+    "title": "UniAria",
+    "href": "https://uniaria.tenphi.me",
+    "description": "Framework-agnostic headless UI behaviors. State, keyboard handling, focus, and ARIA are written once in TypeScript and bound to React, Vue, or custom elements, with React Aria-level accessibility.",
+    "tags": ["TypeScript", "Headless UI", "Accessibility", "React", "Vue"],
+    "icon": "accessible",
+    "section": "Tasty Ecosystem",
+    "featured": false
+  },
+  {
     "id": "okhst",
     "title": "OKHST",
     "href": "https://github.com/tenphi/okhst",
@@ -68,6 +78,16 @@
     "icon": "brain",
     "section": "Developer Tools",
     "featured": true
+  },
+  {
+    "id": "luna",
+    "title": "Luna",
+    "href": "https://luna.tenphi.me",
+    "description": "Personal assistant that runs on your Mac and talks through your own Telegram bot — Apple Calendar, Reminders, Notes, and Gmail, with tools isolated in a sandbox and optional Akno memory.",
+    "tags": ["macOS", "Telegram", "AI Agents", "TypeScript"],
+    "icon": "/projects/luna.png",
+    "section": "Developer Tools",
+    "featured": false
   },
   {
     "id": "cookbook",

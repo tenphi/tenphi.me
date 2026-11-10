@@ -1,5 +1,6 @@
 import { tasty } from '@tenphi/tasty';
 import {
+  IconAccessible,
   IconBook,
   IconBrain,
   IconBrandGithub,
@@ -128,6 +129,7 @@ const Card = tasty({
 });
 
 const icons = {
+  accessible: IconAccessible,
   book: IconBook,
   brain: IconBrain,
   github: IconBrandGithub,
