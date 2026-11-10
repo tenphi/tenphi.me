@@ -6,6 +6,7 @@ export default {
 
     '$gap',
     '$radius',
+    '$large-card-radius',
     '#glass-fill',
     '#glass-edge',
     '$glass-edge-lift',

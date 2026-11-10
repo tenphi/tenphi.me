@@ -19,7 +19,8 @@ const Card = tasty({
       '': '2x',
       '@mobile': '1.5x',
     },
-    radius: '1cr',
+    // Matches the padding above, so the corners curve around the icon tile.
+    radius: '$large-card-radius',
     shadow: '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear)',
     '#glass-fill': {
       '': '#surface',

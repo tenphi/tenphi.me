@@ -99,6 +99,13 @@ configure({
     $gap: '8px',
     $radius: '6px',
     '$card-radius': '1cr',
+    // A card holding a 1cr tile in its corner (the project card's icon):
+    // the tile's radius plus the card's padding, so the card's corners curve
+    // around the tile's.
+    '$large-card-radius': {
+      '': '(1cr + 2x)',
+      '@mobile': '(1cr + 1.5x)',
+    },
     '$max-width': '760px',
     '$prose-width': '720px',
     '$font-sans': '"Onest", system-ui, -apple-system, sans-serif',
