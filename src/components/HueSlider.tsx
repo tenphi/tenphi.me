@@ -200,12 +200,13 @@ const HueSliderEl = tasty({
       height: '$knob-height',
       radius: 'round',
       '#glass-fill': '#surface.5',
-      // The fill is see-through, so the edge derives from an opaque color:
-      // the surface in light mode, white in dark mode, where the dark lens
-      // would otherwise blend into the rainbow.
+      // The fill is see-through, so the edge derives from its own color: the
+      // opaque surface in light mode; in dark mode, where the dark lens would
+      // blend into the rainbow, a half see-through white that outlines it
+      // without glaring.
       '#glass-edge': {
         '': '#surface',
-        '@dark': '#white',
+        '@dark': '#white.5',
       },
       backdropFilter: 'blur(.5x)',
       // While pressed, the lens grows a little and lifts.

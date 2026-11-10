@@ -10,6 +10,8 @@ const ThemeSwitcherEl = tasty({
     display: 'flex',
     flow: 'row',
     alignSelf: 'flex-start',
+    // Options keep apart by the same 2px that keeps them off the track edge.
+    gap: '.25x',
     padding: '.25x',
     radius: 'round',
     // Dark high contrast paints the surface pure black, like the panel, so
