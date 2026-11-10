@@ -30,6 +30,10 @@ const StickyContainer = tasty(Container, {
     // - It sits here, beside the header, not inside it: the header has a view
     //   transition name, which makes it a backdrop root, so a blur inside it
     //   couldn't see the page.
+    // - On phones and tablets it reaches only up and down. The gutter beside
+    //   the bar is 1x–2x there (less with classic scrollbars), and a layer
+    //   reaching past the viewport scrolls the page sideways. Only plain page
+    //   lies beside the bar anyway: content is narrower than the bar.
     Backdrop: {
       $: '&::before',
       content: '""',
@@ -37,9 +41,13 @@ const StickyContainer = tasty(Container, {
       // The header's box (the container's padding), grown by 3x.
       inset: {
         '': '-1x -3x',
-        '@mobile': '-2x -3x',
+        '@tablet': '-1x 0',
+        '@mobile': '-2x 0',
       },
-      padding: '3x',
+      padding: {
+        '': '3x',
+        '@tablet | @mobile': '3x 0',
+      },
       radius: '(1cr + 3x)',
       pointerEvents: 'none',
       mask: 'linear-gradient(white, white) content-box',

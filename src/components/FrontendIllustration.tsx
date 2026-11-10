@@ -19,7 +19,15 @@ const Scene = tasty({
 
     Orbit: {
       position: 'absolute',
-      inset: '31px top, -5% left right',
+      // How far the ends reach past the scene. On phones and tablets, only as
+      // far as the page gutter allows (2x and 3x, less with classic
+      // scrollbars): any further and the page scrolls sideways.
+      '$orbit-reach': {
+        '': '5%',
+        '@tablet': '1.5x',
+        '@mobile': '.75x',
+      },
+      inset: '31px top, (-1 * $orbit-reach) left right',
       height: '72px',
       border: '2px dashed #accent-text.28',
       radius: '50%',
