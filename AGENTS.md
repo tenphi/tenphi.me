@@ -181,7 +181,7 @@ styles: {
 - Buttons and badges are pills (`radius: 'round'`).
 - Nothing nested inside a glass surface is glass itself: switcher options are plain tints on the glass track, and a project card's icon tile is a plain `#surface-2` tile.
 - Translucent glass (topbar, appearance popover) blurs the page with `backdrop-filter`. Two gotchas:
-  - A `backdrop-filter` only samples what's right behind its element and mirrors it at the edges. For an even blur, put it on a layer that reaches past the surface and mask it back to the surface's shape (the topbar's `Backdrop` in `Header.tsx`).
+  - A `backdrop-filter` only samples what's right behind its element and mirrors it at the edges. For an even blur, put it on a layer that reaches past the surface and mask it back to the surface's shape (the topbar's `Backdrop` in `Header.tsx`). Keep that reach inside the page gutter: a layer past the viewport's side scrolls the page sideways. On phones and tablets the topbar's layer reaches only up and down.
   - An ancestor with `backdrop-filter` or `view-transition-name` is a _backdrop root_: a blur inside it can't see the page. So the topbar's blur layer sits beside the header, not inside it, and the header drops its view transition name while the popover is open.
 
 ## Content
