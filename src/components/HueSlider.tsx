@@ -64,10 +64,12 @@ const HueSliderEl = tasty({
       whiteSpace: 'nowrap',
     },
 
-    // The thumb's size; the native thumb matches it, so the glass Knob
-    // tracks it exactly.
+    // The thumb's size. The native thumb (the invisible drag handle) is 4bw
+    // narrower, so the Knob, centered on it, reaches 1bw past each end of the
+    // track at 0 and 360 and covers its rounded end caps.
     '$knob-width': '3.75x',
     '$knob-height': '2.75x',
+    '$handle-width': '($knob-width - 4bw)',
 
     // The thumb is being pressed: on the native slider, or on a segment of
     // the CSS-only track.
@@ -166,14 +168,14 @@ const HueSliderEl = tasty({
       $: 'Slider::-webkit-slider-thumb',
       '-webkit-appearance': 'none',
       appearance: 'none',
-      width: '$knob-width',
+      width: '$handle-width',
       height: '$knob-height',
       opacity: '0',
       cursor: 'pointer',
     },
     MozThumb: {
       $: 'Slider::-moz-range-thumb',
-      width: '$knob-width',
+      width: '$handle-width',
       height: '$knob-height',
       border: 'none',
       opacity: '0',
@@ -190,12 +192,12 @@ const HueSliderEl = tasty({
     Knob: {
       recipe: 'glass',
       position: 'absolute',
-      // Centered on the radio's segment without JS; where the native thumb
-      // sits (its travel is the track minus its width) with JS.
+      // Centered on the radio's segment without JS; on the native thumb
+      // (its travel is the track minus its width) with JS.
       inset: {
         '': '50% top, (1bw + (100% - 2bw) * $primary-hue / 360 - $knob-width / 2) left',
         '@root([data-js])':
-          '50% top, (1bw + (100% - 2bw - $knob-width) * $primary-hue / 360) left',
+          '50% top, (1bw + ($handle-width - $knob-width) / 2 + (100% - 2bw - $handle-width) * $primary-hue / 360) left',
       },
       translate: '0 -50%',
       width: '$knob-width',
