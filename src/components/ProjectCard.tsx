@@ -32,8 +32,8 @@ const Card = tasty({
 
     Edge: { $: '&::before', recipe: 'glass-edge' },
 
+    // A plain tile, not glass: it sits inside the glass card.
     Icon: {
-      recipe: 'glass',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -46,11 +46,9 @@ const Card = tasty({
       boxSizing: 'border-box',
       radius: '1cr',
       overflow: 'hidden',
-      '#glass-fill': '#surface-2',
+      fill: '#surface-2',
       color: '#accent-text',
-      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
     },
-    IconEdge: { $: 'Icon::before', recipe: 'glass-edge' },
     IconImage: {
       display: 'block',
       width: '6x',
