@@ -44,7 +44,13 @@ const Bar = tasty({
       },
       textDecoration: 'none',
       whiteSpace: 'nowrap',
-      transition: '##glass-fill 0.15s',
+      // Grows a little while pressed, like the other glass buttons.
+      scale: {
+        '': '1',
+        '@own(:active)': '1.04',
+        '@media(prefers-reduced-motion: reduce)': '1',
+      },
+      transition: '##glass-fill 0.15s, scale 0.15s ease-out',
     },
     FollowEdge: { $: 'Follow::before', recipe: 'glass-edge' },
   },

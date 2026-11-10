@@ -69,6 +69,11 @@ const HueSliderEl = tasty({
     '$knob-width': '3.75x',
     '$knob-height': '2.75x',
 
+    // The thumb is being pressed: on the native slider, or on a segment of
+    // the CSS-only track.
+    '@thumb-pressed':
+      ':has([data-hue-slider]:active) | :has([data-element="Option"]:active)',
+
     // Holds the track (either kind) and the Knob over it.
     Field: {
       position: 'relative',
@@ -195,10 +200,25 @@ const HueSliderEl = tasty({
       height: '$knob-height',
       radius: 'round',
       '#glass-fill': '#surface.5',
-      // The fill is see-through, so the edge derives from the opaque surface.
-      '#glass-edge': '#surface',
+      // The fill is see-through, so the edge derives from an opaque color:
+      // the surface in light mode, white in dark mode, where the dark lens
+      // would otherwise blend into the rainbow.
+      '#glass-edge': {
+        '': '#surface',
+        '@dark': '#white',
+      },
       backdropFilter: 'blur(.5x)',
-      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
+      // While pressed, the lens grows a little and lifts.
+      shadow: {
+        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
+        '@thumb-pressed': '0 .25x .5x color-mix(in oklab, #shadow 30%, #clear)',
+      },
+      scale: {
+        '': '1',
+        '@thumb-pressed': '1.15',
+        '@media(prefers-reduced-motion: reduce)': '1',
+      },
+      transition: 'scale 120ms ease-out, shadow 120ms',
       pointerEvents: 'none',
     },
     KnobEdge: { $: 'Knob::before', recipe: 'glass-edge' },

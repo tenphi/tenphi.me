@@ -16,8 +16,8 @@ const AppearanceSettingsEl = tasty({
     Button: {
       $: 'button',
       recipe: 'glass',
-      // Press in quickly so the click registers at once, then settle back
-      // more slowly on release.
+      // Grow quickly on press so the click registers at once, then settle
+      // back more slowly on release.
       '$appearance-press-duration': {
         '': '150ms',
         '@own(:active)': '60ms',
@@ -43,15 +43,15 @@ const AppearanceSettingsEl = tasty({
         '@own(:active)': '#surface-2+#accent-text.16',
       },
       border: 'none',
-      // Pressing lowers the button onto the bar: the drop shadow collapses
-      // while the glass edge stays.
+      // Pressing lifts the button toward the viewer: it grows a little and
+      // its shadow deepens.
       shadow: {
         '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
-        '@own(:active)': '0 0 0 #clear',
+        '@own(:active)': '0 .25x .5x color-mix(in oklab, #shadow 30%, #clear)',
       },
       scale: {
         '': '1',
-        '@own(:active)': '.92',
+        '@own(:active)': '1.08',
         '@media(prefers-reduced-motion: reduce)': '1',
       },
       transition:
