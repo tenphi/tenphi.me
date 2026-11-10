@@ -67,9 +67,9 @@ const FILL_DARK = 'oklch(from #glass-fill calc(l - $glass-fill-shade) c h)';
 const FILL_CLEAR = 'oklch(from #glass-fill l c h / 0)';
 
 /** The edge ring's gradient: light top and bottom, dark sides. */
-export const GLASS_EDGE_GRADIENT = `linear-gradient(${EDGE_LIGHT}, ${EDGE_DARK} 35%, ${EDGE_DARK} 65%, ${EDGE_LIGHT})`;
+const GLASS_EDGE_GRADIENT = `linear-gradient(${EDGE_LIGHT}, ${EDGE_DARK} 35%, ${EDGE_DARK} 65%, ${EDGE_LIGHT})`;
 /** The fill gradient: a little darker toward the top and bottom. */
-export const GLASS_FILL_GRADIENT = `linear-gradient(${FILL_DARK}, ${FILL_CLEAR} 35%, ${FILL_CLEAR} 65%, ${FILL_DARK})`;
+const GLASS_FILL_GRADIENT = `linear-gradient(${FILL_DARK}, ${FILL_CLEAR} 35%, ${FILL_CLEAR} 65%, ${FILL_DARK})`;
 
 export const GLASS_RECIPES: Record<string, RecipeStyles> = {
   /** A glass surface. Set its fill with `#glass-fill`. */
@@ -95,20 +95,6 @@ export const GLASS_RECIPES: Record<string, RecipeStyles> = {
     pointerEvents: 'none',
     image: GLASS_EDGE_GRADIENT,
     mask: 'linear-gradient(white, white) content-box exclude, linear-gradient(white, white)',
-  },
-  /**
-   * Glass for an element that can't host the `::before` edge, such as a
-   * slider thumb. The same edge ring goes in a transparent 1bw border, painted
-   * by a background layer clipped to the border box, under the fill and its
-   * gradient (clipped to the padding box). Set its fill with `#glass-fill`;
-   * it must be opaque, or the ring shows through.
-   */
-  'glass-border': {
-    '#glass-edge': '#glass-fill',
-    border: '#clear',
-    fill: '#clear',
-    image: `${GLASS_FILL_GRADIENT}, linear-gradient(#glass-fill, #glass-fill), ${GLASS_EDGE_GRADIENT}`,
-    backgroundClip: 'padding-box, padding-box, border-box',
   },
   /** Add to `glass` on an accent fill: it glows softly in its own color. */
   'glass-accent': {

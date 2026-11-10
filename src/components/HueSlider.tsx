@@ -23,7 +23,7 @@ function rainbow(shift?: string) {
 // The rainbow track as glass. In JS mode the track is a native range input,
 // which can't host the `::before` edge, so both modes draw the edge in a
 // transparent 1bw border instead, with background layers clipped to the
-// border box (like the `glass-border` recipe):
+// border box:
 // - the fill gradient (a little darker toward the top and bottom) and the
 //   rainbow, clipped to the padding box;
 // - the edge: the rainbow lighter along the top and bottom and darker at the
@@ -64,6 +64,16 @@ const HueSliderEl = tasty({
       whiteSpace: 'nowrap',
     },
 
+    // The thumb's size; the native thumb matches it, so the glass Knob
+    // tracks it exactly.
+    '$knob-width': '3.75x',
+    '$knob-height': '2.75x',
+
+    // Holds the track (either kind) and the Knob over it.
+    Field: {
+      position: 'relative',
+    },
+
     // --- CSS-only radio track (shown when JS is absent) --------------------
     // A row of full-height <label> segments over the rainbow. Each label wraps
     // a visually hidden radio; the checked radio drives `--primary-hue` through
@@ -78,7 +88,7 @@ const HueSliderEl = tasty({
       position: 'relative',
       width: '100%',
       height: '2x',
-      radius: '1r',
+      radius: 'round',
       border: '#clear',
       image: TRACK_IMAGE,
       backgroundClip: TRACK_CLIP,
@@ -94,15 +104,10 @@ const HueSliderEl = tasty({
     Option: {
       $: 'label',
       position: 'relative',
-      // Equal segments, even though the thumb is wider than one: it overflows
-      // its segment, centered.
       flexGrow: 1,
       flexBasis: 0,
       width: 'min 0',
       height: '100%',
-      display: 'flex',
-      placeContent: 'center',
-      placeItems: 'center',
       cursor: 'pointer',
     },
     // Visually hidden radios — the accessible, stateful control.
@@ -118,23 +123,6 @@ const HueSliderEl = tasty({
       border: 'none',
       opacity: '0',
     },
-    // Slider-style thumb. Only the thumb after a checked (or focused) radio is
-    // shown, so it reads exactly like the range thumb sitting on the track.
-    // A glass bead (see the `glass-border` recipe).
-    Thumb: {
-      recipe: 'glass-border',
-      '#glass-fill': '#surface',
-      flexShrink: 0,
-      width: '2.25x',
-      height: '2.25x',
-      radius: '50%',
-      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
-      opacity: {
-        '': '0',
-        '@own(:is(input:checked ~ *))': '1',
-        '@own(:is(input:focus-visible ~ *))': '1',
-      },
-    },
 
     // --- Native range slider (shown when JS is present) -------------------
     Slider: {
@@ -147,7 +135,7 @@ const HueSliderEl = tasty({
       width: '100%',
       height: '2x',
       appearance: 'none',
-      radius: '1r',
+      radius: 'round',
       border: '#clear',
       image: TRACK_IMAGE,
       backgroundClip: TRACK_CLIP,
@@ -168,38 +156,60 @@ const HueSliderEl = tasty({
         '@own(:focus-visible)': '2bw solid #focus / 1bw',
       },
     },
-    // Glass beads, like the CSS-only Thumb.
+    // The native thumb stays as the invisible drag handle; the Knob draws it.
     WebkitThumb: {
       $: 'Slider::-webkit-slider-thumb',
-      recipe: 'glass-border',
       '-webkit-appearance': 'none',
       appearance: 'none',
-      '#glass-fill': '#surface',
-      boxSizing: 'border-box',
-      width: '2.25x',
-      height: '2.25x',
-      radius: '50%',
-      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
+      width: '$knob-width',
+      height: '$knob-height',
+      opacity: '0',
       cursor: 'pointer',
     },
     MozThumb: {
       $: 'Slider::-moz-range-thumb',
-      recipe: 'glass-border',
-      '#glass-fill': '#surface',
-      boxSizing: 'border-box',
-      width: '2.25x',
-      height: '2.25x',
-      radius: '50%',
-      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
+      width: '$knob-width',
+      height: '$knob-height',
+      border: 'none',
+      opacity: '0',
       cursor: 'pointer',
     },
+
+    // --- The thumb: a glass lens over either track ------------------------
+    // A real element, not the native thumb, so it can be glass: a slightly
+    // see-through fill over a blurred backdrop, with the 1px glass edge. It
+    // follows `--primary-hue`, which the checked radio (no JS) or the slider
+    // (JS) sets, and ignores the pointer, so the track under it gets it.
+    Knob: {
+      recipe: 'glass',
+      position: 'absolute',
+      // Centered on the radio's segment without JS; where the native thumb
+      // sits (its travel is the track minus its width) with JS.
+      inset: {
+        '': '50% top, (1bw + (100% - 2bw) * $primary-hue / 360 - $knob-width / 2) left',
+        '@root([data-js])':
+          '50% top, (1bw + (100% - 2bw - $knob-width) * $primary-hue / 360) left',
+      },
+      translate: '0 -50%',
+      width: '$knob-width',
+      height: '$knob-height',
+      radius: 'round',
+      '#glass-fill': '#surface.5',
+      // The fill is see-through, so the edge derives from the opaque surface.
+      '#glass-edge': '#surface',
+      backdropFilter: 'blur(.5x)',
+      shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
+      pointerEvents: 'none',
+    },
+    KnobEdge: { $: 'Knob::before', recipe: 'glass-edge' },
   },
   elements: {
     Label: 'div',
+    Field: 'div',
     Track: 'div',
     Option: 'label',
-    Thumb: 'div',
     Slider: 'input',
+    Knob: 'div',
   },
 });
 
@@ -218,35 +228,37 @@ export default function HueSlider() {
   return (
     <HueSliderEl>
       <HueSliderEl.Label id="hue-label">Select hue</HueSliderEl.Label>
-      <HueSliderEl.Track
-        role="radiogroup"
-        aria-labelledby="hue-label"
-        aria-orientation="horizontal"
-      >
-        {STEPS.map((hue) => (
-          <HueSliderEl.Option key={hue}>
-            <input
-              type="radio"
-              name="hue"
-              value={hue}
-              aria-label={`Hue ${hue} degrees`}
-              defaultChecked={hue === DEFAULT_HUE}
-            />
-            <HueSliderEl.Thumb aria-hidden="true" />
-          </HueSliderEl.Option>
-        ))}
-      </HueSliderEl.Track>
-      <HueSliderEl.Slider
-        type="range"
-        min="0"
-        max="360"
-        step="1"
-        defaultValue={DEFAULT_HUE}
-        data-hue-slider
-        aria-label="Hue"
-        aria-valuetext={`${DEFAULT_HUE} degrees`}
-        disabled
-      />
+      <HueSliderEl.Field>
+        <HueSliderEl.Track
+          role="radiogroup"
+          aria-labelledby="hue-label"
+          aria-orientation="horizontal"
+        >
+          {STEPS.map((hue) => (
+            <HueSliderEl.Option key={hue}>
+              <input
+                type="radio"
+                name="hue"
+                value={hue}
+                aria-label={`Hue ${hue} degrees`}
+                defaultChecked={hue === DEFAULT_HUE}
+              />
+            </HueSliderEl.Option>
+          ))}
+        </HueSliderEl.Track>
+        <HueSliderEl.Slider
+          type="range"
+          min="0"
+          max="360"
+          step="1"
+          defaultValue={DEFAULT_HUE}
+          data-hue-slider
+          aria-label="Hue"
+          aria-valuetext={`${DEFAULT_HUE} degrees`}
+          disabled
+        />
+        <HueSliderEl.Knob aria-hidden="true" />
+      </HueSliderEl.Field>
     </HueSliderEl>
   );
 }

@@ -177,7 +177,8 @@ styles: {
 - Set `#glass-edge` to an opaque color when the fill is translucent (see the topbar).
 - A clear fill (`#surface.0`) hides the ring too.
 - The ring uses `::before`, so a glass surface can't use `::before` for anything else.
-- Elements that can't host `::before` (range inputs, slider thumbs) use the `glass-border` recipe: the same ring, drawn in a transparent 1bw border by a background layer. It needs an opaque fill. The hue track does the same with lighter and darker copies of its rainbow (see `HueSlider.tsx`).
+- A range input can't host `::before`. The hue track draws its ring in a transparent 1bw border instead, with lighter and darker copies of its rainbow, and its thumb is a separate glass element over the invisible native thumb (see `HueSlider.tsx`).
+- Buttons and badges are pills (`radius: 'round'`). Options inside a switcher aren't glass: the selected one is a plain tint on the glass track.
 - Translucent glass (topbar, appearance popover) blurs the page with `backdrop-filter`. Two gotchas:
   - A `backdrop-filter` only samples what's right behind its element and mirrors it at the edges. For an even blur, put it on a layer that reaches past the surface and mask it back to the surface's shape (the topbar's `Backdrop` in `Header.tsx`).
   - An ancestor with `backdrop-filter` or `view-transition-name` is a _backdrop root_: a blur inside it can't see the page. So the topbar's blur layer sits beside the header, not inside it, and the header drops its view transition name while the popover is open.
