@@ -180,9 +180,11 @@ const HueSliderEl = tasty({
       cursor: 'pointer',
     },
 
-    // --- The thumb: a glass lens over either track ------------------------
-    // A real element, not the native thumb, so it can be glass: a slightly
-    // see-through fill over a blurred backdrop, with the 1px glass edge. It
+    // --- The thumb: a white pill that turns to glass while dragged --------
+    // Like macOS sliders: at rest a solid white pill (in dark mode too); while
+    // pressed it grows and turns into clear glass that shows the rainbow
+    // through it, with a bright rim, some inner depth and a deeper shadow.
+    // It's a real element, not the native thumb, so it can be glass. It
     // follows `--primary-hue`, which the checked radio (no JS) or the slider
     // (JS) sets, and ignores the pointer, so the track under it gets it.
     Knob: {
@@ -199,27 +201,49 @@ const HueSliderEl = tasty({
       width: '$knob-width',
       height: '$knob-height',
       radius: 'round',
-      '#glass-fill': '#surface.5',
-      // The fill is see-through, so the edge derives from its own color: the
-      // opaque surface in light mode; in dark mode, where the dark lens would
-      // blend into the rainbow, a half see-through white that outlines it
-      // without glaring.
-      '#glass-edge': {
-        '': '#surface',
-        '@dark': '#white.5',
+      '#glass-fill': {
+        '': '#white',
+        '@thumb-pressed': '#white.15',
+        '@thumb-pressed & @dark': '#surface.3',
+        // High contrast keeps it solid.
+        '@high-contrast': '#white',
       },
-      backdropFilter: 'blur(.5x)',
-      // While pressed, the lens grows a little and lifts.
+      // The edge derives from white, so the rim stays bright even when the
+      // fill is clear; half see-through on the dark glass, so it doesn't glare.
+      '#glass-edge': {
+        '': '#white',
+        '@thumb-pressed & @dark & !@high-contrast': '#white.5',
+      },
+      // Clear glass: a light blur that keeps the rainbow vivid.
+      backdropFilter: {
+        '': 'blur(0px) saturate(1)',
+        '@thumb-pressed': 'blur(.25x) saturate(1.6)',
+      },
+      // The same layers in both states, so they animate: the drop shadow,
+      // and the glass's inner highlight (top) and inner shade (bottom).
       shadow: {
-        '': '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
-        '@thumb-pressed': '0 .25x .5x color-mix(in oklab, #shadow 30%, #clear)',
+        '': '0 .125x .375x color-mix(in oklab, #shadow 40%, #clear), 0 0 0 #clear inset, 0 0 0 #clear inset',
+        '@thumb-pressed':
+          '0 .5x 1.5x color-mix(in oklab, #shadow 80%, #clear), 0 1bw 1bw #white.6 inset, 0 -1bw 3bw #black.12 inset',
       },
       scale: {
         '': '1',
-        '@thumb-pressed': '1.15',
+        '@thumb-pressed': '1.35',
         '@media(prefers-reduced-motion: reduce)': '1',
       },
-      transition: 'scale 120ms ease-out, shadow 120ms',
+      // Pressing springs it up quickly, with a slight overshoot; releasing
+      // settles back more gently.
+      '$knob-duration': {
+        '': '200ms',
+        '@thumb-pressed': '150ms',
+        '@media(prefers-reduced-motion: reduce)': '0ms',
+      },
+      '$knob-easing': {
+        '': 'ease-out',
+        '@thumb-pressed': 'cubic-bezier(.3, 1.5, .5, 1)',
+      },
+      transition:
+        'scale $knob-duration $knob-easing, ##glass-fill $knob-duration, ##glass-edge $knob-duration, shadow $knob-duration, backdrop-filter $knob-duration',
       pointerEvents: 'none',
     },
     KnobEdge: { $: 'Knob::before', recipe: 'glass-edge' },
