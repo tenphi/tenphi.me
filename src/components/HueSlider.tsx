@@ -6,50 +6,8 @@ const STEP_COUNT = 18;
 const STEPS = Array.from({ length: STEP_COUNT }, (_, i) => i * 20 + 10);
 const DEFAULT_HUE = 210;
 
-const RAINBOW_HUES = [0, 60, 120, 180, 240, 300, 360];
-
-/**
- * The hue rainbow, left to right. `shift` moves every stop in OKLCH lightness
- * (e.g. `- $glass-edge-shade`), so a glass edge keeps each hue's own color.
- */
-function rainbow(shift?: string) {
-  const stops = RAINBOW_HUES.map((hue) => {
-    const stop = `okhst(${hue} 70% 60%)`;
-    return shift ? `oklch(from ${stop} calc(l ${shift}) c h)` : stop;
-  });
-  return `linear-gradient(to right, ${stops.join(', ')})`;
-}
-
-// The rainbow track as glass. In JS mode the track is a native range input,
-// which can't host the `::before` edge, so both modes draw the edge in a
-// transparent 1bw border instead, with background layers clipped to the
-// border box:
-// - the fill gradient (a little darker toward the top and bottom) and the
-//   rainbow, clipped to the padding box;
-// - the edge: the rainbow lighter along the top and bottom and darker at the
-//   ends, clipped to the border box. Layers can't fade into one another, so
-//   the edge steps from the lighter rainbow (outer 20%) through the plain one
-//   (to 35%) to the darker one (the middle), like the glass edge's gradient.
-const TRACK_LAYERS = [
-  [
-    'linear-gradient(rgb(0 0 0 / .05), transparent 35%, transparent 65%, rgb(0 0 0 / .05))',
-    'padding-box',
-    '100% 100%',
-    'top',
-  ],
-  [rainbow(), 'padding-box', '100% 100%', 'top'],
-  [rainbow('+ $glass-edge-lift'), 'border-box', '100% 20%', 'top'],
-  [rainbow('+ $glass-edge-lift'), 'border-box', '100% 20%', 'bottom'],
-  [rainbow(), 'border-box', '100% 35%', 'top'],
-  [rainbow(), 'border-box', '100% 35%', 'bottom'],
-  [rainbow('- $glass-edge-shade'), 'border-box', '100% 100%', 'top'],
-];
-const TRACK_IMAGE = TRACK_LAYERS.map(([image]) => image).join(', ');
-const TRACK_CLIP = TRACK_LAYERS.map(([, clip]) => clip).join(', ');
-const TRACK_SIZE = TRACK_LAYERS.map(([, , size]) => size).join(', ');
-const TRACK_POSITION = TRACK_LAYERS.map(([, , , position]) => position).join(
-  ', ',
-);
+const RAINBOW =
+  'linear-gradient(to right, okhst(0 70% 60%), okhst(60 70% 60%), okhst(120 70% 60%), okhst(180 70% 60%), okhst(240 70% 60%), okhst(300 70% 60%), okhst(360 70% 60%))';
 
 const HueSliderEl = tasty({
   as: 'div',
@@ -64,21 +22,32 @@ const HueSliderEl = tasty({
       whiteSpace: 'nowrap',
     },
 
-    // The thumb's size. The native thumb (the invisible drag handle) is 4bw
+    // The thumb's size. The native thumb (the invisible drag handle) is 2bw
     // narrower, so the Knob, centered on it, reaches 1bw past each end of the
-    // track at 0 and 360 and covers its rounded end caps.
+    // rail at 0 and 360 and covers its rounded end caps.
     '$knob-width': '3.75x',
     '$knob-height': '2.75x',
-    '$handle-width': '($knob-width - 4bw)',
+    '$handle-width': '($knob-width - 2bw)',
 
     // The thumb is being pressed: on the native slider, or on a segment of
     // the CSS-only track.
     '@thumb-pressed':
       ':has([data-hue-slider]:active) | :has([data-element="Option"]:active)',
 
-    // Holds the track (either kind) and the Knob over it.
+    // Holds the track (either kind) and the Knob over it, and draws the rail:
+    // a thin plain rainbow pill, centered. Both tracks are clear and as tall
+    // as the thumb, so they're easy to grab.
     Field: {
       position: 'relative',
+    },
+    Rail: {
+      $: 'Field::before',
+      content: '""',
+      position: 'absolute',
+      inset: '((100% - 1.5x) / 2) 0',
+      radius: 'round',
+      image: RAINBOW,
+      pointerEvents: 'none',
     },
 
     // --- CSS-only radio track (shown when JS is absent) --------------------
@@ -94,15 +63,8 @@ const HueSliderEl = tasty({
       flow: 'row',
       position: 'relative',
       width: '100%',
-      height: '2x',
+      height: '$knob-height',
       radius: 'round',
-      border: '#clear',
-      image: TRACK_IMAGE,
-      backgroundClip: TRACK_CLIP,
-      backgroundOrigin: 'border-box',
-      backgroundSize: TRACK_SIZE,
-      backgroundPosition: TRACK_POSITION,
-      backgroundRepeat: 'no-repeat',
       outline: {
         '': 'none',
         ':has(input:focus-visible)': '2bw solid #focus / 1bw',
@@ -139,17 +101,14 @@ const HueSliderEl = tasty({
         '': true,
         '@root([data-js])': false,
       },
+      position: 'relative',
       width: '100%',
-      height: '2x',
+      height: '$knob-height',
+      margin: 0,
       appearance: 'none',
       radius: 'round',
-      border: '#clear',
-      image: TRACK_IMAGE,
-      backgroundClip: TRACK_CLIP,
-      backgroundOrigin: 'border-box',
-      backgroundSize: TRACK_SIZE,
-      backgroundPosition: TRACK_POSITION,
-      backgroundRepeat: 'no-repeat',
+      border: 'none',
+      fill: '#clear',
       cursor: {
         '': 'pointer',
         '@own([disabled])': 'not-allowed',
@@ -173,6 +132,11 @@ const HueSliderEl = tasty({
       opacity: '0',
       cursor: 'pointer',
     },
+    MozTrack: {
+      $: 'Slider::-moz-range-track',
+      fill: '#clear',
+      border: 'none',
+    },
     MozThumb: {
       $: 'Slider::-moz-range-thumb',
       width: '$handle-width',
@@ -195,9 +159,9 @@ const HueSliderEl = tasty({
       // Centered on the radio's segment without JS; on the native thumb
       // (its travel is the track minus its width) with JS.
       inset: {
-        '': '50% top, (1bw + (100% - 2bw) * $primary-hue / 360 - $knob-width / 2) left',
+        '': '50% top, (100% * $primary-hue / 360 - $knob-width / 2) left',
         '@root([data-js])':
-          '50% top, (1bw + ($handle-width - $knob-width) / 2 + (100% - 2bw - $handle-width) * $primary-hue / 360) left',
+          '50% top, (($handle-width - $knob-width) / 2 + (100% - $handle-width) * $primary-hue / 360) left',
       },
       translate: '0 -50%',
       width: '$knob-width',

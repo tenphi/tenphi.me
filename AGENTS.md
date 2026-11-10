@@ -177,7 +177,7 @@ styles: {
 - Set `#glass-edge` to an opaque color when the fill is translucent (see the topbar).
 - A clear fill (`#surface.0`) hides the ring too.
 - The ring uses `::before`, so a glass surface can't use `::before` for anything else.
-- A range input can't host `::before`. The hue track draws its ring in a transparent 1bw border instead, with lighter and darker copies of its rainbow, and its thumb is a separate glass element over the invisible native thumb (see `HueSlider.tsx`).
+- The hue slider isn't glass at rest: its track is a thin plain rainbow rail, and its thumb is a white pill that turns to glass only while dragged, like macOS sliders. The thumb is a separate element over the invisible native thumb, because a range input can't host `::before` (see `HueSlider.tsx`).
 - Buttons and badges are pills (`radius: 'round'`). Options inside a switcher aren't glass: the selected one is a plain tint on the glass track.
 - Translucent glass (topbar, appearance popover) blurs the page with `backdrop-filter`. Two gotchas:
   - A `backdrop-filter` only samples what's right behind its element and mirrors it at the edges. For an even blur, put it on a layer that reaches past the surface and mask it back to the surface's shape (the topbar's `Backdrop` in `Header.tsx`).
