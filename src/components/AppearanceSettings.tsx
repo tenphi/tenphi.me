@@ -72,8 +72,11 @@ const AppearanceSettingsEl = tasty({
         '@high-contrast': '#surface',
       },
       '#glass-edge': '#surface',
+      // The blur fades in and out with the panel (see `transition`), so it
+      // doesn't pop on at full strength.
       backdropFilter: {
-        '': 'blur(1x)',
+        '': 'blur(0px)',
+        ':focus-within & !:is([data-collapsed])': 'blur(1x)',
         '@high-contrast': 'none',
       },
       radius: '1cr',
@@ -123,9 +126,9 @@ const AppearanceSettingsEl = tasty({
       // close means that transient blur never starts animating out — a refocus
       // within the window cancels it, eliminating the open/close flicker.
       transition: {
-        '': 'opacity 80ms 150ms, translate 80ms 150ms, visibility 80ms 150ms allow-discrete',
+        '': 'opacity 80ms 150ms, translate 80ms 150ms, backdrop-filter 80ms 150ms, visibility 80ms 150ms allow-discrete',
         ':focus-within & !:is([data-collapsed])':
-          'opacity 80ms, translate 80ms, visibility 80ms allow-discrete',
+          'opacity 80ms, translate 80ms, backdrop-filter 80ms, visibility 80ms allow-discrete',
       },
       width: '260px',
       zIndex: 200,

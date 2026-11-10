@@ -66,6 +66,13 @@ const HeaderEl = tasty({
       '': 'header',
       '@appearance-open': 'none',
     },
+    // The popover closes after a 150ms delay and an 80ms fade. Its blur needs
+    // the page until then, so the name comes back only after 250ms. Opening
+    // drops it at once.
+    transition: {
+      '': 'view-transition-name 0s 250ms allow-discrete',
+      '@appearance-open': 'none',
+    },
     radius: '1cr',
     padding: '1.5x',
     shadow: '0 .5x 1x #shadow',
