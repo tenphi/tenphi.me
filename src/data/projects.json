@@ -76,7 +76,7 @@
     "description": "Memory layer for AI agents built on a Markdown knowledge base you own — cited retrieval, grounded answers, journalled and undoable writes.",
     "tags": ["Node.js", "TypeScript", "AI Agents", "CLI"],
     "icon": "brain",
-    "section": "Developer Tools",
+    "section": "AI Agents",
     "featured": true
   },
   {
@@ -86,7 +86,7 @@
     "description": "Personal assistant that runs on your Mac and talks through your own Telegram bot — Apple Calendar, Reminders, Notes, and Gmail, with tools isolated in a sandbox and optional Akno memory.",
     "tags": ["macOS", "Telegram", "AI Agents", "TypeScript"],
     "icon": "/projects/luna.png",
-    "section": "Developer Tools",
+    "section": "AI Agents",
     "featured": false
   },
   {
