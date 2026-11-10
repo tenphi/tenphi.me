@@ -36,7 +36,7 @@ const Bar = tasty({
       alignItems: 'center',
       preset: 'label',
       padding: '.75x 1.5x',
-      radius: '1r',
+      radius: 'round',
       color: '#accent-surface-text',
       '#glass-fill': {
         '': '#accent-surface',

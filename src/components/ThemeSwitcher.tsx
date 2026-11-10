@@ -4,14 +4,21 @@ import { IconSun, IconMoon, IconDeviceDesktop } from '@tabler/icons-react';
 const ThemeSwitcherEl = tasty({
   as: 'div',
   styles: {
-    // A glass track with a raised glass chip on the selected option.
+    // A glass pill track. The options inside aren't glass: the selected one
+    // is a plain tint of the text color.
     recipe: 'glass',
     display: 'flex',
     flow: 'row',
     alignSelf: 'flex-start',
     padding: '.25x',
-    radius: '1r',
-    '#glass-fill': '#surface-2',
+    radius: 'round',
+    // Dark high contrast paints the surface pure black, like the panel, so
+    // the track steps up a tone to stay visible.
+    '#glass-fill': {
+      '': '#surface',
+      '@dark & @high-contrast': '#surface-2',
+    },
+    shadow: '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
     outline: {
       '': 'none',
       ':has(input:focus-visible:focus-within)': '2bw solid #focus / 1bw',
@@ -20,36 +27,28 @@ const ThemeSwitcherEl = tasty({
     Edge: { $: '&::before', recipe: 'glass-edge' },
 
     Option: {
-      recipe: 'glass',
+      position: 'relative',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       // Keeps the switcher as tall as the appearance button (30px).
-      padding: '(.5x + 1bw) .75x',
-      // Concentric with the track's corners.
-      radius: '(1r - .25x)',
+      padding: '(.5x + 1bw) 1x',
+      radius: 'round',
       color: {
         '': '#text-soft',
         '@own(:hover)': '#text',
         '@own(:has(input:checked))': '#text',
       },
-      // Unselected options are clear, which hides their edge too. Hover shows
-      // a faint chip as a preview.
-      '#glass-fill': {
-        '': '#surface.0',
-        '@own(:hover)': '#surface.5',
-        '@own(:has(input:checked))': '#surface',
+      fill: {
+        '': '#clear',
+        '@own(:hover)': '#text.04',
+        '@own(:has(input:checked))': '#text.08',
+        '@own(:has(input:checked)) & @high-contrast': '#text.16',
       },
-      shadow: {
-        '': '0 0 0 #clear',
-        '@own(:has(input:checked))':
-          '0 .125x .25x color-mix(in oklab, #shadow 30%, #clear)',
-      },
-      transition: 'color 0.15s, ##glass-fill 0.15s, shadow 0.15s',
+      transition: 'color 0.15s, fill 0.15s',
       userSelect: 'none',
     },
-    OptionEdge: { $: 'Option::before', recipe: 'glass-edge' },
     Input: {
       $: 'input',
       position: 'absolute',

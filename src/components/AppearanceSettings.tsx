@@ -28,7 +28,7 @@ const AppearanceSettingsEl = tasty({
       justifyContent: 'center',
       padding: '(.75x + 1bw)',
       cursor: 'pointer',
-      radius: '1r',
+      radius: 'round',
       color: {
         '': '#accent-text',
         '@hover | @open': '#accent-text-2',

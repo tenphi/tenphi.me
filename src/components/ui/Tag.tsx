@@ -5,8 +5,8 @@ const Tag = tasty({
   styles: {
     recipe: 'glass glass-accent',
     preset: 'label',
-    padding: '1bw (.5x + 1bw)',
-    radius: '1r',
+    padding: '1bw (.75x + 1bw)',
+    radius: 'round',
     color: '#accent-surface-text',
     '#glass-fill': '#accent-surface',
     whiteSpace: 'nowrap',
