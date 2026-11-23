@@ -50,7 +50,7 @@ Package docs are symlinked at the repo root for easy reference:
 
 | Path | Target |
 |---|---|
-| `docs/glaze/` | `node_modules/@tenphi/glaze/docs` — Glaze API, OKHST, methodology, migration |
+| `docs/glaze/` | `node_modules/@tenphi/glaze/harness/docs` — Glaze API, OKHST, methodology, migration |
 | `docs/tasty/` | `node_modules/@tenphi/tasty/docs` — Tasty DSL, configuration, React API, SSR, pipeline |
 
 Consult these when working on theming (`src/config/theme.ts`), styling, or Tasty/Glaze integration.
