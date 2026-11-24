@@ -80,6 +80,16 @@
     "featured": false
   },
   {
+    "id": "harnesspm",
+    "title": "harnesspm",
+    "href": "https://harnesspm.tenphi.me",
+    "description": "The harness package manager. Libraries ship agent rules, docs, skills, hooks, and MCP servers in their npm packages, and harnesspm gives them to Claude Code and Codex on every install — matched to the installed version.",
+    "tags": ["TypeScript", "CLI", "npm", "AI Agents", "Claude Code"],
+    "icon": "/projects/harnesspm.svg",
+    "section": "AI Agents",
+    "featured": false
+  },
+  {
     "id": "uniaria",
     "title": "UniAria",
     "href": "https://uniaria.tenphi.me",
