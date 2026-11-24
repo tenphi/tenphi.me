@@ -6,6 +6,7 @@ import {
   IconBrandGithub,
   IconPalette,
 } from '@tabler/icons-react';
+import HarnesspmLogo from './HarnesspmLogo';
 import Tag from './ui/Tag';
 
 const Card = tasty({
@@ -133,6 +134,7 @@ const icons = {
   book: IconBook,
   brain: IconBrain,
   github: IconBrandGithub,
+  harnesspm: HarnesspmLogo,
   palette: IconPalette,
 };
 

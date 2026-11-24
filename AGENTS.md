@@ -97,6 +97,7 @@ src/
     PostCard.tsx          Blog post card for listings
     PostList.tsx          Blog post list wrapper
     ProjectCard.tsx       Portfolio project card
+    HarnesspmLogo.tsx     harnesspm logo, inline so it follows the accent color
     ArticleContent.tsx    Markdown article content styles
     ThemeSwitcher.tsx     Light/dark theme toggle (inline script for persistence)
     EngagementBar.tsx     Build-time Bluesky like/repost/reply counts + follow
