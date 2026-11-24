@@ -1,17 +1,15 @@
 import { tasty } from '@tenphi/tasty';
 
+// A plain accent pill, not glass: tags aren't buttons.
 const Tag = tasty({
   as: 'span',
   styles: {
-    recipe: 'glass glass-accent',
     preset: 'label',
     padding: '1bw (.75x + 1bw)',
     radius: 'round',
     color: '#accent-surface-text',
-    '#glass-fill': '#accent-surface',
+    fill: '#accent-surface',
     whiteSpace: 'nowrap',
-
-    Edge: { $: '&::before', recipe: 'glass-edge' },
   },
 });
 
