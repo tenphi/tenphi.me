@@ -25,7 +25,6 @@ Repository: <https://github.com/tenphi/tenphi.me>
 1. **Lint** — Run `pnpm lint`. Fix errors before proceeding.
 2. **Format** — Run `pnpm format` so committed code matches Prettier output.
 3. **Build** — Run `pnpm build` to verify the site builds without errors.
-4. **Push** — Do not push to `main` directly. Push feature branches with `git push -u origin HEAD`.
 
 ## Stack
 
