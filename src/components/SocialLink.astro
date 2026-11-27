@@ -1,0 +1,53 @@
+---
+import { tasty } from '@tenphi/tasty';
+import type { HTMLAttributes } from 'astro/types';
+import PointerOffset from './behaviors/PointerOffset.astro';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  'aria-label': string;
+}
+
+const SocialLink = tasty({
+  as: 'a',
+  styles: {
+    display: 'flex',
+    width: '5x',
+    height: '5x',
+    radius: '1r',
+    '$pointer-offset-distance': '3px',
+    Visual: {
+      display: 'flex',
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      radius: '1r',
+      pointerEvents: 'none',
+      color: {
+        '': '#accent-text',
+        ':hover': '#accent-text-2',
+      },
+      fill: {
+        '': '#clear',
+        ':hover': '#accent-surface.08',
+      },
+      translate: {
+        '': 'none',
+        '@media(prefers-reduced-motion: no-preference)':
+          '(($pointer-offset-x, 0) * $pointer-offset-distance) (($pointer-offset-y, 0) * $pointer-offset-distance)',
+      },
+      '$translate-transition': '80ms',
+      transition: {
+        '': 'theme',
+        '@media(prefers-reduced-motion: no-preference)': 'theme, translate',
+      },
+    },
+  },
+  elements: { Visual: 'span' },
+});
+---
+
+<SocialLink {...Astro.props} data-pointer-offset>
+  <SocialLink.Visual aria-hidden="true"><slot /></SocialLink.Visual>
+</SocialLink>
+<PointerOffset />

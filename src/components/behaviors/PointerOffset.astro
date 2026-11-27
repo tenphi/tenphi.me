@@ -1,0 +1,35 @@
+<script>
+  // Include this component and add data-pointer-offset to a stationary hit area.
+  // The two custom properties form a unitless vector from the element's center
+  // toward the pointer. Multiply them by a length on the visual to set its travel.
+  function updateOffset(this: HTMLElement, event: PointerEvent) {
+    if (event.pointerType === 'touch') return;
+
+    const { left, top, width, height } = this.getBoundingClientRect();
+    const x = event.clientX - left - width / 2;
+    const y = event.clientY - top - height / 2;
+    const radius = Math.max(Math.hypot(width, height) / 2, Math.hypot(x, y), 1);
+
+    this.style.setProperty('--pointer-offset-x', String(x / radius));
+    this.style.setProperty('--pointer-offset-y', String(y / radius));
+  }
+
+  function clearOffset(this: HTMLElement) {
+    this.style.removeProperty('--pointer-offset-x');
+    this.style.removeProperty('--pointer-offset-y');
+  }
+
+  function bindPointerOffsets() {
+    document
+      .querySelectorAll<HTMLElement>('[data-pointer-offset]')
+      .forEach((element) => {
+        element.addEventListener('pointerenter', updateOffset);
+        element.addEventListener('pointermove', updateOffset);
+        element.addEventListener('pointerleave', clearOffset);
+        element.addEventListener('pointercancel', clearOffset);
+      });
+  }
+
+  bindPointerOffsets();
+  document.addEventListener('astro:page-load', bindPointerOffsets);
+</script>
