@@ -27,11 +27,11 @@ importers:
         specifier: ^3.41.1
         version: 3.41.1(react@19.2.4)
       '@tenphi/glaze':
-        specifier: 3.2.0
-        version: 3.2.0
+        specifier: 3.2.1
+        version: 3.2.1
       '@tenphi/tasty':
-        specifier: 3.19.2
-        version: 3.19.2(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4)
+        specifier: 3.19.3
+        version: 3.19.3(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4)
       astro:
         specifier: ^6.4.8
         version: 6.4.8(@types/node@24.12.2)(jiti@2.7.0)(rollup@4.60.1)(tsx@4.23.1)
@@ -56,7 +56,7 @@ importers:
         version: 10.0.1(eslint@10.2.0(jiti@2.7.0))
       '@tenphi/eslint-plugin-tasty':
         specifier: ^1.21.5
-        version: 1.21.5(@tenphi/tasty@3.19.2(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4))(eslint@10.2.0(jiti@2.7.0))(typescript@5.9.3)
+        version: 1.21.5(@tenphi/tasty@3.19.3(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4))(eslint@10.2.0(jiti@2.7.0))(typescript@5.9.3)
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.14
@@ -1266,12 +1266,12 @@ packages:
       typescript:
         optional: true
 
-  '@tenphi/glaze@3.2.0':
-    resolution: {integrity: sha512-KcI9hpEeBQtf5Yy93KwQ+APrPPO3a8/HHXSVeRmuqCLhAo1SSjVBpZX5HGzDFPczAwqCbu9/fWYjxVVLY658dQ==}
+  '@tenphi/glaze@3.2.1':
+    resolution: {integrity: sha512-8M0IVtvzKJxS3hAj1/X0DRm8LJLOI2XkCz2/r15LtS3KufpqlzxBtktXN8/G16ww3VJmdBrMrhBq2w63eDSbWw==}
     engines: {node: '>=20'}
 
-  '@tenphi/tasty@3.19.2':
-    resolution: {integrity: sha512-/ZYcAgC955SXmXvz7qkWA8KqQ7NOaclonvZzFrlKvlZbyUpXW7nqgCaaV6ejSe+tH8jdYxlkBsdtLmrxsSa92w==}
+  '@tenphi/tasty@3.19.3':
+    resolution: {integrity: sha512-KVZWKAMcSj3jr4f0AYxbiTBZRpfsfjt9PhQuS6HuU0cpf8eMo5H7AkpZncSaAfcZkCrfH31fW7enuZLHHUss8g==}
     engines: {node: '>=20'}
     peerDependencies:
       '@babel/core': ^7.24.0 || ^8.0.0
@@ -3975,21 +3975,21 @@ snapshots:
 
   '@tabler/icons@3.41.1': {}
 
-  '@tenphi/eslint-plugin-tasty@1.21.5(@tenphi/tasty@3.19.2(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4))(eslint@10.2.0(jiti@2.7.0))(typescript@5.9.3)':
+  '@tenphi/eslint-plugin-tasty@1.21.5(@tenphi/tasty@3.19.3(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4))(eslint@10.2.0(jiti@2.7.0))(typescript@5.9.3)':
     dependencies:
       eslint: 10.2.0(jiti@2.7.0)
       jiti: 2.7.0
       postcss-selector-parser: 7.1.6
       semver: 7.8.5
     optionalDependencies:
-      '@tenphi/tasty': 3.19.2(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4)
+      '@tenphi/tasty': 3.19.3(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4)
       '@typescript-eslint/scope-manager': 8.71.2
       oxc-parser: 0.159.0
       typescript: 5.9.3
 
-  '@tenphi/glaze@3.2.0': {}
+  '@tenphi/glaze@3.2.1': {}
 
-  '@tenphi/tasty@3.19.2(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4)':
+  '@tenphi/tasty@3.19.3(@babel/core@7.29.0)(@babel/helper-plugin-utils@7.28.6)(@babel/types@7.29.0)(jiti@2.7.0)(react@19.2.4)':
     dependencies:
       csstype: 3.2.3
     optionalDependencies:
