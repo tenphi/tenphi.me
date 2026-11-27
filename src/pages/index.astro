@@ -8,6 +8,7 @@ import PostCard from '../components/PostCard';
 import PostList from '../components/PostList';
 import ProjectCard from '../components/ProjectCard';
 import FrontendIllustration from '../components/FrontendIllustration';
+import SocialLink from '../components/SocialLink.astro';
 import projects from '../data/projects.json';
 import { tasty } from '@tenphi/tasty';
 import readingTime from 'reading-time';
@@ -99,27 +100,6 @@ const Hero = tasty({
     },
   },
   elements: { Content: 'div', Avatar: 'img', Links: 'div' },
-});
-
-const SocialLink = tasty({
-  as: 'a',
-  styles: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '5x',
-    height: '5x',
-    radius: '1r',
-    color: {
-      '': '#accent-text',
-      ':hover': '#accent-text-2',
-    },
-    fill: {
-      '': '#clear',
-      ':hover': '#accent-surface.08',
-    },
-    transition: 'theme',
-  },
 });
 
 const jsonLd = {
