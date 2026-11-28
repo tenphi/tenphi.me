@@ -67,7 +67,7 @@
     "tags": ["Node.js", "TypeScript", "AI Agents", "CLI"],
     "icon": "brain",
     "section": "AI Agents",
-    "featured": true
+    "featured": false
   },
   {
     "id": "luna",
@@ -87,7 +87,7 @@
     "tags": ["TypeScript", "CLI", "npm", "AI Agents", "Claude Code"],
     "icon": "harnesspm",
     "section": "AI Agents",
-    "featured": false
+    "featured": true
   },
   {
     "id": "uniaria",
